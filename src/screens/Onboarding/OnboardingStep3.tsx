@@ -75,7 +75,7 @@ export const OnboardingStep3 = (): JSX.Element => {
             Which activities help you feel most refreshed?
           </h2>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             {options.map((option, index) => (
               <motion.button
                 key={index}
