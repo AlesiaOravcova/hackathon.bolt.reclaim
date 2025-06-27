@@ -13,7 +13,7 @@ export const Welcome = (): JSX.Element => {
     // Simulate authentication
     setTimeout(() => {
       setIsLoading(false);
-      navigate("/onboarding/calendar");
+      navigate("/onboarding/step1");
     }, 1500);
   };
 
@@ -49,13 +49,7 @@ export const Welcome = (): JSX.Element => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="flex flex-col gap-2 mt-2"
         >
-          {/* Logo hidden with display: none */}
-          <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-2" style={{ display: 'none' }}>
-            <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-            </svg>
-          </div>
-          
+
           <h1 className="text-3xl font-bold text-gray-900 leading-tight">
             Reclaim your
             <br />
