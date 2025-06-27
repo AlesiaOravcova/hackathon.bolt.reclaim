@@ -49,6 +49,7 @@ export const Welcome = (): JSX.Element => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="flex flex-col gap-2 mt-2"
         >
+
           <h1 className="text-3xl font-bold text-gray-900 leading-tight">
             Reclaim your
             <br />
