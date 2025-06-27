@@ -38,7 +38,7 @@ export const OnboardingStep1 = (): JSX.Element => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="px-6 pt-4 sticky top-0 z-10 bg-white"
+          className="px-6 pt-4 sticky top-0 z-10"
         >
           <div className="flex items-center gap-4 mb-6">
             <button
@@ -47,7 +47,7 @@ export const OnboardingStep1 = (): JSX.Element => {
             >
               ← Back
             </button>
-            <h1 className="text-[17px] font-semibold text-gray-900 leading-[22px] tracking-[-0.43px]">Welcome to Reclaimoo</h1>
+            <h1 className="text-[17px] font-semibold text-gray-900 leading-[22px] tracking-[-0.43px]">Welcome to Reclaim</h1>
           </div>
 
           {/* Progress bar */}
