@@ -1,91 +1,101 @@
-import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React from 'react';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 
 interface TabBarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  navigation: any;
 }
 
-export const TabBar = ({ activeTab, onTabChange }: TabBarProps): JSX.Element => {
-  const navigate = useNavigate();
-  const location = useLocation();
+export const TabBar: React.FC<TabBarProps> = ({ activeTab, onTabChange, navigation }) => {
+  const insets = useSafeAreaInsets();
 
   const tabs = [
     {
-      id: "home",
-      label: "Home",
-      path: "/dashboard",
-      icon: (active: boolean) => (
-        <svg className={`w-6 h-6 ${active ? "text-blue-600" : "text-gray-400"}`} fill="currentColor" viewBox="0 0 24 24">
-          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-        </svg>
-      ),
+      id: 'home',
+      label: 'Home',
+      screen: 'Dashboard',
+      icon: 'home' as const,
     },
     {
-      id: "schedule",
-      label: "Schedule",
-      path: "/schedule",
-      icon: (active: boolean) => (
-        <svg className={`w-6 h-6 ${active ? "text-blue-600" : "text-gray-400"}`} fill="currentColor" viewBox="0 0 24 24">
-          <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
-        </svg>
-      ),
+      id: 'schedule',
+      label: 'Schedule',
+      screen: 'Schedule',
+      icon: 'calendar' as const,
     },
     {
-      id: "calendar",
-      label: "Calendar",
-      path: "/calendar",
-      icon: (active: boolean) => (
-        <svg className={`w-6 h-6 ${active ? "text-blue-600" : "text-gray-400"}`} fill="currentColor" viewBox="0 0 24 24">
-          <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
-        </svg>
-      ),
+      id: 'calendar',
+      label: 'Calendar',
+      screen: 'CalendarIntegration',
+      icon: 'calendar-outline' as const,
     },
     {
-      id: "profile",
-      label: "Profile",
-      path: "/profile",
-      icon: (active: boolean) => (
-        <svg className={`w-6 h-6 ${active ? "text-blue-600" : "text-gray-400"}`} fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-        </svg>
-      ),
+      id: 'profile',
+      label: 'Profile',
+      screen: 'Profile',
+      icon: 'person' as const,
     },
   ];
 
   const handleTabPress = (tab: any) => {
     onTabChange(tab.id);
-    navigate(tab.path);
+    navigation.navigate(tab.screen);
   };
-
-  const getCurrentTab = () => {
-    const currentPath = location.pathname;
-    return tabs.find(tab => tab.path === currentPath)?.id || "home";
-  };
-
-  const currentActiveTab = getCurrentTab();
 
   return (
-    <div className="bg-white border-t border-gray-200 px-6 py-2 safe-area-bottom">
-      <div className="flex justify-around items-center">
+    <View style={[styles.container, { paddingBottom: insets.bottom }]}>
+      <View style={styles.tabContainer}>
         {tabs.map((tab) => {
-          const isActive = currentActiveTab === tab.id;
+          const isActive = activeTab === tab.id;
           return (
-            <button
+            <TouchableOpacity
               key={tab.id}
-              onClick={() => handleTabPress(tab)}
-              className="flex flex-col items-center py-2 px-3 min-w-0 flex-1"
+              onPress={() => handleTabPress(tab)}
+              style={styles.tab}
             >
-              {tab.icon(isActive)}
-              <span className={`text-xs mt-1 font-medium ${
-                isActive ? "text-blue-600" : "text-gray-400"
-              }`}>
+              <Ionicons
+                name={tab.icon}
+                size={24}
+                color={isActive ? '#2563EB' : '#9CA3AF'}
+              />
+              <Text style={[
+                styles.tabLabel,
+                { color: isActive ? '#2563EB' : '#9CA3AF' }
+              ]}>
                 {tab.label}
-              </span>
-            </button>
+              </Text>
+            </TouchableOpacity>
           );
         })}
-      </div>
-    </div>
+      </View>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1,
+    borderTopColor: '#E5E7EB',
+    paddingHorizontal: 24,
+    paddingTop: 8,
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  tab: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  tabLabel: {
+    fontSize: 12,
+    fontWeight: '500',
+    marginTop: 4,
+  },
+});

@@ -1,23 +1,21 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import { Button } from "../../components/ui/button";
-import { StatusBar } from "../../components/StatusBar";
-import { HomeIndicator } from "../../components/ui/HomeIndicator";
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { StatusBar } from '../../components/StatusBar';
+import { Button } from '../../components/ui/Button';
+import { Ionicons } from '@expo/vector-icons';
 
-export const OnboardingStep1 = (): JSX.Element => {
-  const navigate = useNavigate();
+interface OnboardingStep1Props {
+  navigation: any;
+}
+
+export const OnboardingStep1: React.FC<OnboardingStep1Props> = ({ navigation }) => {
   const [selectedCalendars, setSelectedCalendars] = useState<string[]>([]);
 
-  const calendars = [
-    "Work",
-    "School run",
-    "Family",
-    "Events"
-  ];
+  const calendars = ['Work', 'School run', 'Family', 'Events'];
 
   const toggleCalendar = (calendar: string) => {
-    setSelectedCalendars(prev => 
+    setSelectedCalendars(prev =>
       prev.includes(calendar)
         ? prev.filter(item => item !== calendar)
         : [...prev, calendar]
@@ -26,107 +24,196 @@ export const OnboardingStep1 = (): JSX.Element => {
 
   const handleNext = () => {
     if (selectedCalendars.length > 0) {
-      navigate("/onboarding/step2");
+      navigation.navigate('OnboardingStep2');
     }
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]">
+    <LinearGradient colors={['#F1F6FE', '#F3FDF5']} style={styles.container}>
       <StatusBar />
       
-      <div className="flex-1 overflow-y-auto">
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="px-6 pt-4 sticky top-0 z-10 bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]"
-        >
-          <div className="flex items-center gap-4 mb-6">
-            <button
-              onClick={() => navigate("/")}
-              className="text-blue-600 font-medium"
+        <View style={styles.header}>
+          <View style={styles.headerContent}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.backButton}
             >
-              ← Back
-            </button>
-            <h1 className="text-[17px] font-normal text-gray-900 leading-[22px] tracking-[-0.43px] flex-1 text-right">Step 1 of 4</h1>
-          </div>
+              <Text style={styles.backText}>← Back</Text>
+            </TouchableOpacity>
+            <Text style={styles.stepText}>Step 1 of 4</Text>
+          </View>
 
           {/* Progress bar */}
-          <div className="flex gap-2.5 mb-6">
-            <div className="flex-1 h-2.5 bg-[#00C7BE] rounded-lg"></div>
-            <div className="flex-1 h-2.5 bg-[#F3FDF5] rounded-lg"></div>
-            <div className="flex-1 h-2.5 bg-[#F3FDF5] rounded-lg"></div>
-            <div className="flex-1 h-2.5 bg-[#F3FDF5] rounded-lg"></div>
-          </div>
-        </motion.div>
+          <View style={styles.progressContainer}>
+            <View style={[styles.progressBar, styles.activeProgress]} />
+            <View style={[styles.progressBar, styles.inactiveProgress]} />
+            <View style={[styles.progressBar, styles.inactiveProgress]} />
+            <View style={[styles.progressBar, styles.inactiveProgress]} />
+          </View>
+        </View>
 
         {/* Question */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="px-6 pb-6"
-        >
-          <h2 className="text-[22px] font-normal text-gray-900 mb-10 leading-[28px] tracking-[-0.45px]">
+        <View style={styles.content}>
+          <Text style={styles.question}>
             Which calendars would you like to sync?
-          </h2>
+          </Text>
 
-          <div className="space-y-6">
+          <View style={styles.optionsList}>
             {calendars.map((calendar, index) => (
-              <motion.button
+              <TouchableOpacity
                 key={index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ 
-                  delay: 0.1 * index,
-                  type: "spring",
-                  stiffness: 400,
-                  damping: 17
-                }}
-                onClick={() => toggleCalendar(calendar)}
-                className={`w-full h-[54px] rounded-[16px] border-2 text-left transition-none pointer-events-auto ${
-                  selectedCalendars.includes(calendar)
-                    ? "border-blue-500 bg-blue-50"
-                    : "border-gray-200 bg-white"
-                }`}
+                onPress={() => toggleCalendar(calendar)}
+                style={[
+                  styles.optionButton,
+                  selectedCalendars.includes(calendar) && styles.selectedOption,
+                ]}
+                activeOpacity={0.8}
               >
-                <div className="flex items-center gap-3 px-4">
-                  <div className={`w-5 h-5 rounded border flex items-center justify-center ${
-                    selectedCalendars.includes(calendar)
-                      ? "border-blue-500 bg-blue-500"
-                      : "border-gray-300"
-                  }`}>
+                <View style={styles.optionContent}>
+                  <View
+                    style={[
+                      styles.checkbox,
+                      selectedCalendars.includes(calendar) && styles.checkedBox,
+                    ]}
+                  >
                     {selectedCalendars.includes(calendar) && (
-                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                      </svg>
+                      <Ionicons name="checkmark" size={12} color="#FFFFFF" />
                     )}
-                  </div>
-                  <span className="text-gray-900 font-medium">{calendar}</span>
-                </div>
-              </motion.button>
+                  </View>
+                  <Text style={styles.optionText}>{calendar}</Text>
+                </View>
+              </TouchableOpacity>
             ))}
-          </div>
-        </motion.div>
-      </div>
+          </View>
+        </View>
+      </ScrollView>
 
       {/* Bottom button */}
-      <div className="p-6 pb-8">
+      <View style={styles.bottomSection}>
         <Button
-          onClick={handleNext}
+          onPress={handleNext}
           disabled={selectedCalendars.length === 0}
-          className={`w-full h-[54px] rounded-[8px] font-semibold text-lg transition-none pointer-events-auto ${
-            selectedCalendars.length > 0
-              ? "bg-blue-600 text-white"
-              : "bg-blue-600 bg-opacity-30 text-white cursor-not-allowed"
-          }`}
+          style={[
+            styles.continueButton,
+            selectedCalendars.length === 0 && styles.disabledButton,
+          ]}
         >
           Continue
         </Button>
-      </div>
-
-      <HomeIndicator />
-    </div>
+      </View>
+    </LinearGradient>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  header: {
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    paddingBottom: 24,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  backButton: {
+    paddingVertical: 8,
+  },
+  backText: {
+    color: '#2563EB',
+    fontWeight: '500',
+    fontSize: 16,
+  },
+  stepText: {
+    fontSize: 17,
+    color: '#1F2937',
+    letterSpacing: -0.43,
+    lineHeight: 22,
+  },
+  progressContainer: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  progressBar: {
+    flex: 1,
+    height: 10,
+    borderRadius: 5,
+  },
+  activeProgress: {
+    backgroundColor: '#00C7BE',
+  },
+  inactiveProgress: {
+    backgroundColor: '#F3FDF5',
+  },
+  content: {
+    paddingHorizontal: 24,
+    paddingBottom: 24,
+  },
+  question: {
+    fontSize: 22,
+    color: '#1F2937',
+    marginBottom: 40,
+    lineHeight: 28,
+    letterSpacing: -0.45,
+  },
+  optionsList: {
+    gap: 24,
+  },
+  optionButton: {
+    height: 54,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: '#E5E7EB',
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+  },
+  selectedOption: {
+    borderColor: '#2563EB',
+    backgroundColor: '#EFF6FF',
+  },
+  optionContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    gap: 12,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkedBox: {
+    backgroundColor: '#2563EB',
+    borderColor: '#2563EB',
+  },
+  optionText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#1F2937',
+  },
+  bottomSection: {
+    padding: 24,
+    paddingBottom: 32,
+  },
+  continueButton: {
+    height: 54,
+    borderRadius: 8,
+    backgroundColor: '#2563EB',
+  },
+  disabledButton: {
+    opacity: 0.3,
+  },
+});
