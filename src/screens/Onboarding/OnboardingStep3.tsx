@@ -52,7 +52,7 @@ export const OnboardingStep3 = (): JSX.Element => {
             >
               ← Back
             </button>
-            <h1 className="text-[17px] font-normal text-gray-900 leading-[22px] tracking-[-0.43px] flex-1 text-right">Step 3 of 4</h1>
+            <h1 className="text-[17px] font-normal text-gray-900 leading-[22px] tracking-[-0.43px] flex-1 text-right">Continue</h1>
           </div>
 
           {/* Progress bar */}
