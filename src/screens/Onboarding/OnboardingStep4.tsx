@@ -81,7 +81,6 @@ export const OnboardingStep4 = (): JSX.Element => {
                     ? "border-blue-500 bg-blue-50"
                     : "border-gray-200 bg-white"
                 }`}
-                style={{ marginBottom: index < options.length - 1 ? '16px' : '0' }}
               >
                 <div className="flex items-center gap-3 px-4">
                   <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
