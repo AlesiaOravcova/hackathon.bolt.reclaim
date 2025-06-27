@@ -49,8 +49,11 @@ export const OnboardingStep1 = (): JSX.Element => {
           </div>
 
           {/* Progress bar */}
-          <div className="w-full bg-gray-200 rounded-full h-1 mb-6">
-            <div className="bg-teal-500 h-1 rounded-full w-1/4"></div>
+          <div className="flex gap-2.5 mb-6">
+            <div className="flex-1 h-2.5 bg-[#00C7BE] rounded-lg"></div>
+            <div className="flex-1 h-2.5 bg-[#F3FDF5] rounded-lg"></div>
+            <div className="flex-1 h-2.5 bg-[#F3FDF5] rounded-lg"></div>
+            <div className="flex-1 h-2.5 bg-[#F3FDF5] rounded-lg"></div>
           </div>
         </motion.div>
 
