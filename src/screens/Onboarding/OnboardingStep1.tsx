@@ -24,7 +24,9 @@ export const OnboardingStep1 = (): JSX.Element => {
   };
 
   const handleNext = () => {
-    navigate("/onboarding/step2");
+    if (selectedCalendars.length > 0) {
+      navigate("/onboarding/step2");
+    }
   };
 
   return (
@@ -36,7 +38,7 @@ export const OnboardingStep1 = (): JSX.Element => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="px-6 py-4 bg-white"
+          className="px-6 py-4"
         >
           <div className="flex items-center gap-4 mb-6">
             <button
@@ -106,7 +108,12 @@ export const OnboardingStep1 = (): JSX.Element => {
       <div className="p-6 bg-white border-t border-gray-200">
         <Button
           onClick={handleNext}
-          className="w-full h-14 bg-blue-600 text-white rounded-2xl font-semibold text-lg"
+          disabled={selectedCalendars.length === 0}
+          className={`w-full h-14 rounded-2xl font-semibold text-lg transition-none ${
+            selectedCalendars.length > 0
+              ? "bg-blue-600 text-white"
+              : "bg-blue-600 bg-opacity-30 text-white cursor-not-allowed"
+          }`}
         >
           Step 2 of 4
         </Button>

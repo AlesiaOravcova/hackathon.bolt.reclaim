@@ -43,7 +43,7 @@ export const OnboardingStep3 = (): JSX.Element => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="px-6 py-4 bg-white"
+          className="px-6 py-4"
         >
           <div className="flex items-center gap-4 mb-6">
             <button
@@ -114,10 +114,10 @@ export const OnboardingStep3 = (): JSX.Element => {
         <Button
           onClick={handleNext}
           disabled={selectedOptions.length === 0}
-          className={`w-full h-14 rounded-2xl font-semibold text-lg ${
+          className={`w-full h-14 rounded-2xl font-semibold text-lg transition-none ${
             selectedOptions.length > 0
               ? "bg-blue-600 text-white"
-              : "bg-gray-200 text-gray-400"
+              : "bg-blue-600 bg-opacity-30 text-white cursor-not-allowed"
           }`}
         >
           Final step
