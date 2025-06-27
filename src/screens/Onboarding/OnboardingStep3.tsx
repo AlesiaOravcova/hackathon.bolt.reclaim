@@ -112,8 +112,8 @@ export const OnboardingStep3 = (): JSX.Element => {
                       : "border-gray-200 bg-white"
                   }`}
                 >
-                  <div className="flex items-start gap-3 px-4 py-3">
-                    <div className={`w-5 h-5 rounded border flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                  <div className="flex items-center gap-3 px-4 py-3">
+                    <div className={`w-5 h-5 rounded border flex items-center justify-center flex-shrink-0 ${
                       selectedOptions.includes(option)
                         ? "border-blue-500 bg-blue-500"
                         : "border-gray-300"
