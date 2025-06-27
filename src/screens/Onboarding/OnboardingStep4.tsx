@@ -62,7 +62,7 @@ export const OnboardingStep4 = (): JSX.Element => {
             When would you like gentle reminders when we find time for you?
           </h2>
 
-          <div className="space-y-40">
+          <div className="space-y-6">
             {options.map((option, index) => (
               <motion.button
                 key={index}
