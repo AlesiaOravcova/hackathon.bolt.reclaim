@@ -32,7 +32,7 @@ export const OnboardingStep4 = (): JSX.Element => {
           animate={{ opacity: 1, y: 0 }}
           className="px-6 pt-4 sticky top-0 z-10 bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]"
         >
-          <div className="flex items-center gap-4 mb-5">
+          <div className="flex items-center gap-4 mb-50">
             <button
               onClick={() => navigate("/onboarding/step3")}
               className="text-blue-600 font-medium"
