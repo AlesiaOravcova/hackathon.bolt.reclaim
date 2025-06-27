@@ -40,7 +40,7 @@ export const OnboardingStep1 = (): JSX.Element => {
         >
           <div className="flex items-center gap-4 mb-6">
             <button
-              onClick={() => navigate("/onboarding/calendar")}
+              onClick={() => navigate("/")}
               className="text-blue-600 font-medium"
             >
               ← Back
