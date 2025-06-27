@@ -105,26 +105,17 @@ export const OnboardingStep2 = (): JSX.Element => {
 
       {/* Bottom button */}
       <div className="p-6">
-        <motion.div
-          whileTap={{ scale: 0.95 }}
-          transition={{ 
-            type: "spring",
-            stiffness: 400,
-            damping: 17
-          }}
+        <Button
+          onClick={handleNext}
+          disabled={!selectedOption}
+          className={`w-full h-[54px] rounded-[16px] font-semibold text-lg transition-none pointer-events-auto ${
+            selectedOption
+              ? "bg-blue-600 text-white"
+              : "bg-blue-600 bg-opacity-30 text-white cursor-not-allowed"
+          }`}
         >
-          <Button
-            onClick={handleNext}
-            disabled={!selectedOption}
-            className={`w-full h-[54px] rounded-[16px] font-semibold text-lg transition-none pointer-events-auto ${
-              selectedOption
-                ? "bg-blue-600 text-white"
-                : "bg-blue-600 bg-opacity-30 text-white cursor-not-allowed"
-            }`}
-          >
-            Step 3 of 4
-          </Button>
-        </motion.div>
+          Step 3 of 4
+        </Button>
       </div>
     </div>
   );
