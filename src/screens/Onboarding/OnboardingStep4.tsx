@@ -76,7 +76,7 @@ export const OnboardingStep4 = (): JSX.Element => {
                   damping: 17
                 }}
                 onClick={() => setSelectedOption(option)}
-                className={`w-full h-[54px] rounded-[16px] border-2 text-left transition-none ${
+                className={`w-full h-[54px] rounded-[16px] border-2 text-left transition-none pointer-events-auto ${
                   selectedOption === option
                     ? "border-blue-500 bg-blue-50"
                     : "border-gray-200 bg-white"
@@ -114,7 +114,7 @@ export const OnboardingStep4 = (): JSX.Element => {
           <Button
             onClick={handleComplete}
             disabled={!selectedOption}
-            className={`w-full h-[54px] rounded-[16px] font-semibold text-lg transition-none ${
+            className={`w-full h-[54px] rounded-[16px] font-semibold text-lg transition-none pointer-events-auto ${
               selectedOption
                 ? "bg-blue-600 text-white"
                 : "bg-blue-600 bg-opacity-30 text-white cursor-not-allowed"
