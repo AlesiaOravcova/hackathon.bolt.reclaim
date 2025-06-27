@@ -68,9 +68,15 @@ export const OnboardingStep4 = (): JSX.Element => {
                 key={index}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 * index }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ 
+                  delay: 0.1 * index,
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 17
+                }}
                 onClick={() => setSelectedOption(option)}
-                className={`w-full h-[54px] rounded-[16px] border-2 text-left transition-all ${
+                className={`w-full h-[54px] rounded-[16px] border-2 text-left ${
                   selectedOption === option
                     ? "border-blue-500 bg-blue-50"
                     : "border-gray-200 bg-white"
@@ -97,17 +103,26 @@ export const OnboardingStep4 = (): JSX.Element => {
 
       {/* Bottom button */}
       <div className="p-6">
-        <Button
-          onClick={handleComplete}
-          disabled={!selectedOption}
-          className={`w-full h-[54px] rounded-[16px] font-semibold text-lg transition-none ${
-            selectedOption
-              ? "bg-blue-600 text-white"
-              : "bg-blue-600 bg-opacity-30 text-white cursor-not-allowed"
-          }`}
+        <motion.div
+          whileTap={{ scale: 0.95 }}
+          transition={{ 
+            type: "spring",
+            stiffness: 400,
+            damping: 17
+          }}
         >
-          All done!
-        </Button>
+          <Button
+            onClick={handleComplete}
+            disabled={!selectedOption}
+            className={`w-full h-[54px] rounded-[16px] font-semibold text-lg transition-none ${
+              selectedOption
+                ? "bg-blue-600 text-white"
+                : "bg-blue-600 bg-opacity-30 text-white cursor-not-allowed"
+            }`}
+          >
+            All done!
+          </Button>
+        </motion.div>
       </div>
     </div>
   );
