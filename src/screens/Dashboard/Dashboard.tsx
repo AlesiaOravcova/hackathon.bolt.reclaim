@@ -27,7 +27,7 @@ export const Dashboard = (): JSX.Element => {
   ];
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]">
       <StatusBar />
       
       <div className="flex-1 overflow-y-auto">

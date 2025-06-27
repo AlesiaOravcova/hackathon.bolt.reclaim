@@ -23,7 +23,7 @@ export const Welcome = (): JSX.Element => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5] relative overflow-hidden">
       {/* Status bar simulation */}
       <div className="flex justify-between items-center px-6 pt-3 pb-1 text-black">
         <span className="text-sm font-semibold">9:41</span>

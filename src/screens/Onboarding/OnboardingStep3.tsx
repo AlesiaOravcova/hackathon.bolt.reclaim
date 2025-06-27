@@ -35,7 +35,7 @@ export const OnboardingStep3 = (): JSX.Element => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]">
       <StatusBar />
       
       <div className="flex-1 overflow-y-auto">
@@ -56,8 +56,11 @@ export const OnboardingStep3 = (): JSX.Element => {
           </div>
 
           {/* Progress bar */}
-          <div className="w-full bg-gray-200 rounded-full h-1 mb-6">
-            <div className="bg-teal-500 h-1 rounded-full w-3/4"></div>
+          <div className="flex gap-2.5 mb-6">
+            <div className="flex-1 h-2.5 bg-[#00C7BE] rounded-lg"></div>
+            <div className="flex-1 h-2.5 bg-[#00C7BE] rounded-lg"></div>
+            <div className="flex-1 h-2.5 bg-[#00C7BE] rounded-lg"></div>
+            <div className="flex-1 h-2.5 bg-[#F3FDF5] rounded-lg"></div>
           </div>
         </motion.div>
 
