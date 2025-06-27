@@ -127,7 +127,7 @@ export const OnboardingStep4 = (): JSX.Element => {
         <Button
           onClick={handleComplete}
           disabled={!isNextEnabled()}
-          className={`w-full h-[54px] rounded-[16px] font-semibold text-lg transition-none pointer-events-auto ${
+          className={`w-full h-[54px] rounded-[8px] font-semibold text-lg transition-none pointer-events-auto ${
             isNextEnabled()
               ? "bg-blue-600 text-white"
               : "bg-blue-600 bg-opacity-30 text-white cursor-not-allowed"
