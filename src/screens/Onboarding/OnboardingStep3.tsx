@@ -1,24 +1,54 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
 import { StatusBar } from "../../components/StatusBar";
 
-export const OnboardingStep4 = (): JSX.Element => {
+export const OnboardingStep3 = (): JSX.Element => {
   const navigate = useNavigate();
-  const [selectedOption, setSelectedOption] = useState<string>("");
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [customText, setCustomText] = useState<string>("");
 
   const options = [
-    "Everyday (Mon-Sun)",
-    "Every weekday (Mon-Fri)",
-    "I'd like to choose",
-    "I don't want gentle reminders for now"
+    "Reading or listening to audiobooks",
+    "Meditation or mindfulness",
+    "Physical exercise or yoga",
+    "Creative activities (art, music, writing)",
+    "Taking walks in nature",
+    "Having warm bath or shower",
+    "Listening to music or podcasts",
+    "Enjoying a cup of tea or coffee quietly",
+    "Something else (please specify)"
   ];
 
-  const handleComplete = () => {
-    if (selectedOption) {
-      navigate("/dashboard");
+  const toggleOption = (option: string) => {
+    setSelectedOptions(prev => 
+      prev.includes(option)
+        ? prev.filter(item => item !== option)
+        : [...prev, option]
+    );
+  };
+
+  const handleNext = () => {
+    if (selectedOptions.length > 0) {
+      // If "Something else" is selected, make sure there's custom text
+      if (selectedOptions.includes("Something else (please specify)") && !customText.trim()) {
+        return;
+      }
+      navigate("/onboarding/step4");
     }
+  };
+
+  const isNextEnabled = () => {
+    if (selectedOptions.length === 0) return false;
+    
+    // If "Something else" is selected, require custom text
+    if (selectedOptions.includes("Something else (please specify)")) {
+      return customText.trim().length > 0;
+    }
+    
+    return true;
   };
 
   return (
@@ -34,12 +64,12 @@ export const OnboardingStep4 = (): JSX.Element => {
         >
           <div className="flex items-center gap-4 mb-6">
             <button
-              onClick={() => navigate("/onboarding/step3")}
+              onClick={() => navigate("/onboarding/step2")}
               className="text-blue-600 font-medium"
             >
               ← Back
             </button>
-            <h1 className="text-[17px] font-semibold text-gray-900 leading-[22px] tracking-[-0.43px]">Welcome to Reclaim</h1>
+            <h1 className="text-[17px] font-normal text-gray-900 leading-[22px] tracking-[-0.43px] flex-1 text-right">Step 3 of 4</h1>
           </div>
 
           {/* Progress bar */}
@@ -47,7 +77,7 @@ export const OnboardingStep4 = (): JSX.Element => {
             <div className="flex-1 h-2.5 bg-[#00C7BE] rounded-lg"></div>
             <div className="flex-1 h-2.5 bg-[#00C7BE] rounded-lg"></div>
             <div className="flex-1 h-2.5 bg-[#00C7BE] rounded-lg"></div>
-            <div className="flex-1 h-2.5 bg-[#00C7BE] rounded-lg"></div>
+            <div className="flex-1 h-2.5 bg-[#F3FDF5] rounded-lg"></div>
           </div>
         </motion.div>
 
@@ -56,45 +86,69 @@ export const OnboardingStep4 = (): JSX.Element => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="px-6 py-6"
+          className="px-6 pb-6"
         >
           <h2 className="text-[22px] font-normal text-gray-900 mb-10 leading-[28px] tracking-[-0.45px]">
-            When would you like gentle reminders when we find time for you?
+            Which activities help you feel most refreshed?
           </h2>
 
           <div className="space-y-6">
             {options.map((option, index) => (
-              <motion.button
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ 
-                  delay: 0.1 * index,
-                  type: "spring",
-                  stiffness: 400,
-                  damping: 17
-                }}
-                onClick={() => setSelectedOption(option)}
-         className={`w-full h-[54px] rounded-[16px] border-2 text-left transition-none pointer-events-auto ${
-                  selectedOption === option
-                    ? "border-blue-500 bg-blue-50"
-                    : "border-gray-200 bg-white"
-                }`}
-              >
-                <div className="flex items-center gap-3 px-4">
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                    selectedOption === option
-                      ? "border-blue-500 bg-blue-500"
-                      : "border-gray-300"
-                  }`}>
-                    {selectedOption === option && (
-                      <div className="w-2 h-2 bg-white rounded-full"></div>
-                    )}
+              <div key={index}>
+                <motion.button
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ 
+                    delay: 0.1 * index,
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 17
+                  }}
+                  onClick={() => toggleOption(option)}
+                  className={`w-full min-h-[54px] rounded-[16px] border-2 text-left transition-none pointer-events-auto ${
+                    selectedOptions.includes(option)
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-gray-200 bg-white"
+                  }`}
+                >
+                  <div className="flex items-start gap-3 px-4 py-3">
+                    <div className={`w-5 h-5 rounded border flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                      selectedOptions.includes(option)
+                        ? "border-blue-500 bg-blue-500"
+                        : "border-gray-300"
+                    }`}>
+                      {selectedOptions.includes(option) && (
+                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                        </svg>
+                      )}
+                    </div>
+                    <span className="text-gray-900 font-medium leading-relaxed">{option}</span>
                   </div>
-                  <span className="text-gray-900 font-medium">{option}</span>
-                </div>
-              </motion.button>
+                </motion.button>
+
+                {/* Conditional Input Field */}
+                <AnimatePresence>
+                  {selectedOptions.includes(option) && option === "Something else (please specify)" && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                      animate={{ opacity: 1, height: "auto", marginTop: 16 }}
+                      exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <Input
+                        placeholder="Please specify..."
+                        value={customText}
+                        onChange={(e) => setCustomText(e.target.value)}
+                        className="w-full"
+                        autoFocus
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             ))}
           </div>
         </motion.div>
@@ -103,15 +157,15 @@ export const OnboardingStep4 = (): JSX.Element => {
       {/* Bottom button */}
       <div className="p-6">
         <Button
-          onClick={handleComplete}
-          disabled={!selectedOption}
+          onClick={handleNext}
+          disabled={!isNextEnabled()}
           className={`w-full h-[54px] rounded-[16px] font-semibold text-lg transition-none pointer-events-auto ${
-            selectedOption
+            isNextEnabled()
               ? "bg-blue-600 text-white"
               : "bg-blue-600 bg-opacity-30 text-white cursor-not-allowed"
           }`}
         >
-          All done!
+          Continue
         </Button>
       </div>
     </div>
