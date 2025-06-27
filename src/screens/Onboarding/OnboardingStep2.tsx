@@ -98,7 +98,7 @@ export const OnboardingStep2 = (): JSX.Element => {
       </div>
 
       {/* Bottom button */}
-      <div className="p-6 bg-white border-t border-gray-200">
+      <div className="p-6">
         <Button
           onClick={handleNext}
           disabled={!selectedOption}
