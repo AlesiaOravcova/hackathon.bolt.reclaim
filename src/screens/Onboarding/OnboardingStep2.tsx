@@ -153,7 +153,7 @@ export const OnboardingStep2 = (): JSX.Element => {
               : "bg-blue-600 bg-opacity-30 text-white cursor-not-allowed"
           }`}
         >
-          Step 3 of 4
+          Continue
         </Button>
       </div>
     </div>
