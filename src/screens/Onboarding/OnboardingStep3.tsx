@@ -71,7 +71,7 @@ export const OnboardingStep3 = (): JSX.Element => {
           transition={{ delay: 0.1 }}
           className="px-6 py-6"
         >
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 leading-tight">
+          <h2 className="text-[22px] font-normal text-gray-900 mb-8 leading-[28px] tracking-[-0.45px]">
             Which activities help you feel most refreshed?
           </h2>
 
