@@ -13,7 +13,7 @@ export const Welcome = (): JSX.Element => {
     // Simulate authentication
     setTimeout(() => {
       setIsLoading(false);
-      navigate("/onboarding/step1");
+      navigate("/onboarding/calendar");
     }, 1500);
   };
 
