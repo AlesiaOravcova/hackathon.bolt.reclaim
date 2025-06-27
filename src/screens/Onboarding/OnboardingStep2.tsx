@@ -72,13 +72,14 @@ export const OnboardingStep2 = (): JSX.Element => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.1 * index }}
                 onClick={() => setSelectedOption(option)}
-                className={`w-full p-4 rounded-2xl border-2 text-left transition-all ${
+                className={`w-full h-[54px] rounded-[16px] border-2 text-left transition-all ${
                   selectedOption === option
                     ? "border-blue-500 bg-blue-50"
                     : "border-gray-200 bg-white"
                 }`}
+                style={{ marginBottom: index < options.length - 1 ? '16px' : '0' }}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 px-4">
                   <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                     selectedOption === option
                       ? "border-blue-500 bg-blue-500"
@@ -101,7 +102,7 @@ export const OnboardingStep2 = (): JSX.Element => {
         <Button
           onClick={handleNext}
           disabled={!selectedOption}
-          className={`w-full h-14 rounded-2xl font-semibold text-lg transition-none ${
+          className={`w-full h-[54px] rounded-[16px] font-semibold text-lg transition-none ${
             selectedOption
               ? "bg-blue-600 text-white"
               : "bg-blue-600 bg-opacity-30 text-white cursor-not-allowed"
