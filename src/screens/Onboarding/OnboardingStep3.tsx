@@ -89,7 +89,7 @@ export const OnboardingStep3 = (): JSX.Element => {
                   damping: 17
                 }}
                 onClick={() => toggleOption(option)}
-                className={`w-full h-[54px] rounded-[16px] border-2 text-left ${
+                className={`w-full h-[54px] rounded-[16px] border-2 text-left transition-none ${
                   selectedOptions.includes(option)
                     ? "border-blue-500 bg-blue-50"
                     : "border-gray-200 bg-white"
