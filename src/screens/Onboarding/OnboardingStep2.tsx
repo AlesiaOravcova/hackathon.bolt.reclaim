@@ -82,7 +82,7 @@ export const OnboardingStep2 = (): JSX.Element => {
             What makes it hardest for you to take time for yourself lately?
           </h2>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             {options.map((option, index) => (
               <div key={index}>
                 <motion.button
