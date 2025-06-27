@@ -115,7 +115,7 @@ export const OnboardingStep1 = (): JSX.Element => {
         <Button
           onClick={handleNext}
           disabled={selectedCalendars.length === 0}
-          className={`w-full h-[54px] rounded-[16px] font-semibold text-lg transition-none pointer-events-auto ${
+          className={`w-full h-[54px] rounded-[8px] font-semibold text-lg transition-none pointer-events-auto ${
             selectedCalendars.length > 0
               ? "bg-blue-600 text-white"
               : "bg-blue-600 bg-opacity-30 text-white cursor-not-allowed"
