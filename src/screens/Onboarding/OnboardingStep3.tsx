@@ -99,13 +99,13 @@ export const OnboardingStep3 = (): JSX.Element => {
                     damping: 17
                   }}
                   onClick={() => toggleOption(option)}
-                  className={`w-full h-[54px] rounded-[16px] border-2 text-left transition-none pointer-events-auto ${
+                  className={`w-full rounded-[16px] border-2 text-left transition-none pointer-events-auto ${
                     selectedOptions.includes(option)
                       ? "border-blue-500 bg-blue-50"
                       : "border-gray-200 bg-white"
                   }`}
                 >
-                  <div className="flex items-center gap-3 px-4">
+                  <div className="flex items-start gap-3 px-4" py-3>
                     <div className={`w-5 h-5 rounded border flex items-center justify-center ${
                       selectedOptions.includes(option)
                         ? "border-blue-500 bg-blue-500"
