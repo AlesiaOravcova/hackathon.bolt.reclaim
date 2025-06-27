@@ -53,7 +53,7 @@ export const OnboardingStep4 = (): JSX.Element => {
             >
               ← Back
             </button>
-            <h1 className="text-[17px] font-normal text-gray-900 leading-[22px] tracking-[-0.43px]">Welcome to Reclaim</h1>
+            <h1 className="text-[17px] font-normal text-gray-900 leading-[22px] tracking-[-0.43px] flex-1 text-right">Welcome to Reclaim</h1>
           </div>
 
           {/* Progress bar */}
