@@ -38,7 +38,7 @@ export const OnboardingStep1 = (): JSX.Element => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="px-6 pt-2 sticky top-0 z-10 bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]"
+          className="px-6 pt-20 sticky top-0 z-10 bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]"
         >
           <div className="flex items-center gap-4 mb-6">
             <button
