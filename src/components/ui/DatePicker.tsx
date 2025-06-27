@@ -39,7 +39,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 onClick={() => toggleDay(day)}
                 className={`flex-1 h-[54px] rounded-[16px] border-2 text-center transition-all font-medium ${
                   selectedDays.includes(day)
-                    ? "border-blue-500 bg-blue-50 text-blue-700"
+                    ? "border-blue-500 bg-blue-50 text-gray-900"
                     : "border-gray-200 bg-white text-gray-900"
                 }`}
               >
