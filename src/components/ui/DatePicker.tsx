@@ -7,7 +7,7 @@ interface DatePickerProps {
   isVisible: boolean;
 }
 
-const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const DAYS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
 export const DatePicker: React.FC<DatePickerProps> = ({
   selectedDays,
