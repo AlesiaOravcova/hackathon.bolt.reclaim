@@ -6,14 +6,13 @@ import { Profile } from "./screens/Profile";
 import { Schedule } from "./screens/Schedule";
 import { CalendarIntegration } from "./screens/CalendarIntegration";
 import { AuthCallback } from "./screens/AuthCallback";
-import { OnboardingCalendar, OnboardingStep1, OnboardingStep2, OnboardingStep3, OnboardingStep4 } from "./screens/Onboarding";
+import { OnboardingStep1, OnboardingStep2, OnboardingStep3, OnboardingStep4 } from "./screens/Onboarding";
 
 export const App = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Routes>
         <Route path="/" element={<Welcome />} />
-        <Route path="/onboarding/calendar" element={<OnboardingCalendar />} />
         <Route path="/onboarding/step1" element={<OnboardingStep1 />} />
         <Route path="/onboarding/step2" element={<OnboardingStep2 />} />
         <Route path="/onboarding/step3" element={<OnboardingStep3 />} />

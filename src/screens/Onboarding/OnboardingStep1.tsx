@@ -40,7 +40,7 @@ export const OnboardingStep1 = (): JSX.Element => {
         >
           <div className="flex items-center gap-4 mb-6">
             <button
-              onClick={() => navigate("/onboarding/calendar")}
+              onClick={() => navigate("/")}
               className="text-blue-600 font-medium"
             >
               ← Back
@@ -62,7 +62,7 @@ export const OnboardingStep1 = (): JSX.Element => {
           className="px-6 py-6"
         >
           <h2 className="text-2xl font-bold text-gray-900 mb-8 leading-tight">
-            Which types of activities would you like us to schedule?
+            Which calendars would you like to sync?
           </h2>
 
           <div className="space-y-4">
