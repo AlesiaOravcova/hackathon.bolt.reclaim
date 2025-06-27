@@ -70,7 +70,7 @@ export const OnboardingStep1 = (): JSX.Element => {
             Which calendars would you like to sync?
           </h2>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             {calendars.map((calendar, index) => (
               <motion.button
                 key={index}
