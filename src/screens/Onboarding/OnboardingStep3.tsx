@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { StatusBar } from "../../components/StatusBar";
+import { HomeIndicator } from "../../components/ui/HomeIndicator";
 
 export const OnboardingStep3 = (): JSX.Element => {
   const navigate = useNavigate();
@@ -155,7 +156,7 @@ export const OnboardingStep3 = (): JSX.Element => {
       </div>
 
       {/* Bottom button */}
-      <div className="p-6">
+      <div className="p-6 pb-8">
         <Button
           onClick={handleNext}
           disabled={!isNextEnabled()}
@@ -168,6 +169,8 @@ export const OnboardingStep3 = (): JSX.Element => {
           Continue
         </Button>
       </div>
+
+      <HomeIndicator />
     </div>
   );
 };

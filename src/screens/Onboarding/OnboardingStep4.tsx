@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { DatePicker } from "../../components/ui/DatePicker";
 import { StatusBar } from "../../components/StatusBar";
+import { HomeIndicator } from "../../components/ui/HomeIndicator";
 
 export const OnboardingStep4 = (): JSX.Element => {
   const navigate = useNavigate();
@@ -123,7 +124,7 @@ export const OnboardingStep4 = (): JSX.Element => {
       </div>
 
       {/* Bottom button */}
-      <div className="p-6">
+      <div className="p-6 pb-8">
         <Button
           onClick={handleComplete}
           disabled={!isNextEnabled()}
@@ -136,6 +137,8 @@ export const OnboardingStep4 = (): JSX.Element => {
           All done!
         </Button>
       </div>
+
+      <HomeIndicator />
     </div>
   );
 };

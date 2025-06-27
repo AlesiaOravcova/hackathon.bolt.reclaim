@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { StatusBar } from "../../components/StatusBar";
+import { HomeIndicator } from "../../components/ui/HomeIndicator";
 
 export const OnboardingStep1 = (): JSX.Element => {
   const navigate = useNavigate();
@@ -111,7 +112,7 @@ export const OnboardingStep1 = (): JSX.Element => {
       </div>
 
       {/* Bottom button */}
-      <div className="p-6">
+      <div className="p-6 pb-8">
         <Button
           onClick={handleNext}
           disabled={selectedCalendars.length === 0}
@@ -124,6 +125,8 @@ export const OnboardingStep1 = (): JSX.Element => {
           Continue
         </Button>
       </div>
+
+      <HomeIndicator />
     </div>
   );
 };
