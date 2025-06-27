@@ -50,7 +50,7 @@ export const OnboardingStep2 = (): JSX.Element => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="px-6 pt-4 sticky top-0 z-10"
+          className="px-6 pt-4 sticky top-0 z-10 bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]"
         >
           <div className="flex items-center gap-4 mb-6">
             <button
@@ -96,7 +96,7 @@ export const OnboardingStep2 = (): JSX.Element => {
                     damping: 17
                   }}
                   onClick={() => handleOptionSelect(option)}
-                  className={`w-full h-[54px] rounded-[16px] border-2 text-left transition-none pointer-events-auto ${
+          className="px-6 pt-4 sticky top-0 z-10 bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]"
                     selectedOption === option
                       ? "border-blue-500 bg-blue-50"
                       : "border-gray-200 bg-white"
