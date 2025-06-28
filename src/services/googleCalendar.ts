@@ -60,6 +60,10 @@ class GoogleCalendarService {
 
   // OAuth 2.0 Authentication
   initiateOAuth(): void {
+    if (!this.CLIENT_ID) {
+      throw new Error('Google Client ID is not configured. Please check your .env file.');
+    }
+
     const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
     authUrl.searchParams.set('client_id', this.CLIENT_ID);
     authUrl.searchParams.set('redirect_uri', this.REDIRECT_URI);
@@ -67,6 +71,13 @@ class GoogleCalendarService {
     authUrl.searchParams.set('scope', this.SCOPES);
     authUrl.searchParams.set('access_type', 'offline');
     authUrl.searchParams.set('prompt', 'consent');
+    authUrl.searchParams.set('include_granted_scopes', 'true');
+    
+    console.log('Initiating OAuth with:', {
+      clientId: this.CLIENT_ID,
+      redirectUri: this.REDIRECT_URI,
+      authUrl: authUrl.toString()
+    });
     
     window.location.href = authUrl.toString();
   }
@@ -88,7 +99,9 @@ class GoogleCalendarService {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to exchange code for tokens');
+        const errorData = await response.json();
+        console.error('Token exchange failed:', errorData);
+        throw new Error(`Failed to exchange code for tokens: ${errorData.error_description || errorData.error}`);
       }
 
       const tokens = await response.json();

@@ -8,16 +8,19 @@ import { googleCalendarService } from "../../services/googleCalendar";
 export const Welcome = (): JSX.Element => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
+    setError(null);
+    
     try {
       // Initiate the actual Google OAuth 2.0 flow
       googleCalendarService.initiateOAuth();
     } catch (error) {
       console.error('OAuth initiation failed:', error);
+      setError('Failed to connect to Google. Please try again.');
       setIsLoading(false);
-      // You could show an error message here
     }
   };
 
@@ -181,6 +184,12 @@ export const Welcome = (): JSX.Element => {
           transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
           className="flex flex-col gap-3 pb-2"
         >
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-2xl p-3 mb-2">
+              <p className="text-red-600 text-sm text-center">{error}</p>
+            </div>
+          )}
+          
           <Button
             onClick={handleGoogleSignIn}
             disabled={isLoading}
