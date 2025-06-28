@@ -7,20 +7,118 @@ import { GoogleIcon } from "../../components/icons";
 export const Welcome = (): JSX.Element => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [showCalendarPrompt, setShowCalendarPrompt] = useState(false);
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     // Simulate authentication
     setTimeout(() => {
       setIsLoading(false);
-      navigate("/onboarding/step1");
+      setShowCalendarPrompt(true);
     }, 1500);
+  };
+
+  const handleConnectCalendar = () => {
+    // Navigate to calendar integration
+    navigate("/calendar");
+  };
+
+  const handleSkipCalendar = () => {
+    // Skip calendar connection and go to onboarding
+    navigate("/onboarding/step1");
   };
 
   const handleSignIn = () => {
     // Navigate to sign in flow (for now, just go to dashboard)
     navigate("/dashboard");
   };
+
+  if (showCalendarPrompt) {
+    return (
+      <div className="flex flex-col h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
+        {/* Status bar simulation */}
+        <div className="flex justify-between items-center px-6 pt-3 pb-1 text-black">
+          <span className="text-sm font-semibold">9:41</span>
+          <div className="flex items-center gap-1">
+            <div className="flex gap-1">
+              <div className="w-1 h-1 bg-black rounded-full"></div>
+              <div className="w-1 h-1 bg-black rounded-full"></div>
+              <div className="w-1 h-1 bg-black rounded-full"></div>
+              <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+            </div>
+            <div className="ml-2 w-6 h-3 border border-black rounded-sm">
+              <div className="w-4 h-1.5 bg-black rounded-sm m-0.5"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Calendar Connection Prompt */}
+        <div className="flex-1 flex flex-col justify-center px-6 py-8">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center"
+          >
+            {/* Calendar Icon */}
+            <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-teal-600 rounded-3xl flex items-center justify-center mx-auto mb-6">
+              <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+              </svg>
+            </div>
+
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Connect Your Calendar
+            </h2>
+            
+            <p className="text-lg text-gray-600 mb-8 leading-relaxed px-4">
+              To find the perfect time for your wellness activities, we'd like to sync with your Google Calendar.
+            </p>
+
+            <div className="bg-blue-50 rounded-2xl p-6 mb-8 mx-4">
+              <h3 className="font-semibold text-blue-900 mb-3">What we'll do:</h3>
+              <ul className="text-sm text-blue-800 space-y-2 text-left">
+                <li className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                  </svg>
+                  View your existing events to find free time
+                </li>
+                <li className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                  </svg>
+                  Automatically schedule wellness activities
+                </li>
+                <li className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                  </svg>
+                  Send gentle reminders for your me-time
+                </li>
+              </ul>
+            </div>
+
+            <div className="space-y-4 px-4">
+              <Button
+                onClick={handleConnectCalendar}
+                className="w-full h-14 bg-gradient-to-r from-green-500 to-teal-600 text-white rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-3"
+              >
+                <GoogleIcon className="w-6 h-6" />
+                Connect Google Calendar
+              </Button>
+
+              <button
+                onClick={handleSkipCalendar}
+                className="w-full text-gray-600 font-medium py-3 hover:text-gray-800 transition-colors"
+              >
+                Skip for now
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
