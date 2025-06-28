@@ -56,11 +56,20 @@ class GoogleCalendarService {
 
   constructor() {
     this.loadTokensFromStorage();
+    console.log('GoogleCalendarService initialized with:', {
+      clientId: this.CLIENT_ID ? 'Set' : 'Not set',
+      clientSecret: this.CLIENT_SECRET ? 'Set' : 'Not set',
+      redirectUri: this.REDIRECT_URI
+    });
   }
 
   // OAuth 2.0 Authentication
   initiateOAuth(): void {
     if (!this.CLIENT_ID) {
+      console.error('Environment variables:', {
+        VITE_GOOGLE_CLIENT_ID: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+        VITE_GOOGLE_CLIENT_SECRET: import.meta.env.VITE_GOOGLE_CLIENT_SECRET
+      });
       throw new Error('Google Client ID is not configured. Please check your .env file.');
     }
 
@@ -79,11 +88,24 @@ class GoogleCalendarService {
       authUrl: authUrl.toString()
     });
     
-    window.location.href = authUrl.toString();
+    // Use window.open for better compatibility
+    const popup = window.open(
+      authUrl.toString(),
+      'google-oauth',
+      'width=500,height=600,scrollbars=yes,resizable=yes'
+    );
+
+    // Fallback to direct navigation if popup is blocked
+    if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+      console.log('Popup blocked, using direct navigation');
+      window.location.href = authUrl.toString();
+    }
   }
 
   async handleOAuthCallback(code: string): Promise<boolean> {
     try {
+      console.log('Handling OAuth callback with code:', code);
+      
       const response = await fetch('https://oauth2.googleapis.com/token', {
         method: 'POST',
         headers: {
@@ -109,6 +131,7 @@ class GoogleCalendarService {
       
       this.tokens = tokens;
       this.saveTokensToStorage();
+      console.log('OAuth tokens received and saved');
       return true;
     } catch (error) {
       console.error('OAuth callback error:', error);
