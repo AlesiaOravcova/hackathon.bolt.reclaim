@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { ArrowLeft, Plus, CheckCircle, Circle } from 'lucide-react-native';
+import { ArrowLeft, Plus, CircleCheck as CheckCircle, Circle } from 'lucide-react-native';
 
 export default function Schedule() {
   const [selectedDate, setSelectedDate] = useState(new Date());
