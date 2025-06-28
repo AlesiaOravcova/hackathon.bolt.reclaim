@@ -33,6 +33,7 @@
     "plugins": [
       "expo-router"
     ],
-    "scheme": "wellness-scheduler"
+    "scheme": "wellness-scheduler",
+    "newArchEnabled": true
   }
 }
