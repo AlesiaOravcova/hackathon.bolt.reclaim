@@ -10,11 +10,11 @@ export const Welcome = (): JSX.Element => {
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
-    // Simulate authentication
+    // Navigate directly to calendar for OAuth flow
     setTimeout(() => {
       setIsLoading(false);
-      navigate("/onboarding/step1");
-    }, 1500);
+      navigate("/calendar");
+    }, 500);
   };
 
   const handleSignIn = () => {
@@ -184,7 +184,7 @@ export const Welcome = (): JSX.Element => {
             className="flex h-12 items-center justify-center gap-3 bg-white border-2 border-gray-200 text-gray-900 rounded-2xl font-semibold text-base shadow-lg active:scale-95 transition-all duration-200"
           >
             <GoogleIcon className="w-5 h-5" />
-            {isLoading ? "Signing in..." : "Continue with Google"}
+            {isLoading ? "Connecting..." : "Continue with Google"}
           </Button>
 
           {/* Sign in link */}
