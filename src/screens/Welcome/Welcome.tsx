@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { GoogleIcon } from "../../components/icons";
+import { googleCalendarService } from "../../services/googleCalendar";
 
 export const Welcome = (): JSX.Element => {
   const navigate = useNavigate();
@@ -10,11 +11,14 @@ export const Welcome = (): JSX.Element => {
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
-    // Navigate directly to calendar for OAuth flow
-    setTimeout(() => {
+    try {
+      // Initiate the actual Google OAuth 2.0 flow
+      googleCalendarService.initiateOAuth();
+    } catch (error) {
+      console.error('OAuth initiation failed:', error);
       setIsLoading(false);
-      navigate("/calendar");
-    }, 500);
+      // You could show an error message here
+    }
   };
 
   const handleSignIn = () => {
