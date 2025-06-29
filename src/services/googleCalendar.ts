@@ -93,9 +93,9 @@ class GoogleCalendarService {
     
     // Add a small delay to ensure console logs are visible
     setTimeout(() => {
-      console.log('Redirecting to Google OAuth in 2 seconds...');
+      console.log('Redirecting to Google OAuth...');
       window.location.href = authUrl.toString();
-    }, 2000);
+    }, 1000);
   }
 
   async handleOAuthCallback(code: string): Promise<boolean> {
