@@ -60,7 +60,8 @@ class GoogleCalendarService {
       clientId: this.CLIENT_ID ? 'Set' : 'Not set',
       clientSecret: this.CLIENT_SECRET ? 'Set' : 'Not set',
       redirectUri: this.REDIRECT_URI,
-      currentOrigin: window.location.origin
+      currentOrigin: window.location.origin,
+      currentUrl: window.location.href
     });
   }
 
@@ -83,16 +84,18 @@ class GoogleCalendarService {
     authUrl.searchParams.set('prompt', 'consent');
     authUrl.searchParams.set('include_granted_scopes', 'true');
     
-    console.log('OAuth Configuration Debug:', {
-      clientId: this.CLIENT_ID,
-      redirectUri: this.REDIRECT_URI,
-      currentUrl: window.location.href,
-      authUrl: authUrl.toString()
-    });
+    console.log('=== OAuth Debug Information ===');
+    console.log('Client ID:', this.CLIENT_ID);
+    console.log('Redirect URI:', this.REDIRECT_URI);
+    console.log('Current URL:', window.location.href);
+    console.log('Auth URL:', authUrl.toString());
+    console.log('================================');
     
-    // Use direct navigation instead of popup for better compatibility
-    console.log('Redirecting to Google OAuth...');
-    window.location.href = authUrl.toString();
+    // Add a small delay to ensure console logs are visible
+    setTimeout(() => {
+      console.log('Redirecting to Google OAuth in 2 seconds...');
+      window.location.href = authUrl.toString();
+    }, 2000);
   }
 
   async handleOAuthCallback(code: string): Promise<boolean> {
