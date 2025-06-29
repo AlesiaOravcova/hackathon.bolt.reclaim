@@ -8,7 +8,7 @@ import { HomeIndicator } from "../../components/ui/HomeIndicator";
 
 export const OnboardingStep2 = (): JSX.Element => {
   const navigate = useNavigate();
-  const [selectedOption, setSelectedOption] = useState<string>("");
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [customText, setCustomText] = useState<string>("");
 
   const options = [
@@ -20,25 +20,32 @@ export const OnboardingStep2 = (): JSX.Element => {
     "Something else (please specify)"
   ];
 
-  const handleOptionSelect = (option: string) => {
-    setSelectedOption(option);
-    // If selecting a different option, hide the input but keep the text
-    if (option !== "Something else (please specify)") {
-      // Don't clear customText, just hide the input
-    }
+  const toggleOption = (option: string) => {
+    setSelectedOptions(prev => 
+      prev.includes(option)
+        ? prev.filter(item => item !== option)
+        : [...prev, option]
+    );
   };
 
   const handleNext = () => {
-    if (selectedOption && (selectedOption !== "Something else (please specify)" || customText.trim())) {
+    if (selectedOptions.length > 0) {
+      // If "Something else" is selected, make sure there's custom text
+      if (selectedOptions.includes("Something else (please specify)") && !customText.trim()) {
+        return;
+      }
       navigate("/onboarding/step3");
     }
   };
 
   const isNextEnabled = () => {
-    if (!selectedOption) return false;
-    if (selectedOption === "Something else (please specify)") {
+    if (selectedOptions.length === 0) return false;
+    
+    // If "Something else" is selected, require custom text
+    if (selectedOptions.includes("Something else (please specify)")) {
       return customText.trim().length > 0;
     }
+    
     return true;
   };
 
@@ -79,9 +86,13 @@ export const OnboardingStep2 = (): JSX.Element => {
           transition={{ delay: 0.1 }}
           className="px-6 pb-6"
         >
-          <h2 className="text-[22px] font-normal text-gray-900 mb-10 leading-[28px] tracking-[-0.45px]">
+          <h2 className="text-[22px] font-normal text-gray-900 mb-4 leading-[28px] tracking-[-0.45px]">
             What makes it hardest for you to take time for yourself lately?
           </h2>
+          
+          <p className="text-sm text-gray-600 mb-8">
+            Select all that apply
+          </p>
 
           <div className="space-y-6">
             {options.map((option, index) => (
@@ -96,30 +107,32 @@ export const OnboardingStep2 = (): JSX.Element => {
                     stiffness: 400,
                     damping: 17
                   }}
-                  onClick={() => handleOptionSelect(option)}
-                  className={`w-full h-[54px] rounded-[16px] border-2 text-left transition-none pointer-events-auto ${
-                    selectedOption === option
+                  onClick={() => toggleOption(option)}
+                  className={`w-full min-h-[54px] rounded-[16px] border-2 text-left transition-none pointer-events-auto ${
+                    selectedOptions.includes(option)
                       ? "border-blue-500 bg-blue-50"
                       : "border-gray-200 bg-white"
                   }`}
                 >
-                  <div className="flex items-center gap-3 px-4">
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                      selectedOption === option
+                  <div className="flex items-center gap-3 px-4 py-3">
+                    <div className={`w-5 h-5 rounded border flex items-center justify-center flex-shrink-0 ${
+                      selectedOptions.includes(option)
                         ? "border-blue-500 bg-blue-500"
                         : "border-gray-300"
                     }`}>
-                      {selectedOption === option && (
-                        <div className="w-2 h-2 bg-white rounded-full"></div>
+                      {selectedOptions.includes(option) && (
+                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                        </svg>
                       )}
                     </div>
-                    <span className="text-gray-900 font-medium">{option}</span>
+                    <span className="text-gray-900 font-medium leading-relaxed">{option}</span>
                   </div>
                 </motion.button>
 
                 {/* Conditional Input Field */}
                 <AnimatePresence>
-                  {selectedOption === option && option === "Something else (please specify)" && (
+                  {selectedOptions.includes(option) && option === "Something else (please specify)" && (
                     <motion.div
                       initial={{ opacity: 0, height: 0, marginTop: 0 }}
                       animate={{ opacity: 1, height: "auto", marginTop: 16 }}
