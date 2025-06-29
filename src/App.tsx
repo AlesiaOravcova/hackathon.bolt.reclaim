@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import { ProtectedRoute } from "./components/auth";
 import { Welcome } from "./screens/Welcome";
 import { Dashboard } from "./screens/Dashboard";
 import { Profile } from "./screens/Profile";
@@ -17,11 +18,29 @@ export const App = (): JSX.Element => {
         <Route path="/onboarding/step2" element={<OnboardingStep2 />} />
         <Route path="/onboarding/step3" element={<OnboardingStep3 />} />
         <Route path="/onboarding/step4" element={<OnboardingStep4 />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/schedule" element={<Schedule />} />
-        <Route path="/calendar" element={<CalendarIntegration />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
+        
+        {/* Protected Routes */}
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        } />
+        <Route path="/schedule" element={
+          <ProtectedRoute>
+            <Schedule />
+          </ProtectedRoute>
+        } />
+        <Route path="/calendar" element={
+          <ProtectedRoute>
+            <CalendarIntegration />
+          </ProtectedRoute>
+        } />
       </Routes>
     </div>
   );
