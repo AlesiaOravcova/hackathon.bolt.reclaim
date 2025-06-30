@@ -15,9 +15,9 @@ export const Dashboard = (): JSX.Element => {
   const [selectedActivity, setSelectedActivity] = useState<string>("");
 
   const todayActivities = [
-    { time: "9–9:15am", title: "🧘 Morning Meditation"},
-    { time: "12:30 PM", title: "🚶 Lunch Break Walk", duration: "20 min", type: "exercise" },
-    { time: "6:00 PM", title: "🧘 Evening Yoga", duration: "30 min", type: "exercise" },
+    { time: "9:00–9:15am", title: "🧘 Morning Meditation"},
+    { time: "12:30–1:00PM", title: "🚶 Lunch Break Walk"},
+    { time: "8:15–8:45PM", title: "🧘 Evening Yoga"},
   ];
 
   const weeklyStats = [
