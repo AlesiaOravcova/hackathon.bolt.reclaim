@@ -68,36 +68,6 @@ export const Dashboard = (): JSX.Element => {
           </div>
         </motion.div>
 
-        {/* Calendar Integration Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="px-6 py-4"
-        >
-          <div className="bg-gradient-to-r from-green-500 to-teal-600 rounded-3xl p-6 text-white">
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold mb-2">Connect Your Calendar</h3>
-                <p className="text-green-100 text-sm mb-4">
-                  Sync with Google Calendar to automatically find time for your wellness activities
-                </p>
-                <Button
-                  onClick={() => navigate("/calendar")}
-                  className="bg-white text-green-600 hover:bg-green-50 font-semibold px-4 py-2 rounded-xl"
-                >
-                  Connect Now
-                </Button>
-              </div>
-              <div className="w-16 h-16 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center ml-4">
-                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
         {/* Today's Schedule */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

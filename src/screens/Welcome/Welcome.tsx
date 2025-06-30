@@ -1,19 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
-import { googleCalendarService } from "../../services/googleCalendar";
 
 export const Welcome = (): JSX.Element => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    // Check if user is already authenticated
-    if (googleCalendarService.isAuthenticated()) {
-      navigate('/calendar');
-    }
-  }, [navigate]);
 
   const handleGetStarted = () => {
     setIsLoading(true);
@@ -199,8 +191,7 @@ export const Welcome = (): JSX.Element => {
 
           {/* Privacy notice */}
           <p className="text-xs text-gray-500 text-center leading-relaxed">
-            By continuing, you agree to our Terms of Service and Privacy Policy. 
-            You can connect your Google Calendar later for automatic scheduling.
+            By continuing, you agree to our Terms of Service and Privacy Policy.
           </p>
         </motion.div>
       </div>
