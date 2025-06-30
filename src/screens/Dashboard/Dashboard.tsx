@@ -39,9 +39,18 @@ export const Dashboard = (): JSX.Element => {
         >
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-4xl font-medium text-gray-900">Good morning Elizabeth!</h1>
-              <p className="text-gray-600">Ready for your me time?</p>
-            </div>
+              <h1 className="text-4xl font-medium text-gray-900 leading-tight">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+              Good morning
+            </span>     
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+              Elizabeth
+            </span>
+          </h1>
+
+
+
+
             <button
               onClick={() => navigate("/profile")}
               className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center hidden"
