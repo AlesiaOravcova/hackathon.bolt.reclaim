@@ -202,7 +202,7 @@ export const Dashboard = (): JSX.Element => {
                         </span>
                       </div>
                       <h3 className="font-semibold text-gray-900 mb-1">
-                        Spa Treatment
+                        🌸 Spa Treatment
                       </h3>
                       <p className="text-sm text-gray-600 mb-3 leading-relaxed">
                         You've been doing great with your wellness routine. How about scheduling some pampering time this weekend?
