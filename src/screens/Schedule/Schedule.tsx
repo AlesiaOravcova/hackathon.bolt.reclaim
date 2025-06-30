@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { TabBar } from "../../components/TabBar";
 import { StatusBar } from "../../components/StatusBar";
+import { monthlySchedule, getActivitiesForDate } from "../../data/scheduleData";
+import { format, addDays, startOfWeek } from "date-fns";
 
 export const Schedule = (): JSX.Element => {
   const navigate = useNavigate();
@@ -16,14 +18,69 @@ export const Schedule = (): JSX.Element => {
     return date;
   });
 
-  const scheduleData = [
-    { time: "8:00 AM", title: "Morning Meditation", duration: "15 min", completed: true },
-    { time: "9:30 AM", title: "Gratitude Journal", duration: "10 min", completed: true },
-    { time: "12:30 PM", title: "Mindful Lunch Break", duration: "20 min", completed: false },
-    { time: "3:00 PM", title: "Breathing Exercise", duration: "10 min", completed: false },
-    { time: "5:30 PM", title: "Evening Walk", duration: "25 min", completed: false },
-    { time: "8:00 PM", title: "Yoga Session", duration: "30 min", completed: false },
-  ];
+  // Get activities for the selected date
+  const scheduleData = getActivitiesForDate(monthlySchedule, selectedDate);
+
+  // Get activity icon based on type
+  const getActivityIcon = (type: string) => {
+    switch (type) {
+      case 'mindfulness':
+        return (
+          <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+        );
+      case 'exercise':
+        return (
+          <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/>
+          </svg>
+        );
+      case 'nutrition':
+        return (
+          <svg className="w-6 h-6 text-orange-600" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+        );
+      case 'sleep':
+        return (
+          <svg className="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+          </svg>
+        );
+      case 'social':
+        return (
+          <svg className="w-6 h-6 text-pink-600" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zM4 18v-4h3v-2c0-1.1.9-2 2-2h2c1.1 0 2 .9 2 2v2h3v4H4z"/>
+          </svg>
+        );
+      case 'creative':
+        return (
+          <svg className="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+        );
+      default:
+        return (
+          <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+        );
+    }
+  };
+
+  // Get activity background color based on type
+  const getActivityBgColor = (type: string) => {
+    switch (type) {
+      case 'mindfulness': return 'bg-purple-100';
+      case 'exercise': return 'bg-green-100';
+      case 'nutrition': return 'bg-orange-100';
+      case 'sleep': return 'bg-indigo-100';
+      case 'social': return 'bg-pink-100';
+      case 'creative': return 'bg-yellow-100';
+      default: return 'bg-blue-100';
+    }
+  };
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]">
@@ -101,66 +158,83 @@ export const Schedule = (): JSX.Element => {
             </span>
           </div>
 
-          <div className="space-y-3">
-            {scheduleData.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 * index }}
-                className={`bg-white rounded-2xl p-4 shadow-sm border ${
-                  item.completed ? "border-green-200 bg-green-50" : "border-gray-100"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                      item.completed 
-                        ? "bg-green-100" 
-                        : "bg-blue-100"
-                    }`}>
-                      {item.completed ? (
-                        <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                        </svg>
-                      ) : (
-                        <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                      )}
-                    </div>
-                    <div>
-                      <h4 className={`font-semibold ${
-                        item.completed ? "text-green-900" : "text-gray-900"
+          {scheduleData.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">No activities scheduled</h3>
+              <p className="text-gray-600 mb-4">This day is free for spontaneous wellness activities</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {scheduleData.map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 * index }}
+                  className={`bg-white rounded-2xl p-4 shadow-sm border ${
+                    item.completed ? "border-green-200 bg-green-50" : "border-gray-100"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                        item.completed 
+                          ? "bg-green-100" 
+                          : getActivityBgColor(item.type)
                       }`}>
-                        {item.title}
-                      </h4>
-                      <p className={`text-sm ${
-                        item.completed ? "text-green-600" : "text-gray-500"
-                      }`}>
-                        {item.time} • {item.duration}
-                      </p>
+                        {item.completed ? (
+                          <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                          </svg>
+                        ) : (
+                          getActivityIcon(item.type)
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <h4 className={`font-semibold ${
+                          item.completed ? "text-green-900" : "text-gray-900"
+                        }`}>
+                          {item.title}
+                        </h4>
+                        <p className={`text-sm ${
+                          item.completed ? "text-green-600" : "text-gray-500"
+                        }`}>
+                          {item.time} • {item.duration}
+                        </p>
+                        {item.description && (
+                          <p className={`text-xs mt-1 ${
+                            item.completed ? "text-green-600" : "text-gray-500"
+                          }`}>
+                            {item.description}
+                          </p>
+                        )}
+                      </div>
                     </div>
+                    
+                    {!item.completed && (
+                      <Button
+                        size="sm"
+                        className="bg-blue-600 text-white rounded-full px-4 py-2"
+                      >
+                        Start
+                      </Button>
+                    )}
+                    
+                    {item.completed && (
+                      <div className="text-green-600 font-semibold text-sm">
+                        Completed
+                      </div>
+                    )}
                   </div>
-                  
-                  {!item.completed && (
-                    <Button
-                      size="sm"
-                      className="bg-blue-600 text-white rounded-full px-4 py-2"
-                    >
-                      Start
-                    </Button>
-                  )}
-                  
-                  {item.completed && (
-                    <div className="text-green-600 font-semibold text-sm">
-                      Completed
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
 
           {/* Add Activity Button */}
           <motion.div
