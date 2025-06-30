@@ -19,6 +19,7 @@ export interface UseFirebaseGoogleCalendarReturn {
   deleteEvent: (calendarId: string, eventId: string) => Promise<boolean>;
   signOut: () => Promise<void>;
   refreshEvents: () => Promise<void>;
+  clearError: () => void;
 }
 
 export const useFirebaseGoogleCalendar = (): UseFirebaseGoogleCalendarReturn => {
@@ -47,6 +48,10 @@ export const useFirebaseGoogleCalendar = (): UseFirebaseGoogleCalendarReturn => 
     }
   }, []);
 
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
   const signInWithGoogle = useCallback(async (): Promise<boolean> => {
     setIsLoading(true);
     setError(null);
@@ -58,8 +63,8 @@ export const useFirebaseGoogleCalendar = (): UseFirebaseGoogleCalendarReturn => 
         setIsAuthenticated(true);
       }
       return success;
-    } catch (error) {
-      setError('Authentication failed. Please try again.');
+    } catch (error: any) {
+      setError(error.message || 'Authentication failed. Please try again.');
       return false;
     } finally {
       setIsLoading(false);
@@ -87,8 +92,8 @@ export const useFirebaseGoogleCalendar = (): UseFirebaseGoogleCalendarReturn => 
           localStorage.setItem('selected_calendars', JSON.stringify([primaryCalendar.id]));
         }
       }
-    } catch (error) {
-      setError('Failed to fetch calendars');
+    } catch (error: any) {
+      setError(error.message || 'Failed to fetch calendars');
       console.error('Fetch calendars error:', error);
     } finally {
       setIsLoading(false);
@@ -106,8 +111,8 @@ export const useFirebaseGoogleCalendar = (): UseFirebaseGoogleCalendarReturn => 
     try {
       const eventList = await firebaseGoogleCalendarService.getEvents(selectedCalendars, timeMin, timeMax);
       setEvents(eventList);
-    } catch (error) {
-      setError('Failed to fetch events');
+    } catch (error: any) {
+      setError(error.message || 'Failed to fetch events');
       console.error('Fetch events error:', error);
     } finally {
       setIsLoading(false);
@@ -142,8 +147,8 @@ export const useFirebaseGoogleCalendar = (): UseFirebaseGoogleCalendarReturn => 
       }));
       
       return createdEvent;
-    } catch (error) {
-      setError('Failed to create event');
+    } catch (error: any) {
+      setError(error.message || 'Failed to create event');
       console.error('Create event error:', error);
       return null;
     } finally {
@@ -171,8 +176,8 @@ export const useFirebaseGoogleCalendar = (): UseFirebaseGoogleCalendarReturn => 
       setEvents(prev => prev.map(e => e.id === eventId ? updatedEvent : e));
       
       return updatedEvent;
-    } catch (error) {
-      setError('Failed to update event');
+    } catch (error: any) {
+      setError(error.message || 'Failed to update event');
       console.error('Update event error:', error);
       return null;
     } finally {
@@ -196,8 +201,8 @@ export const useFirebaseGoogleCalendar = (): UseFirebaseGoogleCalendarReturn => 
       setEvents(prev => prev.filter(e => e.id !== eventId));
       
       return true;
-    } catch (error) {
-      setError('Failed to delete event');
+    } catch (error: any) {
+      setError(error.message || 'Failed to delete event');
       console.error('Delete event error:', error);
       return false;
     } finally {
@@ -206,14 +211,17 @@ export const useFirebaseGoogleCalendar = (): UseFirebaseGoogleCalendarReturn => 
   }, []);
 
   const signOut = useCallback(async (): Promise<void> => {
-    await firebaseGoogleCalendarService.signOut();
-    setIsAuthenticated(false);
-    setUser(null);
-    setCalendars([]);
-    setEvents([]);
-    setSelectedCalendars([]);
-    setError(null);
-    localStorage.removeItem('selected_calendars');
+    try {
+      await firebaseGoogleCalendarService.signOut();
+      setIsAuthenticated(false);
+      setUser(null);
+      setCalendars([]);
+      setEvents([]);
+      setSelectedCalendars([]);
+      setError(null);
+    } catch (error: any) {
+      setError(error.message || 'Failed to sign out');
+    }
   }, []);
 
   const refreshEvents = useCallback(async (): Promise<void> => {
@@ -237,5 +245,6 @@ export const useFirebaseGoogleCalendar = (): UseFirebaseGoogleCalendarReturn => 
     deleteEvent,
     signOut,
     refreshEvents,
+    clearError,
   };
 };

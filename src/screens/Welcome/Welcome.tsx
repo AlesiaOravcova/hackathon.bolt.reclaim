@@ -3,22 +3,49 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { GoogleIcon } from "../../components/icons";
+import { firebaseGoogleCalendarService } from "../../services/firebaseGoogleCalendar";
 
 export const Welcome = (): JSX.Element => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
-    // Simulate authentication
-    setTimeout(() => {
+    setError(null);
+    
+    try {
+      const success = await firebaseGoogleCalendarService.signInWithGoogle();
+      
+      if (success) {
+        // Check if user is new or returning
+        const user = firebaseGoogleCalendarService.getCurrentUser();
+        
+        if (user) {
+          // For new users, go to onboarding
+          // For returning users, go directly to dashboard
+          // You can check user metadata or store this info in your database
+          const isNewUser = user.metadata.creationTime === user.metadata.lastSignInTime;
+          
+          if (isNewUser) {
+            navigate("/onboarding/step1");
+          } else {
+            navigate("/dashboard");
+          }
+        }
+      } else {
+        setError("Failed to sign in with Google. Please try again.");
+      }
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+      setError("An error occurred during sign-in. Please try again.");
+    } finally {
       setIsLoading(false);
-      navigate("/onboarding/step1");
-    }, 1500);
+    }
   };
 
   const handleSignIn = () => {
-    // Navigate to sign in flow (for now, just go to dashboard)
+    // For existing users who want to sign in manually
     navigate("/dashboard");
   };
 
@@ -177,23 +204,48 @@ export const Welcome = (): JSX.Element => {
           transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
           className="flex flex-col gap-3 pb-2"
         >
+          {/* Error message */}
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm text-center"
+            >
+              {error}
+            </motion.div>
+          )}
+
           <Button
             onClick={handleGoogleSignIn}
             disabled={isLoading}
             variant="outline"
-            className="flex h-12 items-center justify-center gap-3 bg-white border-2 border-gray-200 text-gray-900 rounded-2xl font-semibold text-base shadow-lg active:scale-95 transition-all duration-200"
+            className="flex h-12 items-center justify-center gap-3 bg-white border-2 border-gray-200 text-gray-900 rounded-2xl font-semibold text-base shadow-lg active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <GoogleIcon className="w-5 h-5" />
-            {isLoading ? "Signing in..." : "Continue with Google"}
+            {isLoading ? (
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                Signing in...
+              </div>
+            ) : (
+              "Continue with Google"
+            )}
           </Button>
 
           {/* Sign in link */}
           <button
             onClick={handleSignIn}
-            className="text-blue-600 font-medium text-center py-1 active:scale-95 transition-all duration-200"
+            disabled={isLoading}
+            className="text-blue-600 font-medium text-center py-1 active:scale-95 transition-all duration-200 disabled:opacity-50"
           >
             Already have an account? Sign in
           </button>
+
+          {/* Privacy notice */}
+          <p className="text-xs text-gray-500 text-center leading-relaxed">
+            By continuing, you agree to our Terms of Service and Privacy Policy. 
+            We'll access your Google Calendar to help schedule your wellness time.
+          </p>
         </motion.div>
       </div>
     </div>

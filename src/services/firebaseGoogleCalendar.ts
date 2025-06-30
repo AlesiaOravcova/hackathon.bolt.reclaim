@@ -1,4 +1,4 @@
-import { signInWithPopup, signOut as firebaseSignOut, User } from 'firebase/auth';
+import { signInWithPopup, signOut as firebaseSignOut, User, GoogleAuthProvider, getAdditionalUserInfo } from 'firebase/auth';
 import { auth, googleProvider } from './firebaseConfig';
 
 export interface CalendarEvent {
@@ -44,11 +44,26 @@ class FirebaseGoogleCalendarService {
     // Listen for auth state changes
     auth.onAuthStateChanged((user) => {
       this.user = user;
+      if (user) {
+        // Try to get the access token from the user's auth result
+        this.refreshAccessToken();
+      }
     });
   }
 
   async signInWithGoogle(): Promise<boolean> {
     try {
+      // Configure the Google provider with additional scopes
+      googleProvider.addScope('https://www.googleapis.com/auth/calendar');
+      googleProvider.addScope('https://www.googleapis.com/auth/calendar.events');
+      googleProvider.addScope('https://www.googleapis.com/auth/calendar.readonly');
+      
+      // Set custom parameters for better UX
+      googleProvider.setCustomParameters({
+        prompt: 'select_account',
+        access_type: 'offline',
+      });
+
       const result = await signInWithPopup(auth, googleProvider);
       this.user = result.user;
       
@@ -56,10 +71,36 @@ class FirebaseGoogleCalendarService {
       const credential = GoogleAuthProvider.credentialFromResult(result);
       this.accessToken = credential?.accessToken || null;
       
+      // Check if this is a new user
+      const additionalUserInfo = getAdditionalUserInfo(result);
+      const isNewUser = additionalUserInfo?.isNewUser || false;
+      
+      // Store user info in localStorage for persistence
+      if (this.accessToken) {
+        localStorage.setItem('google_access_token', this.accessToken);
+        localStorage.setItem('user_info', JSON.stringify({
+          uid: this.user.uid,
+          email: this.user.email,
+          displayName: this.user.displayName,
+          photoURL: this.user.photoURL,
+          isNewUser
+        }));
+      }
+      
       return true;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error signing in with Google:', error);
-      return false;
+      
+      // Handle specific error cases
+      if (error.code === 'auth/popup-closed-by-user') {
+        throw new Error('Sign-in was cancelled. Please try again.');
+      } else if (error.code === 'auth/popup-blocked') {
+        throw new Error('Pop-up was blocked. Please allow pop-ups and try again.');
+      } else if (error.code === 'auth/network-request-failed') {
+        throw new Error('Network error. Please check your connection and try again.');
+      } else {
+        throw new Error('Failed to sign in with Google. Please try again.');
+      }
     }
   }
 
@@ -68,8 +109,14 @@ class FirebaseGoogleCalendarService {
       await firebaseSignOut(auth);
       this.user = null;
       this.accessToken = null;
+      
+      // Clear stored tokens and user info
+      localStorage.removeItem('google_access_token');
+      localStorage.removeItem('user_info');
+      localStorage.removeItem('selected_calendars');
     } catch (error) {
       console.error('Error signing out:', error);
+      throw new Error('Failed to sign out. Please try again.');
     }
   }
 
@@ -77,12 +124,20 @@ class FirebaseGoogleCalendarService {
     return !!this.user && !!this.accessToken;
   }
 
+  private async refreshAccessToken(): Promise<void> {
+    // Try to get token from localStorage first
+    const storedToken = localStorage.getItem('google_access_token');
+    if (storedToken && this.user) {
+      this.accessToken = storedToken;
+    }
+  }
+
   private async makeAuthenticatedRequest(url: string, options: RequestInit = {}): Promise<Response> {
     if (!this.accessToken) {
-      throw new Error('No access token available');
+      throw new Error('No access token available. Please sign in again.');
     }
 
-    return fetch(url, {
+    const response = await fetch(url, {
       ...options,
       headers: {
         ...options.headers,
@@ -90,6 +145,13 @@ class FirebaseGoogleCalendarService {
         'Content-Type': 'application/json',
       },
     });
+
+    if (response.status === 401) {
+      // Token might be expired, try to refresh
+      throw new Error('Authentication expired. Please sign in again.');
+    }
+
+    return response;
   }
 
   async getCalendarList(): Promise<Calendar[]> {
@@ -278,6 +340,20 @@ class FirebaseGoogleCalendarService {
 
   getCurrentUser(): User | null {
     return this.user;
+  }
+
+  // Helper method to check if user is new
+  isNewUser(): boolean {
+    const userInfo = localStorage.getItem('user_info');
+    if (userInfo) {
+      try {
+        const parsed = JSON.parse(userInfo);
+        return parsed.isNewUser || false;
+      } catch {
+        return false;
+      }
+    }
+    return false;
   }
 }
 
