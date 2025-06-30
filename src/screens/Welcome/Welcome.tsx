@@ -50,7 +50,7 @@ export const Welcome = (): JSX.Element => {
         <img 
           src="/ReclaimLogo.svg" 
           alt="Reclaim" 
-          className="h-16 w-auto"
+          className="h-12 w-auto"
         />
       </motion.div>
 
