@@ -4,11 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { TabBar } from "../../components/TabBar";
 import { StatusBar } from "../../components/StatusBar";
-import { gabieSchedule, getActivitiesForDate } from "../../data/scheduleData";
+import { WeeklyScheduleView } from "../../components/WeeklySchedule";
+import { gabieSchedule, getActivitiesForDate, ScheduleActivity } from "../../data/scheduleData";
 import { format, parseISO, startOfWeek, addDays } from "date-fns";
 
 export const Schedule = (): JSX.Element => {
   const navigate = useNavigate();
+  const [viewMode, setViewMode] = useState<'weekly' | 'daily'>('weekly');
   const [selectedDate, setSelectedDate] = useState(new Date('2024-07-01')); // Start with Monday July 1st
 
   // Create week starting from June 29th (Saturday) to July 5th (Friday)
@@ -21,6 +23,11 @@ export const Schedule = (): JSX.Element => {
   });
 
   const scheduleData = getActivitiesForDate(format(selectedDate, 'yyyy-MM-dd'));
+
+  const handleActivityClick = (activity: ScheduleActivity) => {
+    console.log('Activity clicked:', activity);
+    // You can add more functionality here, like opening a modal or navigating to details
+  };
 
   const getActivityIcon = (type: string) => {
     switch (type) {
@@ -83,6 +90,121 @@ export const Schedule = (): JSX.Element => {
     return getActivitiesForDate(dateStr).length;
   };
 
+  const renderDailyView = () => (
+    <div className="px-6 py-4 mb-20">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-bold text-gray-900">
+          {format(selectedDate, 'EEEE, MMMM d')}
+          {format(selectedDate, 'yyyy-MM-dd') === '2024-07-04' && (
+            <span className="ml-2 text-sm bg-red-100 text-red-600 px-2 py-1 rounded-full">
+              🇺🇸 Independence Day
+            </span>
+          )}
+        </h3>
+        <span className="text-sm text-gray-500">
+          {scheduleData.filter(item => item.completed).length} of {scheduleData.length} completed
+        </span>
+      </div>
+
+      {scheduleData.length === 0 ? (
+        <div className="text-center py-8">
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">No activities scheduled</h3>
+          <p className="text-gray-600">This day is free for spontaneous activities!</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {scheduleData.map((item, index) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 * index }}
+              className={`bg-white rounded-2xl p-4 shadow-sm border-2 ${
+                item.completed 
+                  ? "border-green-200 bg-green-50" 
+                  : getActivityColor(item.type)
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                    item.completed 
+                      ? "bg-green-100" 
+                      : "bg-white"
+                  }`}>
+                    {item.completed ? (
+                      <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                      </svg>
+                    ) : (
+                      getActivityIcon(item.type)
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <h4 className={`font-semibold ${
+                      item.completed ? "text-green-900" : "text-gray-900"
+                    }`}>
+                      {item.title}
+                    </h4>
+                    <p className={`text-sm ${
+                      item.completed ? "text-green-600" : "text-gray-500"
+                    }`}>
+                      {item.time} • {item.duration}
+                      {item.location && ` • ${item.location}`}
+                    </p>
+                    {item.description && (
+                      <p className={`text-xs mt-1 ${
+                        item.completed ? "text-green-700" : "text-gray-600"
+                      }`}>
+                        {item.description}
+                      </p>
+                    )}
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                        item.type === 'wellness' ? 'bg-purple-100 text-purple-700' :
+                        item.type === 'work' ? 'bg-blue-100 text-blue-700' :
+                        item.type === 'family' ? 'bg-green-100 text-green-700' :
+                        item.type === 'personal' ? 'bg-orange-100 text-orange-700' :
+                        'bg-gray-100 text-gray-700'
+                      }`}>
+                        {item.type}
+                      </span>
+                      {item.priority === 'high' && (
+                        <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-700 font-medium">
+                          High Priority
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                
+                {!item.completed && (
+                  <Button
+                    size="sm"
+                    className="bg-blue-600 text-white rounded-full px-4 py-2 hover:bg-blue-700"
+                  >
+                    Start
+                  </Button>
+                )}
+                
+                {item.completed && (
+                  <div className="text-green-600 font-semibold text-sm">
+                    ✓ Done
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]">
       <StatusBar />
@@ -109,186 +231,80 @@ export const Schedule = (): JSX.Element => {
             </div>
           </div>
 
-          {/* Week Calendar */}
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">This Week</h2>
-            <div className="text-sm text-gray-500">
-              Working mom with 2 middle schoolers
-            </div>
+          {/* View Toggle */}
+          <div className="flex bg-gray-100 rounded-xl p-1 mb-4">
+            <button
+              onClick={() => setViewMode('weekly')}
+              className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all ${
+                viewMode === 'weekly'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              📅 Weekly View
+            </button>
+            <button
+              onClick={() => setViewMode('daily')}
+              className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all ${
+                viewMode === 'daily'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              📋 Daily View
+            </button>
           </div>
 
-          <div className="flex gap-2">
-            {currentWeek.map((date, index) => {
-              const isSelected = format(date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
-              const completedCount = getCompletedCount(date);
-              const totalCount = getTotalCount(date);
-              
-              return (
-                <button
-                  key={index}
-                  onClick={() => setSelectedDate(date)}
-                  className={`flex-1 py-3 px-2 rounded-2xl transition-all ${
-                    isSelected
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  <div className="text-xs font-medium mb-1">{weekDays[index]}</div>
-                  <div className="text-lg font-bold mb-1">{date.getDate()}</div>
-                  <div className="text-xs">
-                    {completedCount}/{totalCount}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+          {/* Week Calendar - Only show in daily view */}
+          {viewMode === 'daily' && (
+            <>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-gray-900">This Week</h2>
+                <div className="text-sm text-gray-500">
+                  Working mom with 2 middle schoolers
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                {currentWeek.map((date, index) => {
+                  const isSelected = format(date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
+                  const completedCount = getCompletedCount(date);
+                  const totalCount = getTotalCount(date);
+                  
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedDate(date)}
+                      className={`flex-1 py-3 px-2 rounded-2xl transition-all ${
+                        isSelected
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      }`}
+                    >
+                      <div className="text-xs font-medium mb-1">{weekDays[index]}</div>
+                      <div className="text-lg font-bold mb-1">{date.getDate()}</div>
+                      <div className="text-xs">
+                        {completedCount}/{totalCount}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </motion.div>
 
-        {/* Schedule List */}
+        {/* Content */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="px-6 py-4 mb-20"
         >
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold text-gray-900">
-              {format(selectedDate, 'EEEE, MMMM d')}
-              {format(selectedDate, 'yyyy-MM-dd') === '2024-07-04' && (
-                <span className="ml-2 text-sm bg-red-100 text-red-600 px-2 py-1 rounded-full">
-                  🇺🇸 Independence Day
-                </span>
-              )}
-            </h3>
-            <span className="text-sm text-gray-500">
-              {scheduleData.filter(item => item.completed).length} of {scheduleData.length} completed
-            </span>
-          </div>
-
-          {scheduleData.length === 0 ? (
-            <div className="text-center py-8">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No activities scheduled</h3>
-              <p className="text-gray-600">This day is free for spontaneous activities!</p>
-            </div>
+          {viewMode === 'weekly' ? (
+            <WeeklyScheduleView onActivityClick={handleActivityClick} />
           ) : (
-            <div className="space-y-3">
-              {scheduleData.map((item, index) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 * index }}
-                  className={`bg-white rounded-2xl p-4 shadow-sm border-2 ${
-                    item.completed 
-                      ? "border-green-200 bg-green-50" 
-                      : getActivityColor(item.type)
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                        item.completed 
-                          ? "bg-green-100" 
-                          : "bg-white"
-                      }`}>
-                        {item.completed ? (
-                          <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                          </svg>
-                        ) : (
-                          getActivityIcon(item.type)
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <h4 className={`font-semibold ${
-                          item.completed ? "text-green-900" : "text-gray-900"
-                        }`}>
-                          {item.title}
-                        </h4>
-                        <p className={`text-sm ${
-                          item.completed ? "text-green-600" : "text-gray-500"
-                        }`}>
-                          {item.time} • {item.duration}
-                          {item.location && ` • ${item.location}`}
-                        </p>
-                        {item.description && (
-                          <p className={`text-xs mt-1 ${
-                            item.completed ? "text-green-700" : "text-gray-600"
-                          }`}>
-                            {item.description}
-                          </p>
-                        )}
-                        <div className="flex items-center gap-2 mt-2">
-                          <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                            item.type === 'wellness' ? 'bg-purple-100 text-purple-700' :
-                            item.type === 'work' ? 'bg-blue-100 text-blue-700' :
-                            item.type === 'family' ? 'bg-green-100 text-green-700' :
-                            item.type === 'personal' ? 'bg-orange-100 text-orange-700' :
-                            'bg-gray-100 text-gray-700'
-                          }`}>
-                            {item.type}
-                          </span>
-                          {item.priority === 'high' && (
-                            <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-700 font-medium">
-                              High Priority
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {!item.completed && (
-                      <Button
-                        size="sm"
-                        className="bg-blue-600 text-white rounded-full px-4 py-2 hover:bg-blue-700"
-                      >
-                        Start
-                      </Button>
-                    )}
-                    
-                    {item.completed && (
-                      <div className="text-green-600 font-semibold text-sm">
-                        ✓ Done
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+            renderDailyView()
           )}
-
-          {/* Weekly Summary */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="mt-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-6 text-white"
-          >
-            <h3 className="text-lg font-semibold mb-3">Gabie's Wellness Focus</h3>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <div className="font-medium">Daily Wellness</div>
-                <div className="text-purple-100">Morning meditation, mindful breaks</div>
-              </div>
-              <div>
-                <div className="font-medium">Work-Life Balance</div>
-                <div className="text-purple-100">Family time, personal care</div>
-              </div>
-              <div>
-                <div className="font-medium">Self-Care</div>
-                <div className="text-purple-100">Reading, baths, journaling</div>
-              </div>
-              <div>
-                <div className="font-medium">Family Activities</div>
-                <div className="text-purple-100">Quality time with kids</div>
-              </div>
-            </div>
-          </motion.div>
         </motion.div>
       </div>
 
