@@ -248,9 +248,6 @@ export const Schedule = (): JSX.Element => {
                       <div className="font-semibold text-xs leading-tight">
                         {event.title}
                       </div>
-                      <div className="text-xs opacity-90 mt-0.5">
-                        {event.time.replace(':00', '')} – {event.endTime.replace(':00', '')}
-                      </div>
                     </div>
                   ))}
 
