@@ -23,51 +23,21 @@ export const AuthCallback: React.FC = () => {
         }
         
         if (code) {
-          // Check if we're in a popup window
-          if (window.opener && !window.opener.closed) {
-            console.log('📨 In popup window, sending OAuth callback to main window...');
-            
-            // Send the OAuth parameters back to the main window for processing
-            window.opener.postMessage({ 
-              type: 'GOOGLE_AUTH_CALLBACK',
-              code: code,
-              state: state
-            }, window.location.origin);
-            
-            // Close the popup immediately
-            window.close();
+          // Security: Handle direct Google Calendar API OAuth callback with state verification
+          const success = await googleCalendarService.handleOAuthCallback(code, state || undefined);
+          
+          if (success) {
+            // Security: Clear URL parameters to remove sensitive data from browser history
+            window.history.replaceState({}, document.title, window.location.pathname);
+            navigate('/calendar');
             return;
           } else {
-            console.log('📨 In main window, processing OAuth callback...');
-            // We're in the main window - proceed with normal callback handling
-            const success = await googleCalendarService.handleOAuthCallback(code, state || undefined);
-            
-            if (success) {
-              console.log('✅ OAuth callback successful in main window');
-              // Security: Clear URL parameters to remove sensitive data from browser history
-              window.history.replaceState({}, document.title, window.location.pathname);
-              // Redirect to onboarding
-              navigate('/onboarding/step1');
-              return;
-            } else {
-              throw new Error('Failed to authenticate with Google Calendar');
-            }
+            throw new Error('Failed to authenticate with Google Calendar');
           }
         }
 
-        // No authentication result found
-        if (window.opener && !window.opener.closed) {
-          // We're in a popup, send error message to parent and close
-          window.opener.postMessage({ 
-            type: 'GOOGLE_AUTH_ERROR', 
-            error: 'No authentication code received' 
-          }, window.location.origin);
-          window.close();
-          return;
-        } else {
-          // We're in the main window, redirect to welcome
-          navigate('/');
-        }
+        // No authentication result found, redirect to welcome
+        navigate('/');
       } catch (error: any) {
         console.error('Auth callback error:', error);
         setError(error.message || 'Authentication failed. Please try again.');
@@ -75,20 +45,10 @@ export const AuthCallback: React.FC = () => {
         // Security: Clear any potentially sensitive URL parameters
         window.history.replaceState({}, document.title, window.location.pathname);
         
-        if (window.opener && !window.opener.closed) {
-          // We're in a popup, send error message to parent and close
-          window.opener.postMessage({ 
-            type: 'GOOGLE_AUTH_ERROR', 
-            error: error.message || 'Authentication failed' 
-          }, window.location.origin);
-          window.close();
-          return;
-        } else {
-          // We're in the main window, show error and redirect after delay
-          setTimeout(() => {
-            navigate('/');
-          }, 3000);
-        }
+        // Redirect to welcome page after showing error briefly
+        setTimeout(() => {
+          navigate('/');
+        }, 3000);
       } finally {
         setIsProcessing(false);
       }
@@ -115,11 +75,9 @@ export const AuthCallback: React.FC = () => {
             <p className="text-gray-600 mb-4">
               {error}
             </p>
-            {!window.opener && (
-              <p className="text-sm text-gray-500">
-                Redirecting you back to the welcome page...
-              </p>
-            )}
+            <p className="text-sm text-gray-500">
+              Redirecting you back to the welcome page...
+            </p>
           </div>
         </div>
       </div>

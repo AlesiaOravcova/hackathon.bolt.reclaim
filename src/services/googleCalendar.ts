@@ -81,9 +81,9 @@ class GoogleCalendarService {
     return `${window.location.origin}/auth/callback`;
   }
 
-  // OAuth 2.0 Authentication with popup window
-  async initiateOAuth(): Promise<boolean> {
-    console.log('Initiating OAuth flow with popup...');
+  // OAuth 2.0 Authentication with redirect flow
+  initiateOAuth(): void {
+    console.log('Initiating OAuth flow with redirect...');
     
     if (!this.CLIENT_ID) {
       throw new Error('Google Client ID is not configured. Please check your .env file.');
@@ -113,95 +113,15 @@ class GoogleCalendarService {
       
       if (import.meta.env.DEV) {
         console.log('OAuth URL:', authUrl);
-        console.log('Opening popup window...');
+        console.log('Redirecting to Google OAuth...');
       }
       
-      // Open popup window
-      const popup = window.open(
-        authUrl,
-        'google-oauth',
-        'width=500,height=600,scrollbars=yes,resizable=yes,status=yes,location=yes,toolbar=no,menubar=no'
-      );
-
-      if (!popup) {
-        throw new Error('Popup blocked. Please allow popups for this site and try again.');
-      }
-
-      // Wait for popup to complete authentication
-      return new Promise((resolve, reject) => {
-        const checkClosed = setInterval(() => {
-          if (popup.closed) {
-            clearInterval(checkClosed);
-            // Check if we received tokens (they would be stored during the callback)
-            if (this.isAuthenticated()) {
-              console.log('✅ Authentication successful - tokens found');
-              resolve(true);
-            } else {
-              console.log('❌ Authentication failed - no tokens found');
-              reject(new Error('Authentication was cancelled or failed.'));
-            }
-          }
-        }, 1000);
-
-        // Listen for messages from the popup (callback page will send success message)
-        const messageListener = (event: MessageEvent) => {
-          if (event.origin !== window.location.origin) return;
-          
-          if (event.data.type === 'GOOGLE_AUTH_CALLBACK') {
-            console.log('📨 Received auth callback message:', event.data);
-            console.log('🔐 State from callback:', event.data.state);
-            
-            // Handle the OAuth callback in the main window with proper state verification
-            clearInterval(checkClosed);
-            window.removeEventListener('message', messageListener);
-            popup.close();
-            
-            // Process the OAuth callback
-            this.handleOAuthCallback(event.data.code, event.data.state)
-              .then((success) => {
-                if (success) {
-                  console.log('✅ OAuth callback processed successfully');
-                  resolve(true);
-                } else {
-                  console.log('❌ OAuth callback processing failed');
-                  reject(new Error('Failed to authenticate with Google Calendar'));
-                }
-              })
-              .catch((error) => {
-                console.error('❌ OAuth callback error:', error);
-                reject(error);
-              });
-          } else if (event.data.type === 'GOOGLE_AUTH_SUCCESS') {
-            console.log('✅ Received auth success message');
-            clearInterval(checkClosed);
-            window.removeEventListener('message', messageListener);
-            popup.close();
-            resolve(true);
-          } else if (event.data.type === 'GOOGLE_AUTH_ERROR') {
-            console.error('❌ Received auth error message:', event.data.error);
-            clearInterval(checkClosed);
-            window.removeEventListener('message', messageListener);
-            popup.close();
-            reject(new Error(event.data.error || 'Authentication failed'));
-          }
-        };
-
-        window.addEventListener('message', messageListener);
-
-        // Timeout after 5 minutes
-        setTimeout(() => {
-          clearInterval(checkClosed);
-          window.removeEventListener('message', messageListener);
-          if (!popup.closed) {
-            popup.close();
-          }
-          reject(new Error('Authentication timeout. Please try again.'));
-        }, 5 * 60 * 1000);
-      });
+      // Redirect to Google OAuth
+      window.location.href = authUrl;
       
     } catch (error) {
       console.error('Error creating OAuth URL:', error);
-      throw error;
+      throw new Error(`Failed to create OAuth URL: ${error}`);
     }
   }
 

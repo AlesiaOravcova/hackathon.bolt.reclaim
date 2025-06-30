@@ -3,15 +3,34 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { GoogleIcon } from "../../components/icons";
-import { useGoogleCalendar } from "../../hooks/useGoogleCalendar";
+import { googleCalendarService } from "../../services/googleCalendar";
 
 export const Welcome = (): JSX.Element => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const { initiateAuth, error } = useGoogleCalendar();
+  const [error, setError] = useState<string | null>(null);
+  const [debugInfo, setDebugInfo] = useState<string>("");
+
+  useEffect(() => {
+    // Debug environment variables
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const clientSecret = import.meta.env.VITE_GOOGLE_CLIENT_SECRET;
+    
+    let debug = "Debug Info:\n";
+    debug += `Client ID: ${clientId ? `${clientId.substring(0, 20)}...` : 'NOT SET'}\n`;
+    debug += `Client Secret: ${clientSecret ? 'SET' : 'NOT SET'}\n`;
+    debug += `Current URL: ${window.location.href}\n`;
+    debug += `Redirect URI: ${window.location.origin}/auth/callback\n`;
+    debug += `Is in iframe: ${window.top !== window.self}\n`;
+    debug += `User Agent: ${navigator.userAgent}\n`;
+    
+    setDebugInfo(debug);
+    console.log(debug);
+  }, []);
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
+    setError(null);
     
     try {
       console.log("Starting Google Sign-In process...");
@@ -36,17 +55,68 @@ export const Welcome = (): JSX.Element => {
       
       console.log("Initiating OAuth flow...");
       
-      // Initiate Google OAuth flow with popup
-      await initiateAuth();
+      // Add a small delay to show loading state
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      // After successful authentication, navigate to onboarding
-      navigate("/onboarding/step1");
+      // Initiate Google OAuth flow
+      googleCalendarService.initiateOAuth();
       
+      // Note: The page will redirect, so code after this won't execute
     } catch (error: any) {
       console.error('Google sign-in error:', error);
-      // Error is handled by the hook
-    } finally {
+      setError(error.message || "An error occurred during sign-in. Please try again.");
       setIsLoading(false);
+    }
+  };
+
+  const handleGetStarted = () => {
+    setIsLoading(true);
+    // Simulate loading for better UX
+    setTimeout(() => {
+      navigate("/onboarding/step1");
+    }, 1000);
+  };
+
+  const handleShowDebugInfo = () => {
+    alert(debugInfo);
+  };
+
+  const handleTryAlternativeMethod = () => {
+    setError(null);
+    
+    // Try opening in a new window/tab as an alternative
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    if (!clientId) {
+      setError("Google Client ID is not configured.");
+      return;
+    }
+
+    const redirectUri = `${window.location.origin}/auth/callback`;
+    const authParams = new URLSearchParams({
+      client_id: clientId,
+      redirect_uri: redirectUri,
+      response_type: 'code',
+      scope: 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events',
+      access_type: 'offline',
+      prompt: 'consent',
+    });
+
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${authParams.toString()}`;
+    
+    // Try opening in new window
+    const popup = window.open(authUrl, 'google-auth', 'width=500,height=600,scrollbars=yes,resizable=yes');
+    
+    if (!popup) {
+      setError("Popup blocked. Please allow popups for this site and try again, or use the 'Skip for now' option.");
+    } else {
+      // Monitor the popup for completion
+      const checkClosed = setInterval(() => {
+        if (popup.closed) {
+          clearInterval(checkClosed);
+          // Refresh the page to check for auth completion
+          window.location.reload();
+        }
+      }, 1000);
     }
   };
 
@@ -214,6 +284,20 @@ export const Welcome = (): JSX.Element => {
             >
               <div className="font-semibold mb-1">Connection Issue:</div>
               <div className="mb-2">{error}</div>
+              <div className="flex gap-2">
+                <button
+                  onClick={handleTryAlternativeMethod}
+                  className="text-xs underline text-red-600 hover:text-red-800"
+                >
+                  Try Alternative Method
+                </button>
+                <button
+                  onClick={handleShowDebugInfo}
+                  className="text-xs underline text-red-600 hover:text-red-800"
+                >
+                  Show Debug Info
+                </button>
+              </div>
             </motion.div>
           )}
 
@@ -234,6 +318,15 @@ export const Welcome = (): JSX.Element => {
             )}
           </Button>
 
+          {/* Alternative option */}
+          <button
+            onClick={handleGetStarted}
+            disabled={isLoading}
+            className="text-blue-600 font-medium text-center py-1 active:scale-95 transition-all duration-200 disabled:opacity-50"
+          >
+            Skip for now - Get Started
+          </button>
+
           {/* Privacy notice */}
           <p className="text-xs text-gray-500 text-center leading-relaxed">
             By continuing, you agree to our Terms of Service and Privacy Policy. 
@@ -243,8 +336,8 @@ export const Welcome = (): JSX.Element => {
           {/* Troubleshooting note */}
           <div className="mt-2 p-3 bg-blue-50 rounded-xl">
             <p className="text-xs text-blue-700 text-center">
-              <strong>Seamless popup experience!</strong><br />
-              Sign in with Google opens in a secure popup window. Complete setup in just a few steps.
+              <strong>Having trouble connecting?</strong><br />
+              Make sure popups are enabled, or use "Skip for now\" to explore the app without calendar integration.
             </p>
           </div>
         </motion.div>
