@@ -1,6 +1,8 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { Welcome } from "./screens/Welcome";
+import { SignUp } from "./screens/SignUp";
+import { Login } from "./screens/Login";
 import { Dashboard } from "./screens/Dashboard";
 import { Profile } from "./screens/Profile";
 import { Schedule } from "./screens/Schedule";
@@ -12,6 +14,8 @@ export const App = (): JSX.Element => {
     <div className="min-h-screen bg-gray-50">
       <Routes>
         <Route path="/" element={<Welcome />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/onboarding/step1" element={<OnboardingStep1 />} />
         <Route path="/onboarding/step2" element={<OnboardingStep2 />} />
         <Route path="/onboarding/step3" element={<OnboardingStep3 />} />

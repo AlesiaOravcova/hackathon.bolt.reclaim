@@ -13,7 +13,7 @@ export const Welcome = (): JSX.Element => {
     setLoadingType('signup');
     // Simulate loading for better UX
     setTimeout(() => {
-      navigate("/onboarding/step1");
+      navigate("/signup");
     }, 1000);
   };
 
@@ -22,7 +22,16 @@ export const Welcome = (): JSX.Element => {
     setLoadingType('login');
     // Simulate loading for better UX
     setTimeout(() => {
-      navigate("/dashboard");
+      navigate("/login");
+    }, 1000);
+  };
+
+  const handleContinueAsGuest = () => {
+    setIsLoading(true);
+    setLoadingType('signup');
+    // Simulate loading for better UX
+    setTimeout(() => {
+      navigate("/onboarding/step1");
     }, 1000);
   };
 
@@ -194,7 +203,7 @@ export const Welcome = (): JSX.Element => {
             {isLoading && loadingType === 'signup' ? (
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                Creating Account...
+                Loading...
               </div>
             ) : (
               "Sign Up"
@@ -215,7 +224,7 @@ export const Welcome = (): JSX.Element => {
             {isLoading && loadingType === 'login' ? (
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-                Signing In...
+                Loading...
               </div>
             ) : (
               "Log In"
@@ -231,7 +240,7 @@ export const Welcome = (): JSX.Element => {
 
           {/* Continue as Guest */}
           <button
-            onClick={handleSignUp}
+            onClick={handleContinueAsGuest}
             disabled={isLoading}
             className="text-blue-600 font-medium text-center py-2 active:scale-95 transition-all duration-200 disabled:opacity-50"
           >
