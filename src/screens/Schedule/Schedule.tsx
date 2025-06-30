@@ -7,79 +7,62 @@ import { StatusBar } from "../../components/StatusBar";
 
 export const Schedule = (): JSX.Element => {
   const navigate = useNavigate();
-  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  // Sample schedule data matching the screenshot
-  const scheduleData = [
-    // Morning routine (7:30-8:30 AM)
-    { 
-      id: 1, 
-      time: "7:30 AM", 
-      endTime: "8:30 AM",
-      title: "Wake kids up/breakfast", 
-      duration: "1 hour", 
-      completed: true, 
-      type: "family",
-      days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
-    },
-    
-    // Work blocks
-    { 
-      id: 2, 
-      time: "9:30 AM", 
-      endTime: "5:30 PM",
-      title: "Onsite", 
-      duration: "8 hours", 
-      completed: false, 
-      type: "work",
-      days: ['monday', 'tuesday']
-    },
-    { 
-      id: 3, 
-      time: "9:30 AM", 
-      endTime: "5:30 PM",
-      title: "Work from Home", 
-      duration: "8 hours", 
-      completed: false, 
-      type: "work",
-      days: ['wednesday']
-    },
-    { 
-      id: 4, 
-      time: "10:00 AM", 
-      endTime: "6:00 PM",
-      title: "Work from Home", 
-      duration: "8 hours", 
-      completed: false, 
-      type: "work",
-      days: ['thursday']
-    },
-    { 
-      id: 5, 
-      time: "10:00 AM", 
-      endTime: "5:00 PM",
-      title: "Onsite", 
-      duration: "7 hours", 
-      completed: false, 
-      type: "work",
-      days: ['friday']
-    },
-    
-    // Evening routine (7-8 PM)
-    { 
-      id: 6, 
-      time: "7:00 PM", 
-      endTime: "8:00 PM",
-      title: "Family Dinner", 
-      duration: "1 hour", 
-      completed: false, 
-      type: "family",
-      days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
-    }
-  ];
+  // Comprehensive schedule data matching the screenshot
+  const scheduleData = {
+    sunday: [
+      { id: 1, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
+      { id: 2, time: "9:00 AM", endTime: "10:00 AM", title: "Wake kids up/breakfast", type: "family" },
+      { id: 3, time: "10:00 AM", endTime: "11:30 AM", title: "English tutor (ride)", type: "education" },
+      { id: 4, time: "12:30 PM", endTime: "1:30 PM", title: "Lunch", type: "meal" },
+      { id: 5, time: "2:00 PM", endTime: "3:30 PM", title: "Football (ride)", type: "sports" },
+      { id: 6, time: "3:30 PM", endTime: "4:30 PM", title: "Groceries", type: "errands" },
+      { id: 7, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
+    ],
+    monday: [
+      { id: 8, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
+      { id: 9, time: "7:30 AM", endTime: "8:30 AM", title: "Wake kids up/breakfast", type: "family" },
+      { id: 10, time: "9:00 AM", endTime: "5:00 PM", title: "Onsite", type: "work" },
+      { id: 11, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
+    ],
+    tuesday: [
+      { id: 12, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
+      { id: 13, time: "7:30 AM", endTime: "8:30 AM", title: "Wake kids up/breakfast", type: "family" },
+      { id: 14, time: "8:30 AM", endTime: "9:00 AM", title: "Summer school drop off", type: "transport" },
+      { id: 15, time: "9:00 AM", endTime: "5:00 PM", title: "Onsite", type: "work" },
+      { id: 16, time: "5:30 PM", endTime: "6:00 PM", title: "Summer school pick up", type: "transport" },
+      { id: 17, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
+    ],
+    wednesday: [
+      { id: 18, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
+      { id: 19, time: "7:30 AM", endTime: "8:30 AM", title: "Wake kids up/breakfast", type: "family" },
+      { id: 20, time: "9:30 AM", endTime: "5:30 PM", title: "Work from Home", type: "work" },
+      { id: 21, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
+    ],
+    thursday: [
+      { id: 22, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
+      { id: 23, time: "7:30 AM", endTime: "8:30 AM", title: "Wake kids up/breakfast", type: "family" },
+      { id: 24, time: "8:30 AM", endTime: "9:00 AM", title: "Summer school drop off", type: "transport" },
+      { id: 25, time: "9:00 AM", endTime: "5:00 PM", title: "Work from Home", type: "work" },
+      { id: 26, time: "5:30 PM", endTime: "6:00 PM", title: "Summer school pick up", type: "transport" },
+      { id: 27, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
+    ],
+    friday: [
+      { id: 28, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
+      { id: 29, time: "10:00 AM", endTime: "5:00 PM", title: "Onsite", type: "work" },
+      { id: 30, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
+    ],
+    saturday: [
+      { id: 31, time: "8:00 AM", endTime: "9:30 AM", title: "Laundry", type: "chores" },
+      { id: 32, time: "9:30 AM", endTime: "10:30 AM", title: "Breakfast", type: "meal" },
+      { id: 33, time: "11:00 AM", endTime: "4:00 PM", title: "Birthday party", type: "social" },
+      { id: 34, time: "5:00 PM", endTime: "6:00 PM", title: "Math tutor (at home)", type: "education" },
+      { id: 35, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
+    ]
+  };
 
   const weekDays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-  const weekDaysLong = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const weekDaysLong = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
   
   // Get current week dates
   const getCurrentWeek = () => {
@@ -104,36 +87,33 @@ export const Schedule = (): JSX.Element => {
   ];
 
   const getEventsForDay = (dayIndex: number) => {
-    const dayName = weekDaysLong[dayIndex].toLowerCase();
-    return scheduleData.filter(event => 
-      event.days.includes(dayName)
-    );
+    const dayName = weekDaysLong[dayIndex];
+    return scheduleData[dayName] || [];
   };
 
   const getEventColor = (type: string) => {
     switch (type) {
-      case 'family':
+      case 'meal':
         return 'bg-blue-500 text-white';
       case 'work':
-        return 'bg-amber-700 text-white';
+        return 'bg-amber-800 text-white';
+      case 'family':
+        return 'bg-blue-500 text-white';
+      case 'transport':
+        return 'bg-orange-500 text-white';
+      case 'education':
+        return 'bg-orange-600 text-white';
+      case 'sports':
+        return 'bg-orange-600 text-white';
+      case 'errands':
+        return 'bg-blue-500 text-white';
+      case 'chores':
+        return 'bg-blue-500 text-white';
+      case 'social':
+        return 'bg-green-500 text-white';
       default:
         return 'bg-gray-500 text-white';
     }
-  };
-
-  const getEventHeight = (startTime: string, endTime: string) => {
-    const start = parseTime(startTime);
-    const end = parseTime(endTime);
-    const duration = (end - start) / (1000 * 60 * 60); // hours
-    return Math.max(duration * 60, 40); // minimum 40px height
-  };
-
-  const getEventTop = (startTime: string) => {
-    const time = parseTime(startTime);
-    const hours = time.getHours();
-    const minutes = time.getMinutes();
-    const startHour = 7; // 7 AM
-    return ((hours - startHour) * 60 + minutes) + 40; // 40px for header
   };
 
   const parseTime = (timeStr: string) => {
@@ -143,6 +123,30 @@ export const Schedule = (): JSX.Element => {
     date.setHours(period === 'PM' && hours !== 12 ? hours + 12 : hours === 12 && period === 'AM' ? 0 : hours);
     date.setMinutes(minutes || 0);
     return date;
+  };
+
+  const getEventHeight = (startTime: string, endTime: string) => {
+    const start = parseTime(startTime);
+    const end = parseTime(endTime);
+    const duration = (end - start) / (1000 * 60 * 60); // hours
+    return Math.max(duration * 64, 32); // 64px per hour, minimum 32px
+  };
+
+  const getEventTop = (startTime: string, slotTime: string) => {
+    const eventStart = parseTime(startTime);
+    const slotStart = parseTime(slotTime);
+    
+    if (eventStart.getHours() === slotStart.getHours()) {
+      const minuteOffset = eventStart.getMinutes();
+      return (minuteOffset / 60) * 64; // 64px per hour
+    }
+    return 0;
+  };
+
+  const shouldShowEventInSlot = (event: any, slotTime: string) => {
+    const eventStart = parseTime(event.time);
+    const slotStart = parseTime(slotTime);
+    return eventStart.getHours() === slotStart.getHours();
   };
 
   const renderCalendarView = () => (
@@ -186,18 +190,14 @@ export const Schedule = (): JSX.Element => {
               <div key={dayIndex} className="border-r border-gray-100 last:border-r-0 h-16 relative">
                 {/* Events for this time slot and day */}
                 {getEventsForDay(dayIndex)
-                  .filter(event => {
-                    const eventStart = parseTime(event.time);
-                    const slotStart = parseTime(time);
-                    const slotEnd = new Date(slotStart.getTime() + 60 * 60 * 1000);
-                    return eventStart >= slotStart && eventStart < slotEnd;
-                  })
+                  .filter(event => shouldShowEventInSlot(event, time))
                   .map(event => (
                     <div
                       key={`${event.id}-${dayIndex}`}
                       className={`absolute left-1 right-1 rounded-lg p-2 text-xs font-medium ${getEventColor(event.type)}`}
                       style={{
                         height: `${getEventHeight(event.time, event.endTime)}px`,
+                        top: `${getEventTop(event.time, time)}px`,
                         zIndex: 10
                       }}
                     >
@@ -242,7 +242,7 @@ export const Schedule = (): JSX.Element => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            <h1 className="text-2xl font-bold text-gray-900">Schedule</h1>
+            <h1 className="text-2xl font-bold text-gray-900">My Calendar</h1>
           </div>
         </motion.div>
 
