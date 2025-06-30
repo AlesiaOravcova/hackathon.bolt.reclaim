@@ -12,8 +12,8 @@ export const TabBar = ({ activeTab, onTabChange }: TabBarProps): JSX.Element => 
 
   const tabs = [
     {
-      id: "home",
-      label: "Home",
+      id: "Your me time",
+      label: "Your me time",
       path: "/dashboard",
       icon: (active: boolean) => (
         <svg className={`w-6 h-6 ${active ? "text-blue-600" : "text-gray-400"}`} fill="currentColor" viewBox="0 0 24 24">
