@@ -192,12 +192,6 @@ export const Welcome = (): JSX.Element => {
         </motion.div>
 
         {/* Authentication section - compact spacing */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
-          className="flex flex-col gap-3 pb-2"
-        >
           <Button
             onClick={handleGoogleSignIn}
             disabled={isLoading}
@@ -207,8 +201,6 @@ export const Welcome = (): JSX.Element => {
             <GoogleIcon className="w-5 h-5" />
             {isLoading ? "Signing in..." : "Continue with Google"}
           </Button>
-
-        </motion.div>
       </div>
     </div>
   );
