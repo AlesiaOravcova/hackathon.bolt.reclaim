@@ -130,13 +130,16 @@ export const Dashboard = (): JSX.Element => {
           transition={{ delay: 0.2 }}
           className="px-6 py-4"
         >
+          <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-gray-900">
               {selectedDate.toLocaleDateString('en-US', { 
                 weekday: 'long', 
                 month: 'long', 
                 day: 'numeric' 
               })}
-            </h2>
+            </h2> 
+
+          </div>
 
           <div className="space-y-3">
             {todayActivities.map((activity, index) => (
