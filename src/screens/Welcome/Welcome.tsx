@@ -3,22 +3,41 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { GoogleIcon } from "../../components/icons";
+import { googleCalendarService } from "../../services/googleCalendar";
 
 export const Welcome = (): JSX.Element => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleGoogleSignIn = () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      // Check if we have Google Calendar credentials configured
+      if (!import.meta.env.VITE_GOOGLE_CLIENT_ID) {
+        setError("Google Calendar integration is not configured. Please set up your Google API credentials.");
+        setIsLoading(false);
+        return;
+      }
+      
+      // Initiate Google OAuth flow
+      googleCalendarService.initiateOAuth();
+      // Note: The page will redirect, so code after this won't execute
+    } catch (error: any) {
+      console.error('Google sign-in error:', error);
+      setError(error.message || "An error occurred during sign-in. Please try again.");
+      setIsLoading(false);
+    }
+  };
+
+  const handleGetStarted = () => {
     setIsLoading(true);
     // Simulate loading for better UX
     setTimeout(() => {
       navigate("/onboarding/step1");
     }, 1000);
-  };
-
-  const handleSignIn = () => {
-    // For existing users who want to sign in manually
-    navigate("/dashboard");
   };
 
   return (
@@ -176,6 +195,17 @@ export const Welcome = (): JSX.Element => {
           transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
           className="flex flex-col gap-3 pb-2"
         >
+          {/* Error message */}
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm text-center"
+            >
+              {error}
+            </motion.div>
+          )}
+
           <Button
             onClick={handleGoogleSignIn}
             disabled={isLoading}
@@ -186,26 +216,26 @@ export const Welcome = (): JSX.Element => {
             {isLoading ? (
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
-                Getting started...
+                Signing in...
               </div>
             ) : (
-              "Get Started"
+              "Continue with Google"
             )}
           </Button>
 
-          {/* Sign in link */}
+          {/* Alternative option */}
           <button
-            onClick={handleSignIn}
+            onClick={handleGetStarted}
             disabled={isLoading}
             className="text-blue-600 font-medium text-center py-1 active:scale-95 transition-all duration-200 disabled:opacity-50"
           >
-            Already have an account? Sign in
+            Skip for now - Get Started
           </button>
 
           {/* Privacy notice */}
           <p className="text-xs text-gray-500 text-center leading-relaxed">
             By continuing, you agree to our Terms of Service and Privacy Policy. 
-            Connect your calendar later to automatically schedule your wellness time.
+            Connect your Google Calendar to automatically schedule your wellness time.
           </p>
         </motion.div>
       </div>
