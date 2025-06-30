@@ -50,11 +50,11 @@ export const Welcome = (): JSX.Element => {
           className="flex flex-col gap-4 mt-2"
         >
 
-          <h1 className="text-3xl font-normal text-gray-900 leading-tight">
+          <h1 className="text-3xl font-normal text-gray-900 leading-relaxed">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
               Reclaim
             </span>     
-            <br> 
+            <br /> 
             your{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
               me time
@@ -182,6 +182,12 @@ export const Welcome = (): JSX.Element => {
         </motion.div>
 
         {/* Authentication section - compact spacing */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+          className="flex flex-col gap-3 pb-2"
+        >
           <Button
             onClick={handleGoogleSignIn}
             disabled={isLoading}
@@ -191,6 +197,15 @@ export const Welcome = (): JSX.Element => {
             <GoogleIcon className="w-5 h-5" />
             {isLoading ? "Signing in..." : "Continue with Google"}
           </Button>
+
+          {/* Sign in link */}
+          <button
+            onClick={handleSignIn}
+            className="text-blue-600 font-medium text-center py-1 active:scale-95 transition-all duration-200"
+          >
+            Already have an account? Sign in
+          </button>
+        </motion.div>
       </div>
     </div>
   );
