@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { TabBar } from "../../components/TabBar";
 import { StatusBar } from "../../components/StatusBar";
+import { useAuthContext } from "../../contexts/AuthContext";
 
 export const Dashboard = (): JSX.Element => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("home");
+  const { user } = useAuthContext();
 
   const todayActivities = [
     { time: "9:00 AM", title: "Morning Meditation", duration: "15 min", type: "mindfulness" },
@@ -26,6 +28,33 @@ export const Dashboard = (): JSX.Element => {
     { day: "Sun", completed: 0, total: 2 },
   ];
 
+  // Get user initials for avatar
+  const getUserInitial = () => {
+    if (user?.displayName) {
+      return user.displayName.charAt(0).toUpperCase();
+    }
+    if (user?.email) {
+      return user.email.charAt(0).toUpperCase();
+    }
+    return 'U';
+  };
+
+  // Get greeting based on time of day
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 17) return 'Good afternoon';
+    return 'Good evening';
+  };
+
+  // Get user's first name for greeting
+  const getUserFirstName = () => {
+    if (user?.displayName) {
+      return user.displayName.split(' ')[0];
+    }
+    return 'there';
+  };
+
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]">
       <StatusBar />
@@ -39,14 +68,16 @@ export const Dashboard = (): JSX.Element => {
         >
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Good morning!</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                {getGreeting()}, {getUserFirstName()}!
+              </h1>
               <p className="text-gray-600">Ready for your me time?</p>
             </div>
             <button
               onClick={() => navigate("/profile")}
               className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center"
             >
-              <span className="text-white font-semibold">J</span>
+              <span className="text-white font-semibold">{getUserInitial()}</span>
             </button>
           </div>
 
