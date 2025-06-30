@@ -209,3 +209,46 @@ export const Dashboard = (): JSX.Element => {
                         You've been doing great with your wellness routine. How about scheduling some pampering time this weekend?
                       </p>
                       <div className="text-sm text-purple-700 font-medium">
+                        Perfect for relaxation and self-care
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex space-x-2">
+                      <Button
+                        size="sm"
+                        onClick={handleSpaCommit}
+                        className="bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full px-4 py-2"
+                      >
+                        Book Now
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={handleSpaDismiss}
+                        className="border-pink-300 text-pink-700 hover:bg-pink-50 rounded-full px-4 py-2"
+                      >
+                        Maybe Later
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Success Modal */}
+      <SuccessModal
+        isOpen={showCommitSuccessModal}
+        onClose={handleCloseSuccessModal}
+        activityTitle={selectedActivity}
+      />
+
+      {/* Tab Bar */}
+      <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
+    </div>
+  );
+};
