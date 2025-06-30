@@ -46,10 +46,12 @@ export const FirebaseCalendarIntegration: React.FC = () => {
   }, [isAuthenticated, calendars.length, selectedCalendars.length]);
 
   const handleGoogleSignIn = async () => {
-    const success = await signInWithGoogle();
-    if (success) {
-      setSetupStep('select');
-      fetchCalendars();
+    try {
+      await signInWithGoogle();
+      // Note: The page will redirect, so code after this won't execute
+    } catch (error: any) {
+      console.error('Google sign-in error:', error);
+      // Error handling is managed by the hook
     }
   };
 
