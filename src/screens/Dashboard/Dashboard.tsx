@@ -47,10 +47,11 @@ export const Dashboard = (): JSX.Element => {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="text-4xl font-medium text-gray-900 leading-tight">
+                ☀️ Good morning{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-              ☀️ Good morning 
-                </span>     
-          </h1>
+                  Elizabeth
+                </span>
+              </h1>
             </div>
 
             <button
@@ -126,7 +127,6 @@ export const Dashboard = (): JSX.Element => {
           transition={{ delay: 0.2 }}
           className="px-6 py-4"
         >
-
 
           <div className="space-y-3">
             {todayActivities.map((activity, index) => (
