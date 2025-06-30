@@ -47,7 +47,7 @@ export const Welcome = (): JSX.Element => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-          className="flex flex-col gap-4 mt-14"
+          className="flex flex-col gap-4 mt-6"
         >
 
           <h1 className="text-3xl font-normal text-gray-900 leading-none">
