@@ -125,7 +125,7 @@ export const Dashboard = (): JSX.Element => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="px-6 py-4"
+          className=""
         >
 
           <div className="space-y-3">
