@@ -62,124 +62,127 @@ export const Welcome = (): JSX.Element => {
           </h1>
         </motion.div>
 
-        {/* Illustration with floating elements - increased size */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
-          className="flex-1 flex items-center justify-center py-4 relative max-h-80"
-        >
-          <div className="relative w-80 h-80">
-            {/* Floating element 1 - Weather/Sun icon (top left) */}
-            <motion.div
-              animate={{ 
-                y: [-12, 12, -12],
-                x: [-4, 4, -4],
-                rotate: [0, 4, -4, 0]
-              }}
-              transition={{ 
-                duration: 6, 
-                repeat: Infinity, 
-                ease: "easeInOut",
-                delay: 0
-              }}
-              className="absolute top-0 left-0 w-32 h-32 z-10"
-            >
-              <img 
-                src="/image 1.png" 
-                alt="Weather element" 
-                className="w-full h-full object-contain drop-shadow-lg"
-              />
-            </motion.div>
+        {/* Illustration and Description grouped with 16px gap */}
+        <div className="flex flex-col gap-4">
+          {/* Illustration with floating elements */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+            className="flex-1 flex items-center justify-center relative max-h-80"
+          >
+            <div className="relative w-80 h-80">
+              {/* Floating element 1 - Weather/Sun icon (top left) */}
+              <motion.div
+                animate={{ 
+                  y: [-12, 12, -12],
+                  x: [-4, 4, -4],
+                  rotate: [0, 4, -4, 0]
+                }}
+                transition={{ 
+                  duration: 6, 
+                  repeat: Infinity, 
+                  ease: "easeInOut",
+                  delay: 0
+                }}
+                className="absolute top-0 left-0 w-32 h-32 z-10"
+              >
+                <img 
+                  src="/image 1.png" 
+                  alt="Weather element" 
+                  className="w-full h-full object-contain drop-shadow-lg"
+                />
+              </motion.div>
 
-            {/* Floating element 2 - Cloud (top right) */}
-            <motion.div
-              animate={{ 
-                y: [10, -10, 10],
-                x: [4, -4, 4],
-                scale: [1, 1.05, 1]
-              }}
-              transition={{ 
-                duration: 5, 
-                repeat: Infinity, 
-                ease: "easeInOut",
-                delay: 1
-              }}
-              className="absolute top-6 right-6 w-16 h-12 z-10"
-            >
-              <img 
-                src="/image 2.png" 
-                alt="Cloud element" 
-                className="w-full h-full object-contain drop-shadow-lg"
-              />
-            </motion.div>
+              {/* Floating element 2 - Cloud (top right) */}
+              <motion.div
+                animate={{ 
+                  y: [10, -10, 10],
+                  x: [4, -4, 4],
+                  scale: [1, 1.05, 1]
+                }}
+                transition={{ 
+                  duration: 5, 
+                  repeat: Infinity, 
+                  ease: "easeInOut",
+                  delay: 1
+                }}
+                className="absolute top-6 right-6 w-16 h-12 z-10"
+              >
+                <img 
+                  src="/image 2.png" 
+                  alt="Cloud element" 
+                  className="w-full h-full object-contain drop-shadow-lg"
+                />
+              </motion.div>
 
-            {/* Floating element 3 - Winter/Snow tree (bottom left) */}
-            <motion.div
-              animate={{ 
-                y: [-8, 10, -8],
-                x: [-3, 5, -3],
-                rotate: [0, -3, 3, 0]
-              }}
-              transition={{ 
-                duration: 7, 
-                repeat: Infinity, 
-                ease: "easeInOut",
-                delay: 2
-              }}
-              className="absolute bottom-12 left-4 w-16 h-18 z-10"
-            >
-              <img 
-                src="/image 3.png" 
-                alt="Winter tree element" 
-                className="w-full h-full object-contain drop-shadow-lg"
-              />
-            </motion.div>
+              {/* Floating element 3 - Winter/Snow tree (bottom left) */}
+              <motion.div
+                animate={{ 
+                  y: [-8, 10, -8],
+                  x: [-3, 5, -3],
+                  rotate: [0, -3, 3, 0]
+                }}
+                transition={{ 
+                  duration: 7, 
+                  repeat: Infinity, 
+                  ease: "easeInOut",
+                  delay: 2
+                }}
+                className="absolute bottom-12 left-4 w-16 h-18 z-10"
+              >
+                <img 
+                  src="/image 3.png" 
+                  alt="Winter tree element" 
+                  className="w-full h-full object-contain drop-shadow-lg"
+                />
+              </motion.div>
 
-            {/* Floating element 4 - Calendar (bottom right) */}
-            <motion.div
-              animate={{ 
-                y: [10, -8, 10],
-                x: [3, -3, 3],
-                rotate: [0, 6, -6, 0]
-              }}
-              transition={{ 
-                duration: 4.5, 
-                repeat: Infinity, 
-                ease: "easeInOut",
-                delay: 0.5
-              }}
-              className="absolute bottom-14 right-8 w-20 h-20 z-10"
-            >
-              <img 
-                src="/image 4 copy.png" 
-                alt="Calendar element" 
-                className="w-full h-full object-contain drop-shadow-lg"
-              />
-            </motion.div>
+              {/* Floating element 4 - Calendar (bottom right) */}
+              <motion.div
+                animate={{ 
+                  y: [10, -8, 10],
+                  x: [3, -3, 3],
+                  rotate: [0, 6, -6, 0]
+                }}
+                transition={{ 
+                  duration: 4.5, 
+                  repeat: Infinity, 
+                  ease: "easeInOut",
+                  delay: 0.5
+                }}
+                className="absolute bottom-14 right-8 w-20 h-20 z-10"
+              >
+                <img 
+                  src="/image 4 copy.png" 
+                  alt="Calendar element" 
+                  className="w-full h-full object-contain drop-shadow-lg"
+                />
+              </motion.div>
 
-            {/* Main character illustration - static */}
-            <div className="absolute inset-0 flex items-center justify-center z-0">
-              <img 
-                src="/welcome_bg_img.png" 
-                alt="Welcome illustration" 
-                className="w-full h-full object-contain"
-              />
+              {/* Main character illustration - static */}
+              <div className="absolute inset-0 flex items-center justify-center z-0">
+                <img 
+                  src="/welcome_bg_img.png" 
+                  alt="Welcome illustration" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        {/* Description text - positioned after illustration */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
-          className="text-start mb-6"
-        >
-          <p className="text-base text-[#333333] leading-relaxed">
-            AI assistant that intelligently schedules time for your personal wellbeing and self-care.
-          </p>
-        </motion.div>
+          {/* Description text - positioned after illustration */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
+            className="text-start"
+          >
+            <p className="text-base text-[#333333] leading-relaxed">
+              AI assistant that intelligently schedules time for your personal wellbeing and self-care.
+            </p>
+          </motion.div>
+        </div>
 
         {/* Authentication section - compact spacing */}
         <motion.div
@@ -197,7 +200,6 @@ export const Welcome = (): JSX.Element => {
             <GoogleIcon className="w-5 h-5" />
             {isLoading ? "Signing in..." : "Continue with Google"}
           </Button>
- 
         </motion.div>
       </div>
     </div>
