@@ -8,83 +8,78 @@ import { StatusBar } from "../../components/StatusBar";
 export const Schedule = (): JSX.Element => {
   const navigate = useNavigate();
 
-  // Comprehensive schedule data matching the screenshot
+  // Calendar data matching the screenshot
   const scheduleData = {
     sunday: [
-      { id: 1, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
-      { id: 2, time: "9:00 AM", endTime: "10:00 AM", title: "Wake kids up/breakfast", type: "family" },
-      { id: 3, time: "10:00 AM", endTime: "11:30 AM", title: "English tutor (ride)", type: "education" },
-      { id: 4, time: "12:30 PM", endTime: "1:30 PM", title: "Lunch", type: "meal" },
-      { id: 5, time: "2:00 PM", endTime: "3:30 PM", title: "Football (ride)", type: "sports" },
-      { id: 6, time: "3:30 PM", endTime: "4:30 PM", title: "Groceries", type: "errands" },
-      { id: 7, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
+      { id: 1, time: "9:00 AM", endTime: "10:00 AM", title: "Breakfast", type: "meal" },
+      { id: 2, time: "10:00 AM", endTime: "11:30 AM", title: "English tutor (ride)", type: "education" },
+      { id: 3, time: "12:30 PM", endTime: "1:30 PM", title: "Lunch", type: "meal" },
+      { id: 4, time: "2:00 PM", endTime: "3:30 PM", title: "Football (ride)", type: "sports" },
+      { id: 5, time: "3:30 PM", endTime: "4:30 PM", title: "Groceries", type: "errands" },
+      { id: 6, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
     ],
     monday: [
-      { id: 8, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
-      { id: 9, time: "7:30 AM", endTime: "8:30 AM", title: "Wake kids up/breakfast", type: "family" },
-      { id: 10, time: "9:00 AM", endTime: "5:00 PM", title: "Onsite", type: "work" },
-      { id: 11, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
+      { id: 7, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
+      { id: 8, time: "8:00 AM", endTime: "8:30 AM", title: "Camp (ride)", type: "transport" },
+      { id: 9, time: "9:00 AM", endTime: "5:00 PM", title: "Onsite", type: "work" },
+      { id: 10, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
     ],
     tuesday: [
-      { id: 12, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
-      { id: 13, time: "7:30 AM", endTime: "8:30 AM", title: "Wake kids up/breakfast", type: "family" },
-      { id: 14, time: "8:30 AM", endTime: "9:00 AM", title: "Summer school drop off", type: "transport" },
-      { id: 15, time: "9:00 AM", endTime: "5:00 PM", title: "Onsite", type: "work" },
-      { id: 16, time: "5:30 PM", endTime: "6:00 PM", title: "Summer school pick up", type: "transport" },
-      { id: 17, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
+      { id: 11, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
+      { id: 12, time: "8:00 AM", endTime: "8:30 AM", title: "Camp (ride)", type: "transport" },
+      { id: 13, time: "9:00 AM", endTime: "5:00 PM", title: "Onsite", type: "work" },
+      { id: 14, time: "5:30 PM", endTime: "6:00 PM", title: "Camp (ride)", type: "transport" },
+      { id: 15, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
     ],
     wednesday: [
-      { id: 18, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
-      { id: 19, time: "7:30 AM", endTime: "8:30 AM", title: "Wake kids up/breakfast", type: "family" },
-      { id: 20, time: "9:30 AM", endTime: "5:30 PM", title: "Work from Home", type: "work" },
-      { id: 21, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
+      { id: 16, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
+      { id: 17, time: "9:30 AM", endTime: "5:30 PM", title: "Work from Home", type: "work" },
+      { id: 18, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
     ],
     thursday: [
-      { id: 22, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
-      { id: 23, time: "7:30 AM", endTime: "8:30 AM", title: "Wake kids up/breakfast", type: "family" },
-      { id: 24, time: "8:30 AM", endTime: "9:00 AM", title: "Summer school drop off", type: "transport" },
-      { id: 25, time: "9:00 AM", endTime: "5:00 PM", title: "Work from Home", type: "work" },
-      { id: 26, time: "5:30 PM", endTime: "6:00 PM", title: "Summer school pick up", type: "transport" },
-      { id: 27, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
+      { id: 19, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
+      { id: 20, time: "8:00 AM", endTime: "8:30 AM", title: "Camp (ride)", type: "transport" },
+      { id: 21, time: "9:00 AM", endTime: "5:00 PM", title: "Work from Home", type: "work" },
+      { id: 22, time: "5:30 PM", endTime: "6:00 PM", title: "Camp (ride)", type: "transport" },
+      { id: 23, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
     ],
     friday: [
-      { id: 28, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
-      { id: 29, time: "10:00 AM", endTime: "5:00 PM", title: "Onsite", type: "work" },
-      { id: 30, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
+      { id: 24, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
+      { id: 25, time: "10:00 AM", endTime: "5:00 PM", title: "Onsite", type: "work" },
+      { id: 26, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
     ],
     saturday: [
-      { id: 31, time: "8:00 AM", endTime: "9:30 AM", title: "Laundry", type: "chores" },
-      { id: 32, time: "9:30 AM", endTime: "10:30 AM", title: "Breakfast", type: "meal" },
-      { id: 33, time: "11:00 AM", endTime: "4:00 PM", title: "Birthday party", type: "social" },
-      { id: 34, time: "5:00 PM", endTime: "6:00 PM", title: "Math tutor (at home)", type: "education" },
-      { id: 35, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
+      { id: 27, time: "8:00 AM", endTime: "9:30 AM", title: "Laundry", type: "chores" },
+      { id: 28, time: "9:30 AM", endTime: "10:30 AM", title: "Breakfast", type: "meal" },
+      { id: 29, time: "11:00 AM", endTime: "4:00 PM", title: "Birthday party", type: "social" },
+      { id: 30, time: "5:00 PM", endTime: "6:00 PM", title: "Math tutor (at home)", type: "education" },
+      { id: 31, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
     ]
   };
 
   const weekDays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const weekDaysLong = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
   
-  // Get current week dates
+  // Get current week dates - June 29 to July 5, 2025
   const getCurrentWeek = () => {
-    const today = new Date();
-    const currentDay = today.getDay();
-    const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - currentDay);
-    
-    return Array.from({ length: 7 }, (_, i) => {
-      const date = new Date(startOfWeek);
-      date.setDate(startOfWeek.getDate() + i);
-      return date;
-    });
+    const dates = [
+      new Date(2025, 5, 29), // June 29 (Sunday)
+      new Date(2025, 5, 30), // June 30 (Monday) - highlighted
+      new Date(2025, 6, 1),  // July 1 (Tuesday)
+      new Date(2025, 6, 2),  // July 2 (Wednesday)
+      new Date(2025, 6, 3),  // July 3 (Thursday)
+      new Date(2025, 6, 4),  // July 4 (Friday)
+      new Date(2025, 6, 5)   // July 5 (Saturday)
+    ];
+    return dates;
   };
 
   const currentWeek = getCurrentWeek();
 
-  // Extended time slots from 1am to 11pm (22 hours total)
+  // Time slots from 7am to 7pm
   const timeSlots = [
-    "1 AM", "2 AM", "3 AM", "4 AM", "5 AM", "6 AM", "7 AM", "8 AM", 
-    "9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", 
-    "5 PM", "6 PM", "7 PM", "8 PM", "9 PM", "10 PM", "11 PM"
+    "7 AM", "8 AM", "9 AM", "10 AM", "11 AM", "12 PM", 
+    "1 PM", "2 PM", "3 PM", "4 PM", "5 PM", "6 PM", "7 PM"
   ];
 
   const getEventsForDay = (dayIndex: number) => {
@@ -97,21 +92,19 @@ export const Schedule = (): JSX.Element => {
       case 'meal':
         return 'bg-blue-500 text-white';
       case 'work':
-        return 'bg-amber-800 text-white';
-      case 'family':
-        return 'bg-blue-500 text-white';
+        return 'bg-green-600 text-white';
       case 'transport':
-        return 'bg-orange-500 text-white';
+        return 'bg-gray-500 text-white';
       case 'education':
-        return 'bg-orange-600 text-white';
+        return 'bg-gray-500 text-white';
       case 'sports':
-        return 'bg-orange-600 text-white';
+        return 'bg-gray-500 text-white';
       case 'errands':
         return 'bg-blue-500 text-white';
       case 'chores':
         return 'bg-blue-500 text-white';
       case 'social':
-        return 'bg-green-500 text-white';
+        return 'bg-red-400 text-white';
       default:
         return 'bg-gray-500 text-white';
     }
@@ -159,8 +152,7 @@ export const Schedule = (): JSX.Element => {
         </div>
         {weekDays.map((day, index) => {
           const date = currentWeek[index];
-          const isToday = date.toDateString() === new Date().toDateString();
-          const isMonday = index === 1; // Monday is highlighted in blue
+          const isMonday = index === 1; // Monday (June 30) is highlighted in blue
           
           return (
             <div key={day} className="p-3 text-center border-r border-gray-200 last:border-r-0">
@@ -169,7 +161,7 @@ export const Schedule = (): JSX.Element => {
               </div>
               <div className={`text-lg font-bold ${
                 isMonday ? 'bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center mx-auto' :
-                isToday ? 'text-blue-600' : 'text-gray-900'
+                'text-gray-900'
               }`}>
                 {date.getDate()}
               </div>
@@ -205,6 +197,9 @@ export const Schedule = (): JSX.Element => {
                       <div className="font-semibold text-xs leading-tight">
                         {event.title}
                       </div>
+                      <div className="text-xs opacity-90 mt-0.5">
+                        {event.time.replace(':00', '')} – {event.endTime.replace(':00', '')}
+                      </div>
                     </div>
                   ))}
               </div>
@@ -212,8 +207,8 @@ export const Schedule = (): JSX.Element => {
           </div>
         ))}
         
-        {/* Current time indicator (red line) - adjusted position for 1am start */}
-        <div className="absolute left-0 right-0 h-0.5 bg-red-500 z-20" style={{ top: '774px' }}>
+        {/* Current time indicator (red line) - positioned at around 7:30 PM */}
+        <div className="absolute left-0 right-0 h-0.5 bg-red-500 z-20" style={{ top: '832px' }}>
           <div className="w-3 h-3 bg-red-500 rounded-full -ml-1.5 -mt-1"></div>
         </div>
       </div>
