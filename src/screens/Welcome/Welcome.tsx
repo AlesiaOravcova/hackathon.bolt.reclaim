@@ -39,8 +39,8 @@ export const Welcome = (): JSX.Element => {
       // Initiate Google OAuth flow with popup
       await initiateAuth();
       
-      // If successful, navigate to calendar
-      navigate("/calendar");
+      // After successful authentication, navigate to onboarding
+      navigate("/onboarding/step1");
       
     } catch (error: any) {
       console.error('Google sign-in error:', error);
@@ -261,7 +261,7 @@ export const Welcome = (): JSX.Element => {
           <div className="mt-2 p-3 bg-blue-50 rounded-xl">
             <p className="text-xs text-blue-700 text-center">
               <strong>Seamless popup experience!</strong><br />
-              Sign in with Google opens in a secure popup window. No page redirects needed.
+              Sign in with Google opens in a secure popup window. Complete setup in just a few steps.
             </p>
           </div>
         </motion.div>
