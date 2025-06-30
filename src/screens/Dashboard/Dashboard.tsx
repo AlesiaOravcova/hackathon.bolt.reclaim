@@ -221,7 +221,7 @@ export const Dashboard = (): JSX.Element => {
                     <div className="flex space-x-4">
                      <Button
                         size="sm"
-                        variant="outline"
+                        variant="ghost"
                         onClick={handleSpaDismiss}
                         className="text-grey-500 px-4 py-2"
                       >
