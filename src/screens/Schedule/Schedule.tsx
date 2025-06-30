@@ -57,6 +57,32 @@ export const Schedule = (): JSX.Element => {
     ]
   };
 
+  // Me time opportunities based on schedule analysis
+  const meTimeSlots = {
+    sunday: [
+      { time: "7:00 AM", endTime: "9:00 AM", title: "Sunday Self-Care", priority: "high", duration: "2 hours" }
+    ],
+    monday: [
+      { time: "6:00 AM", endTime: "7:00 AM", title: "Morning Meditation", priority: "high", duration: "1 hour" }
+    ],
+    tuesday: [
+      { time: "6:00 AM", endTime: "7:00 AM", title: "Gentle Yoga", priority: "high", duration: "1 hour" }
+    ],
+    wednesday: [
+      { time: "6:00 AM", endTime: "7:00 AM", title: "Journaling", priority: "medium", duration: "1 hour" },
+      { time: "8:00 AM", endTime: "9:30 AM", title: "Nature Walk", priority: "medium", duration: "1.5 hours" }
+    ],
+    thursday: [
+      { time: "6:00 AM", endTime: "7:00 AM", title: "Mindfulness", priority: "medium", duration: "1 hour" }
+    ],
+    friday: [
+      { time: "8:00 AM", endTime: "10:00 AM", title: "Self-Care Morning", priority: "high", duration: "2 hours" }
+    ],
+    saturday: [
+      { time: "6:00 AM", endTime: "8:00 AM", title: "Weekend Workout", priority: "medium", duration: "2 hours" }
+    ]
+  };
+
   const weekDays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const weekDaysLong = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
   
@@ -88,6 +114,11 @@ export const Schedule = (): JSX.Element => {
     return scheduleData[dayName] || [];
   };
 
+  const getMeTimeSlotsForDay = (dayIndex: number) => {
+    const dayName = weekDaysLong[dayIndex];
+    return meTimeSlots[dayName] || [];
+  };
+
   const getEventColor = (type: string) => {
     switch (type) {
       case 'meal':
@@ -108,6 +139,19 @@ export const Schedule = (): JSX.Element => {
         return 'bg-red-400 text-white';
       default:
         return 'bg-gray-500 text-white';
+    }
+  };
+
+  const getMeTimeColor = (priority: string) => {
+    switch (priority) {
+      case 'high':
+        return 'border-purple-400 bg-purple-50 text-purple-700';
+      case 'medium':
+        return 'border-blue-400 bg-blue-50 text-blue-700';
+      case 'low':
+        return 'border-gray-400 bg-gray-50 text-gray-700';
+      default:
+        return 'border-purple-400 bg-purple-50 text-purple-700';
     }
   };
 
@@ -142,6 +186,12 @@ export const Schedule = (): JSX.Element => {
     const eventStart = parseTime(event.time);
     const slotStart = parseTime(slotTime);
     return eventStart.getHours() === slotStart.getHours();
+  };
+
+  const shouldShowMeTimeInSlot = (meTime: any, slotTime: string) => {
+    const meTimeStart = parseTime(meTime.time);
+    const slotStart = parseTime(slotTime);
+    return meTimeStart.getHours() === slotStart.getHours();
   };
 
   const renderCalendarView = () => (
@@ -182,7 +232,7 @@ export const Schedule = (): JSX.Element => {
             {/* Day columns */}
             {Array.from({ length: 7 }, (_, dayIndex) => (
               <div key={dayIndex} className="border-r border-gray-100 last:border-r-0 h-16 relative">
-                {/* Events for this time slot and day */}
+                {/* Regular Events for this time slot and day */}
                 {getEventsForDay(dayIndex)
                   .filter(event => shouldShowEventInSlot(event, time))
                   .map(event => (
@@ -202,6 +252,39 @@ export const Schedule = (): JSX.Element => {
                         {event.time.replace(':00', '')} – {event.endTime.replace(':00', '')}
                       </div>
                     </div>
+                  ))}
+
+                {/* Me Time Opportunities for this time slot and day */}
+                {getMeTimeSlotsForDay(dayIndex)
+                  .filter(meTime => shouldShowMeTimeInSlot(meTime, time))
+                  .map((meTime, meTimeIndex) => (
+                    <motion.div
+                      key={`me-time-${dayIndex}-${meTimeIndex}`}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.2 + (dayIndex * 0.1) }}
+                      className={`absolute left-1 right-1 rounded-lg p-2 text-xs font-medium border-2 border-dashed ${getMeTimeColor(meTime.priority)}`}
+                      style={{
+                        height: `${getEventHeight(meTime.time, meTime.endTime)}px`,
+                        top: `${getEventTop(meTime.time, time)}px`,
+                        zIndex: 15
+                      }}
+                    >
+                      <div className="flex items-center gap-1 mb-1">
+                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        <span className="font-semibold text-xs leading-tight">
+                          {meTime.title}
+                        </span>
+                      </div>
+                      <div className="text-xs opacity-90">
+                        {meTime.time.replace(':00', '')} – {meTime.endTime.replace(':00', '')}
+                      </div>
+                      <div className="text-xs opacity-75 mt-0.5">
+                        {meTime.duration} • {meTime.priority} priority
+                      </div>
+                    </motion.div>
                   ))}
               </div>
             ))}
@@ -237,6 +320,29 @@ export const Schedule = (): JSX.Element => {
               </svg>
             </button>
             <h1 className="text-2xl font-bold text-gray-900">My Calendar</h1>
+          </div>
+
+          {/* Legend */}
+          <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-4 mb-4">
+            <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+              <svg className="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+              Me Time Opportunities
+            </h3>
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-dashed border-purple-400 bg-purple-50 rounded"></div>
+                <span className="text-gray-700">High Priority</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-dashed border-blue-400 bg-blue-50 rounded"></div>
+                <span className="text-gray-700">Medium Priority</span>
+              </div>
+            </div>
+            <p className="text-xs text-gray-600 mt-2">
+              Dashed boxes show optimal times for wellness activities based on your schedule
+            </p>
           </div>
         </motion.div>
 
