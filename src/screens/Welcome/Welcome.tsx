@@ -54,7 +54,7 @@ export const Welcome = (): JSX.Element => {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
               Reclaim
             </span>     
-            <br /> 
+            <br/> 
             your{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
               me time
