@@ -198,7 +198,7 @@ export const Welcome = (): JSX.Element => {
             className="flex h-12 items-center justify-center gap-3 bg-white border-2 border-gray-200 text-gray-900 rounded-2xl font-semibold text-base shadow-lg active:scale-95 transition-all duration-200"
           >
             <GoogleIcon className="w-5 h-5" />
-            {isLoading ? "Syncing your calendar..." : "Continue with Google"}
+            {isLoading ? "Syncing your calendar..." : "Sync your Google calendar"}
           </Button>
         </motion.div>
       </div>
