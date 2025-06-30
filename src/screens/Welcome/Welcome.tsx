@@ -58,28 +58,23 @@ export const Welcome = (): JSX.Element => {
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5] relative overflow-hidden">
-      {/* Status bar simulation */}
-      <div className="flex justify-between items-center px-6 pt-3 pb-1 text-black relative">
-        <span className="text-sm font-semibold">9:41</span>
-        
-        {/* Bolt.new Badge */}
-        <motion.a
-          href="https://bolt.new"
-          target="_blank"
-          rel="noopener noreferrer"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="absolute left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95"
-        >
-          <div className="flex items-center gap-1">
-            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M13 3L4 14h7v7l9-11h-7V3z"/>
-            </svg>
-            Built with Bolt.new
-          </div>
-        </motion.a>
+      {/* White Circle Image - Top Right Corner */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="absolute top-4 right-4 z-10"
+      >
+        <img 
+          src="/white_circle_360x360.png" 
+          alt="White circle decoration" 
+          className="w-16 h-16 object-contain"
+        />
+      </motion.div>
 
+      {/* Status bar simulation */}
+      <div className="flex justify-between items-center px-6 pt-3 pb-1 text-black">
+        <span className="text-sm font-semibold">9:41</span>
         <div className="flex items-center gap-1">
           <div className="flex gap-1">
             <div className="w-1 h-1 bg-black rounded-full"></div>
