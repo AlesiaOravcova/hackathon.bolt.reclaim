@@ -40,20 +40,6 @@ export const Welcome = (): JSX.Element => {
         </div>
       </div>
 
-      {/* Logo */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="flex justify-start px-6 pt-6 pb-0"
-      >
-        <img 
-          src="/ReclaimLogo.svg" 
-          alt="Reclaim" 
-          className="h-12 w-auto"
-        />
-      </motion.div>
-
       {/* Main content */}
       <div className="flex-1 flex flex-col justify-between px-6 py-0 pb-8">
         {/* Header section - reduced padding */}
