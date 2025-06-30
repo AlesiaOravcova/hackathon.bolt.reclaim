@@ -39,7 +39,7 @@ export const Dashboard = (): JSX.Element => {
         >
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Good morning!</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Good morning Elizabeth!</h1>
               <p className="text-gray-600">Ready for your me time?</p>
             </div>
             <button
