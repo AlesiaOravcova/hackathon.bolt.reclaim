@@ -7,7 +7,6 @@ import { SignUp } from "./screens/SignUp";
 import { Login } from "./screens/Login";
 import { Dashboard } from "./screens/Dashboard";
 import { Profile } from "./screens/Profile";
-import { Schedule } from "./screens/Schedule";
 import { CalendarIntegration } from "./screens/CalendarIntegration";
 import { OnboardingStep1, OnboardingStep2, OnboardingStep3, OnboardingStep4 } from "./screens/Onboarding";
 
@@ -28,14 +27,6 @@ export const App = (): JSX.Element => {
             element={
               <ProtectedRoute>
                 <Dashboard />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/schedule" 
-            element={
-              <ProtectedRoute>
-                <Schedule />
               </ProtectedRoute>
             } 
           />
