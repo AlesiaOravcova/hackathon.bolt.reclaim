@@ -84,7 +84,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
-              <h2 className="text-2xl font-bold text-gray-900 mb-3">
+              <h2 className="text-2xl font-medium text-gray-900 mb-3">
                 You've committed to {activityTitle} at 9am!
               </h2>
               <p className="text-gray-600 leading-relaxed mb-6">
