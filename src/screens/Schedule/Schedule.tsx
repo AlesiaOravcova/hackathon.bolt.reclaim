@@ -276,9 +276,6 @@ export const Schedule = (): JSX.Element => {
                       <div className="text-xs opacity-90">
                         {meTime.time.replace(':00', '')} – {meTime.endTime.replace(':00', '')}
                       </div>
-                      <div className="text-xs opacity-75 mt-0.5">
-                        {meTime.duration}
-                      </div>
                     </motion.div>
                   ))}
               </div>
