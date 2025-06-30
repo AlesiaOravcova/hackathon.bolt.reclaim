@@ -40,13 +40,27 @@ export const Welcome = (): JSX.Element => {
         </div>
       </div>
 
+      {/* Logo */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="flex justify-center px-6 pt-4 pb-2"
+      >
+        <img 
+          src="/ReclaimLogo.svg" 
+          alt="Reclaim" 
+          className="h-8 w-auto"
+        />
+      </motion.div>
+
       {/* Main content */}
       <div className="flex-1 flex flex-col justify-between px-6 py-2">
         {/* Header section - reduced padding */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
           className="flex flex-col gap-2 mt-2"
         >
 
@@ -67,7 +81,7 @@ export const Welcome = (): JSX.Element => {
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+          transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
           className="flex-1 flex items-center justify-center py-4 relative max-h-80"
         >
           <div className="relative w-80 h-80">
@@ -174,7 +188,7 @@ export const Welcome = (): JSX.Element => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
           className="flex flex-col gap-3 pb-2"
         >
           <Button
