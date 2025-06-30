@@ -121,7 +121,7 @@ export const Dashboard = (): JSX.Element => {
         </motion.div>
 
         {/* Today's Schedule */}
-        <h2>Suggested activities<h2/>
+        <h2 Suggested activities/>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
