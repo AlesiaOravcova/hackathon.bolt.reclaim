@@ -6,7 +6,7 @@ interface BoltBadgeProps {
 
 export const BoltBadge: React.FC<BoltBadgeProps> = ({ className = '' }) => {
   return (
-    <div className={`fixed top-8 right-4 z-50 ${className}`}>
+    <div className={`fixed top-10 right-4 z-50 ${className}`}>
       <img 
         src="/white_circle_360x360.png" 
         alt="Powered by Bolt" 
