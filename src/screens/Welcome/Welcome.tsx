@@ -50,14 +50,6 @@ export const Welcome = (): JSX.Element => {
     }
   };
 
-  const handleGetStarted = () => {
-    setIsLoading(true);
-    // Simulate loading for better UX
-    setTimeout(() => {
-      navigate("/onboarding/step1");
-    }, 1000);
-  };
-
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5] relative overflow-hidden">
       {/* Status bar simulation */}
@@ -241,15 +233,6 @@ export const Welcome = (): JSX.Element => {
               "Continue with Google"
             )}
           </Button>
-
-          {/* Alternative option */}
-          <button
-            onClick={handleGetStarted}
-            disabled={isLoading}
-            className="text-blue-600 font-medium text-center py-1 active:scale-95 transition-all duration-200 disabled:opacity-50"
-          >
-            Skip for now - Get Started
-          </button>
 
           {/* Privacy notice */}
           <p className="text-xs text-gray-500 text-center leading-relaxed">
