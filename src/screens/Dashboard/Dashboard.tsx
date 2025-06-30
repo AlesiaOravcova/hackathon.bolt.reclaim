@@ -215,7 +215,7 @@ export const Dashboard = (): JSX.Element => {
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <div className="flex space-x-2">
+                    <div className="flex space-x-4">
                      <Button
                         size="sm"
                         variant="outline"
