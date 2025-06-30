@@ -186,7 +186,7 @@ export const Welcome = (): JSX.Element => {
           transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
           className="text-start mb-6"
         >
-          <p className="text-base text-gray-600 leading-relaxed">
+          <p className="text-base text-[#333333] leading-relaxed">
             AI assistant that intelligently schedules time for your personal wellbeing and self-care.
           </p>
         </motion.div>
