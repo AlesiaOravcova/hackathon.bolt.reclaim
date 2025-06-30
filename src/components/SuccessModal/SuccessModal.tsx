@@ -118,15 +118,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
               </Button>
             </motion.div>
 
-            {/* Additional encouragement */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="text-sm text-gray-500 mt-4 text-left"
-            >
-              Taking time for yourself is an act of self-care 💙
-            </motion.p>
+
           </motion.div>
         </motion.div>
       )}
