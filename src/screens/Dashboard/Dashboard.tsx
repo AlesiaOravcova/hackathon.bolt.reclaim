@@ -111,7 +111,7 @@ export const Dashboard = (): JSX.Element => {
             <Button
               variant="ghost"
               className="text-blue-600 font-semibold"
-              onClick={() => navigate("/calendar")}
+              onClick={() => navigate("/schedule")}
             >
               View All
             </Button>
