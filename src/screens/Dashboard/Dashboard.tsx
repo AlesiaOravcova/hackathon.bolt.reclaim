@@ -13,6 +13,7 @@ export const Dashboard = (): JSX.Element => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [showCommitSuccessModal, setShowCommitSuccessModal] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState<string>("");
+  const [showSpaPromo, setShowSpaPromo] = useState(true);
 
   const todayActivities = [
     { time: "9:00–9:15am", title: "🧘 Morning Meditation"},
@@ -43,6 +44,15 @@ export const Dashboard = (): JSX.Element => {
   const handleCloseSuccessModal = () => {
     setShowCommitSuccessModal(false);
     setSelectedActivity("");
+  };
+
+  const handleSpaCommit = () => {
+    setSelectedActivity("🌸 Spa Treatment");
+    setShowCommitSuccessModal(true);
+  };
+
+  const handleSpaDismiss = () => {
+    setShowSpaPromo(false);
   };
 
   return (
@@ -168,6 +178,72 @@ export const Dashboard = (): JSX.Element => {
                 </div>
               </motion.div>
             ))}
+
+            {/* Spa Treatment Promotional Card */}
+            {showSpaPromo && (
+              <motion.div
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                transition={{ delay: 0.4, type: "spring", damping: 20, stiffness: 300 }}
+                className="relative overflow-hidden bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 rounded-2xl p-5 border-2 border-pink-200 shadow-sm"
+              >
+                {/* Subtle decorative elements */}
+                <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-pink-200/30 to-purple-200/30 rounded-full -translate-y-10 translate-x-10"></div>
+                <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-indigo-200/30 to-pink-200/30 rounded-full translate-y-8 -translate-x-8"></div>
+                
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-2xl">🌸</span>
+                        <span className="text-sm font-medium text-pink-700 bg-pink-100 px-2 py-1 rounded-full">
+                          Treat yourself
+                        </span>
+                      </div>
+                      <h3 className="font-semibold text-gray-900 mb-1">
+                        Spa Treatment
+                      </h3>
+                      <p className="text-sm text-gray-600 mb-3 leading-relaxed">
+                        You've been doing great with your wellness routine. How about scheduling some pampering time this weekend?
+                      </p>
+                      <div className="text-sm text-purple-700 font-medium">
+                        Saturday 2:00–3:30PM
+                      </div>
+                    </div>
+                    
+                    {/* Dismiss button */}
+                    <button
+                      onClick={handleSpaDismiss}
+                      className="p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-white/50"
+                      aria-label="Dismiss spa treatment suggestion"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  <div className="flex gap-3">
+                    <Button
+                      size="sm"
+                      onClick={handleSpaCommit}
+                      className="bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full px-4 py-2 font-medium shadow-sm hover:shadow-md transition-all duration-200"
+                    >
+                      I'm in! 💆‍♀️
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={handleSpaDismiss}
+                      className="text-gray-600 hover:text-gray-800 hover:bg-white/60 rounded-full px-4 py-2 font-medium transition-all duration-200"
+                    >
+                      Maybe later
+                    </Button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
           </div>
         </motion.div>
 
