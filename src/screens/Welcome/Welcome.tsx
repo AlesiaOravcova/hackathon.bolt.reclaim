@@ -55,7 +55,7 @@ export const Welcome = (): JSX.Element => {
       </motion.div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col justify-between px-16 py-8">
+      <div className="flex-1 flex flex-col justify-between px-1 py-8">
         {/* Header section - reduced padding */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
