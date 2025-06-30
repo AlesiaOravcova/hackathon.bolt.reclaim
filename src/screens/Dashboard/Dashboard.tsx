@@ -127,7 +127,6 @@ export const Dashboard = (): JSX.Element => {
           transition={{ delay: 0.2 }}
           className="px-6"
         >
-
           <div className="space-y-3">
             {todayActivities.map((activity, index) => (
               <motion.div
@@ -137,10 +136,10 @@ export const Dashboard = (): JSX.Element => {
                 transition={{ delay: 0.1 * index }}
                 className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100"
               >
- 
-                      <h3 className="font-semibold text-gray-900">{activity.title}</h3>
-                      <p className="text-sm text-gray-500">{activity.time} • {activity.duration}</p>
-                    </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-semibold text-gray-900">{activity.title}</h3>
+                    <p className="text-sm text-gray-500">{activity.time} • {activity.duration}</p>
                   </div>
                   <Button
                     size="sm"
