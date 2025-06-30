@@ -73,7 +73,7 @@ export const WeeklyCalendarScroll: React.FC<WeeklyCalendarScrollProps> = ({
     if (isSelected(date)) {
       return 'text-blue-600';
     }
-
+    return '';
   };
 
   return (
@@ -116,7 +116,7 @@ export const WeeklyCalendarScroll: React.FC<WeeklyCalendarScrollProps> = ({
                 </span>
               </motion.button>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
