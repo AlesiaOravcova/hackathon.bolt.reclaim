@@ -64,7 +64,7 @@ export const Welcome = (): JSX.Element => {
           className="flex flex-col gap-2 mt-2"
         >
 
-          <h1 className="text-3xl font-bold text-gray-900 leading-tight">
+          <h1 className="text-3xl font-normal text-gray-900 leading-tight">
             your{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
               me time
