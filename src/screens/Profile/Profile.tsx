@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
+import { BoltBadge } from "../../components/ui";
 import { TabBar } from "../../components/TabBar";
 import { StatusBar } from "../../components/StatusBar";
 
@@ -24,6 +25,9 @@ export const Profile = (): JSX.Element => {
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]">
+      {/* Bolt Badge */}
+      <BoltBadge />
+      
       <StatusBar />
       
       <div className="flex-1 overflow-y-auto">

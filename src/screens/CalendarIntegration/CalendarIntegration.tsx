@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { StatusBar } from '../../components/StatusBar';
+import { BoltBadge } from '../../components/ui';
 import { TabBar } from '../../components/TabBar';
 import { CalendarConnect, CalendarSelector, CalendarView } from '../../components/Calendar';
 import { useGoogleCalendar } from '../../hooks/useGoogleCalendar';
@@ -127,6 +128,9 @@ export const CalendarIntegration: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]">
+      {/* Bolt Badge */}
+      <BoltBadge />
+      
       <StatusBar />
       
       <div className="flex-1 overflow-hidden">
