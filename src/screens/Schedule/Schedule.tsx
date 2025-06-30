@@ -76,10 +76,11 @@ export const Schedule = (): JSX.Element => {
 
   const currentWeek = getCurrentWeek();
 
-  // Time slots from 7am to 7pm
+  // Time slots from 1 AM to 11 PM
   const timeSlots = [
-    "7 AM", "8 AM", "9 AM", "10 AM", "11 AM", "12 PM", 
-    "1 PM", "2 PM", "3 PM", "4 PM", "5 PM", "6 PM", "7 PM"
+    "1 AM", "2 AM", "3 AM", "4 AM", "5 AM", "6 AM", "7 AM", "8 AM", 
+    "9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", 
+    "4 PM", "5 PM", "6 PM", "7 PM", "8 PM", "9 PM", "10 PM", "11 PM"
   ];
 
   const getEventsForDay = (dayIndex: number) => {
@@ -208,7 +209,7 @@ export const Schedule = (): JSX.Element => {
         ))}
         
         {/* Current time indicator (red line) - positioned at around 7:30 PM */}
-        <div className="absolute left-0 right-0 h-0.5 bg-red-500 z-20" style={{ top: '832px' }}>
+        <div className="absolute left-0 right-0 h-0.5 bg-red-500 z-20" style={{ top: '1216px' }}>
           <div className="w-3 h-3 bg-red-500 rounded-full -ml-1.5 -mt-1"></div>
         </div>
       </div>
