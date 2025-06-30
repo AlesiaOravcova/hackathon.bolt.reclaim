@@ -41,7 +41,8 @@ export const AuthCallback: React.FC = () => {
             if (success) {
               // Security: Clear URL parameters to remove sensitive data from browser history
               window.history.replaceState({}, document.title, window.location.pathname);
-              navigate('/calendar');
+              // Redirect to onboarding instead of calendar
+              navigate('/onboarding/step1');
               return;
             } else {
               throw new Error('Failed to authenticate with Google Calendar');
