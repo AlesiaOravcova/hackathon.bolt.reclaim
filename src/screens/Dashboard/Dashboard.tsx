@@ -195,24 +195,22 @@ export const Dashboard = (): JSX.Element => {
                 <div className="relative z-10">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
-                      {/* Title row with Spa Treatment and Treat yourself on same line */}
+                      {/* Title row with tag on left and spa details on right */}
+                      <div className="flex items-start justify-between">
                         <span className="text-sm font-medium text-pink-700 bg-pink-100 px-2 py-1 rounded-full">
                           🌸 Treat yourself
                         </span>
-                      <div className="flex items-start justify-between w-full">
-
-                      </div>
-                        <div className="flex flex-col"> 
-                          <h3 className="font-semibold text-gray-900 mb-0 flex-1">
+                        <div className="flex flex-col items-end">
+                          <h3 className="font-semibold text-gray-900 mb-0">
                             Spa Treatment
                           </h3>
                           <div className="text-sm text-purple-700 font-medium">
                             Saturday 2:00-4:00PM
                           </div>
                         </div>
+                      </div>
 
-
-                      <p className="text-sm text-gray-600 mb-3 leading-relaxed">
+                      <p className="text-sm text-gray-600 mb-3 leading-relaxed mt-3">
                         You've been doing great with your wellness routine. How about scheduling some pampering time this weekend?
                       </p>
 
