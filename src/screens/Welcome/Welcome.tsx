@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
-import { GoogleIcon } from "../../components/icons";
 import { googleCalendarService } from "../../services/googleCalendar";
 
 export const Welcome = (): JSX.Element => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Check if user is already authenticated
@@ -17,73 +15,12 @@ export const Welcome = (): JSX.Element => {
     }
   }, [navigate]);
 
-  const handleGoogleSignIn = async () => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      console.log("Starting Google Sign-In process...");
-      
-      // Check if we have Google Calendar credentials configured
-      const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-      const clientSecret = import.meta.env.VITE_GOOGLE_CLIENT_SECRET;
-      
-      console.log("Environment check:", {
-        hasClientId: !!clientId,
-        hasClientSecret: !!clientSecret,
-        clientIdLength: clientId?.length || 0
-      });
-      
-      if (!clientId) {
-        throw new Error("Google Client ID is not configured. Please check your .env file and ensure VITE_GOOGLE_CLIENT_ID is set.");
-      }
-      
-      if (!clientSecret) {
-        throw new Error("Google Client Secret is not configured. Please check your .env file and ensure VITE_GOOGLE_CLIENT_SECRET is set.");
-      }
-      
-      console.log("Initiating OAuth flow...");
-      
-      // Add a small delay to show loading state
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Initiate Google OAuth flow - this will redirect the page
-      googleCalendarService.initiateOAuth();
-      
-      // Note: The page will redirect, so code after this won't execute
-    } catch (error: any) {
-      console.error('Google sign-in error:', error);
-      setError(error.message || "An error occurred during sign-in. Please try again.");
-      setIsLoading(false);
-    }
-  };
-
   const handleGetStarted = () => {
     setIsLoading(true);
     // Simulate loading for better UX
     setTimeout(() => {
       navigate("/onboarding/step1");
     }, 1000);
-  };
-
-  const handleShowDebugInfo = () => {
-    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    const clientSecret = import.meta.env.VITE_GOOGLE_CLIENT_SECRET;
-    
-    let debug = "Debug Information:\n\n";
-    debug += `Environment Variables:\n`;
-    debug += `- VITE_GOOGLE_CLIENT_ID: ${clientId ? `${clientId.substring(0, 20)}...` : 'NOT SET'}\n`;
-    debug += `- VITE_GOOGLE_CLIENT_SECRET: ${clientSecret ? 'SET' : 'NOT SET'}\n\n`;
-    debug += `Current Configuration:\n`;
-    debug += `- Current URL: ${window.location.href}\n`;
-    debug += `- Redirect URI: ${window.location.origin}/auth/callback\n`;
-    debug += `- Browser: ${navigator.userAgent}\n\n`;
-    debug += `Troubleshooting:\n`;
-    debug += `1. Ensure your Google OAuth app is configured with the correct redirect URI\n`;
-    debug += `2. Check that your .env file contains the correct credentials\n`;
-    debug += `3. Verify that your Google OAuth app allows this domain\n`;
-    
-    alert(debug);
   };
 
   return (
@@ -234,72 +171,37 @@ export const Welcome = (): JSX.Element => {
           </div>
         </motion.div>
 
-        {/* Authentication section - compact spacing */}
+        {/* Get Started section */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
           className="flex flex-col gap-3 pb-2"
         >
-          {/* Error message */}
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"
-            >
-              <div className="font-semibold mb-1">Connection Issue:</div>
-              <div className="mb-2">{error}</div>
-              <div className="flex gap-2">
-                <button
-                  onClick={handleShowDebugInfo}
-                  className="text-xs underline text-red-600 hover:text-red-800"
-                >
-                  Show Debug Info
-                </button>
-              </div>
-            </motion.div>
-          )}
-
           <Button
-            onClick={handleGoogleSignIn}
-            disabled={isLoading}
-            variant="outline"
-            className="flex h-12 items-center justify-center gap-3 bg-white border-2 border-gray-200 text-gray-900 rounded-2xl font-semibold text-base shadow-lg active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <GoogleIcon className="w-5 h-5" />
-            {isLoading ? (
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
-                Connecting...
-              </div>
-            ) : (
-              "Continue with Google"
-            )}
-          </Button>
-
-          {/* Alternative option */}
-          <button
             onClick={handleGetStarted}
             disabled={isLoading}
-            className="text-blue-600 font-medium text-center py-1 active:scale-95 transition-all duration-200 disabled:opacity-50"
+            className={`w-full h-12 rounded-2xl font-semibold text-lg transition-all duration-200 ${
+              isLoading
+                ? "bg-blue-600 bg-opacity-50 text-white cursor-not-allowed"
+                : "bg-blue-600 text-white hover:bg-blue-700 active:scale-95"
+            }`}
           >
-            Skip for now - Get Started
-          </button>
+            {isLoading ? (
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Getting Started...
+              </div>
+            ) : (
+              "Get Started"
+            )}
+          </Button>
 
           {/* Privacy notice */}
           <p className="text-xs text-gray-500 text-center leading-relaxed">
             By continuing, you agree to our Terms of Service and Privacy Policy. 
-            Connect your Google Calendar to automatically schedule your wellness time.
+            You can connect your Google Calendar later for automatic scheduling.
           </p>
-
-          {/* Troubleshooting note */}
-          <div className="mt-2 p-3 bg-blue-50 rounded-xl">
-            <p className="text-xs text-blue-700 text-center">
-              <strong>Having trouble connecting?</strong><br />
-              Make sure your Google OAuth app is properly configured with the correct redirect URI, or use "Skip for now\" to explore the app without calendar integration.
-            </p>
-          </div>
         </motion.div>
       </div>
     </div>
