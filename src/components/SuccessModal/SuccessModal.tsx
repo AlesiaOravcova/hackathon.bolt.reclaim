@@ -92,7 +92,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
                 transition={{ delay: 0.4 }}
                 className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-2xl p-4 mb-4"
               >
-                <p className="text-lg font-semibold text-blue-800">
+                <p className="text-lg font-normal text-blue-800">
                   🧘Morning Meditation
                 </p>
               </motion.div>
