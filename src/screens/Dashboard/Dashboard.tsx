@@ -41,7 +41,7 @@ export const Dashboard = (): JSX.Element => {
             <div>
               <h1 className="text-4xl font-medium text-gray-900 leading-tight">
                 <span className="">
-              Good morning
+              ☀️ Good morning
                 </span>     
                 <br/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
