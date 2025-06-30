@@ -70,10 +70,6 @@ export const Welcome = (): JSX.Element => {
               me time
             </span>
           </h1>
-
-          <p className="text-base text-gray-600 leading-relaxed">
-            AI assistant that intelligently schedules time for your personal wellbeing and self-care.
-          </p>
         </motion.div>
 
         {/* Illustration with floating elements - increased size */}
@@ -182,6 +178,15 @@ export const Welcome = (): JSX.Element => {
             </div>
           </div>
         </motion.div>
+        <motion.div  
+          <p className="text-base text-gray-600 leading-relaxed"> 
+            AI assistant that intelligently schedules time for your personal wellbeing and self-care.
+          </p>
+        </motion.div>
+
+                  
+
+
 
         {/* Authentication section - compact spacing */}
         <motion.div
