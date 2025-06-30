@@ -23,7 +23,7 @@ export const Welcome = (): JSX.Element => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 relative overflow-hidden">
       {/* Status bar simulation */}
       <div className="flex justify-between items-center px-6 pt-3 pb-1 text-black">
         <span className="text-sm font-semibold">9:41</span>
@@ -53,7 +53,7 @@ export const Welcome = (): JSX.Element => {
           <h1 className="text-3xl font-bold text-gray-900 leading-tight">
             Reclaim your
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">
               me time
             </span>
           </h1>
@@ -190,7 +190,7 @@ export const Welcome = (): JSX.Element => {
           {/* Sign in link */}
           <button
             onClick={handleSignIn}
-            className="text-blue-600 font-medium text-center py-1 active:scale-95 transition-all duration-200"
+            className="text-green-600 font-medium text-center py-1 active:scale-95 transition-all duration-200"
           >
             Already have an account? Sign in
           </button>

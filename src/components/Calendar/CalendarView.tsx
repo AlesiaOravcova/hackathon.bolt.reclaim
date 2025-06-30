@@ -95,7 +95,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
           <p className="text-gray-600 mb-4">Create your first event to get started</p>
           <Button
             onClick={() => setShowEventForm(true)}
-            className="bg-blue-600 text-white"
+            className="bg-green-600 text-white"
           >
             Create Event
           </Button>
@@ -166,17 +166,17 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
                 className={`bg-white rounded-2xl p-4 border ${
-                  isToday ? 'border-blue-200 bg-blue-50' : 'border-gray-100'
+                  isToday ? 'border-green-200 bg-green-50' : 'border-gray-100'
                 }`}
               >
                 <div className="flex items-center justify-between mb-3">
                   <h4 className={`font-semibold ${
-                    isToday ? 'text-blue-900' : 'text-gray-900'
+                    isToday ? 'text-green-900' : 'text-gray-900'
                   }`}>
                     {format(day, 'EEEE, MMM d')}
                   </h4>
                   <span className={`text-sm ${
-                    isToday ? 'text-blue-600' : 'text-gray-500'
+                    isToday ? 'text-green-600' : 'text-gray-500'
                   }`}>
                     {dayEvents.length} event{dayEvents.length !== 1 ? 's' : ''}
                   </span>
@@ -226,16 +226,16 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
               <div className="absolute left-4 top-0 bottom-0 w-px bg-gray-200" />
               <div className={`absolute left-2 top-2 w-4 h-4 rounded-full border-2 ${
                 isToday 
-                  ? 'bg-blue-600 border-blue-600' 
+                  ? 'bg-green-600 border-green-600' 
                   : 'bg-white border-gray-300'
               }`} />
 
               <div className="ml-12">
                 <h3 className={`font-semibold mb-2 ${
-                  isToday ? 'text-blue-900' : 'text-gray-900'
+                  isToday ? 'text-green-900' : 'text-gray-900'
                 }`}>
                   {format(day, 'EEEE, MMMM d')}
-                  {isToday && <span className="ml-2 text-sm text-blue-600">Today</span>}
+                  {isToday && <span className="ml-2 text-sm text-green-600">Today</span>}
                 </h3>
 
                 {dayEvents.length > 0 ? (
@@ -286,7 +286,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
 
         <Button
           onClick={() => setShowEventForm(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-xl"
+          className="bg-green-600 text-white px-4 py-2 rounded-xl"
         >
           + Add Event
         </Button>

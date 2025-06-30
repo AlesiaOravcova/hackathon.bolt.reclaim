@@ -51,14 +51,14 @@ export const CalendarSelector: React.FC<CalendarSelectorProps> = ({
             onClick={() => toggleCalendar(calendar.id)}
             className={`w-full p-4 rounded-2xl border-2 text-left transition-all ${
               selectedCalendars.includes(calendar.id)
-                ? 'border-blue-500 bg-blue-50'
+                ? 'border-green-500 bg-green-50'
                 : 'border-gray-200 bg-white'
             }`}
           >
             <div className="flex items-center gap-3">
               <div className={`w-5 h-5 rounded border flex items-center justify-center ${
                 selectedCalendars.includes(calendar.id)
-                  ? 'border-blue-500 bg-blue-500'
+                  ? 'border-green-500 bg-green-500'
                   : 'border-gray-300'
               }`}>
                 {selectedCalendars.includes(calendar.id) && (
@@ -80,7 +80,7 @@ export const CalendarSelector: React.FC<CalendarSelectorProps> = ({
                     {calendar.summary}
                   </span>
                   {calendar.primary && (
-                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
                       Primary
                     </span>
                   )}
@@ -101,7 +101,7 @@ export const CalendarSelector: React.FC<CalendarSelectorProps> = ({
         disabled={selectedCalendars.length === 0 || isLoading}
         className={`w-full h-14 rounded-2xl font-semibold text-lg ${
           selectedCalendars.length > 0
-            ? 'bg-blue-600 text-white'
+            ? 'bg-green-600 text-white'
             : 'bg-gray-200 text-gray-400'
         }`}
       >

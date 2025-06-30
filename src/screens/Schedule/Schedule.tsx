@@ -51,7 +51,7 @@ export const Schedule = (): JSX.Element => {
           {/* Week Calendar */}
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-gray-900">This Week</h2>
-            <Button variant="ghost" className="text-blue-600 font-medium">
+            <Button variant="ghost" className="text-green-600 font-medium">
               Add Activity
             </Button>
           </div>
@@ -67,9 +67,9 @@ export const Schedule = (): JSX.Element => {
                   onClick={() => setSelectedDate(date)}
                   className={`flex-1 py-3 px-2 rounded-2xl transition-all ${
                     isSelected
-                      ? "bg-blue-600 text-white"
+                      ? "bg-green-600 text-white"
                       : isToday
-                      ? "bg-blue-100 text-blue-600"
+                      ? "bg-green-100 text-green-600"
                       : "bg-gray-100 text-gray-600"
                   }`}
                 >
@@ -117,14 +117,14 @@ export const Schedule = (): JSX.Element => {
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
                       item.completed 
                         ? "bg-green-100" 
-                        : "bg-blue-100"
+                        : "bg-emerald-100"
                     }`}>
                       {item.completed ? (
                         <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                         </svg>
                       ) : (
-                        <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-6 h-6 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                         </svg>
                       )}
@@ -146,7 +146,7 @@ export const Schedule = (): JSX.Element => {
                   {!item.completed && (
                     <Button
                       size="sm"
-                      className="bg-blue-600 text-white rounded-full px-4 py-2"
+                      className="bg-green-600 text-white rounded-full px-4 py-2"
                     >
                       Start
                     </Button>
@@ -170,7 +170,7 @@ export const Schedule = (): JSX.Element => {
             className="mt-6"
           >
             <Button
-              className="w-full h-14 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl font-semibold text-lg shadow-lg"
+              className="w-full h-14 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-2xl font-semibold text-lg shadow-lg"
             >
               + Schedule New Activity
             </Button>

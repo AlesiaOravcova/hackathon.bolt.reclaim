@@ -47,13 +47,13 @@ export const Profile = (): JSX.Element => {
 
           {/* Profile Info */}
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+            <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
               <span className="text-white font-bold text-2xl">J</span>
             </div>
             <div>
               <h2 className="text-xl font-bold text-gray-900">Jane Doe</h2>
               <p className="text-gray-600">Member since March 2024</p>
-              <p className="text-sm text-blue-600 font-medium">Premium Plan</p>
+              <p className="text-sm text-green-600 font-medium">Premium Plan</p>
             </div>
           </div>
         </motion.div>

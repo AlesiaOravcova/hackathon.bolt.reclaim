@@ -44,25 +44,25 @@ export const Dashboard = (): JSX.Element => {
             </div>
             <button
               onClick={() => navigate("/profile")}
-              className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center"
+              className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center"
             >
               <span className="text-white font-semibold">J</span>
             </button>
           </div>
 
           {/* Progress Card */}
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl p-6 text-white">
+          <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-3xl p-6 text-white">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-lg font-semibold">Today's Progress</h3>
-                <p className="text-blue-100">2 of 4 activities completed</p>
+                <p className="text-green-100">2 of 4 activities completed</p>
               </div>
               <div className="text-right">
                 <div className="text-2xl font-bold">50%</div>
-                <div className="text-blue-100 text-sm">Complete</div>
+                <div className="text-green-100 text-sm">Complete</div>
               </div>
             </div>
-            <div className="w-full bg-blue-400 rounded-full h-2">
+            <div className="w-full bg-green-400 rounded-full h-2">
               <div className="bg-white h-2 rounded-full w-1/2"></div>
             </div>
           </div>
@@ -75,16 +75,16 @@ export const Dashboard = (): JSX.Element => {
           transition={{ delay: 0.1 }}
           className="px-6 py-4"
         >
-          <div className="bg-gradient-to-r from-green-500 to-teal-600 rounded-3xl p-6 text-white">
+          <div className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-3xl p-6 text-white">
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <h3 className="text-lg font-semibold mb-2">Connect Your Calendar</h3>
-                <p className="text-green-100 text-sm mb-4">
+                <p className="text-emerald-100 text-sm mb-4">
                   Sync with Google Calendar to automatically find time for your wellness activities
                 </p>
                 <Button
                   onClick={() => navigate("/calendar")}
-                  className="bg-white text-green-600 hover:bg-green-50 font-semibold px-4 py-2 rounded-xl"
+                  className="bg-white text-emerald-600 hover:bg-emerald-50 font-semibold px-4 py-2 rounded-xl"
                 >
                   Connect Now
                 </Button>
@@ -109,7 +109,7 @@ export const Dashboard = (): JSX.Element => {
             <h2 className="text-xl font-bold text-gray-900">Today's Schedule</h2>
             <Button
               variant="ghost"
-              className="text-blue-600 font-semibold"
+              className="text-green-600 font-semibold"
               onClick={() => navigate("/schedule")}
             >
               View All
@@ -129,11 +129,11 @@ export const Dashboard = (): JSX.Element => {
                   <div className="flex items-center gap-4">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
                       activity.type === "mindfulness" 
-                        ? "bg-purple-100" 
+                        ? "bg-emerald-100" 
                         : "bg-green-100"
                     }`}>
                       {activity.type === "mindfulness" ? (
-                        <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-6 h-6 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                         </svg>
                       ) : (
@@ -149,7 +149,7 @@ export const Dashboard = (): JSX.Element => {
                   </div>
                   <Button
                     size="sm"
-                    className="bg-blue-600 text-white rounded-full px-4 py-2"
+                    className="bg-green-600 text-white rounded-full px-4 py-2"
                   >
                     Start
                   </Button>
@@ -174,7 +174,7 @@ export const Dashboard = (): JSX.Element => {
                   <div className="text-xs font-medium text-gray-500">{stat.day}</div>
                   <div className="w-8 h-16 bg-gray-100 rounded-full relative overflow-hidden">
                     <div
-                      className="absolute bottom-0 w-full bg-gradient-to-t from-blue-500 to-purple-600 rounded-full transition-all duration-500"
+                      className="absolute bottom-0 w-full bg-gradient-to-t from-green-500 to-emerald-600 rounded-full transition-all duration-500"
                       style={{ height: `${(stat.completed / stat.total) * 100}%` }}
                     ></div>
                   </div>

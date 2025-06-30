@@ -364,11 +364,11 @@ class GoogleCalendarService {
 
   getCategoryColor(category: CalendarEvent['category']): string {
     const colors = {
-      work: '#3B82F6', // Blue
-      school: '#10B981', // Green
-      family: '#F59E0B', // Yellow
-      health: '#EF4444', // Red
-      personal: '#8B5CF6', // Purple
+      work: '#10B981', // Green
+      school: '#059669', // Emerald
+      family: '#34D399', // Light Green
+      health: '#6EE7B7', // Very Light Green
+      personal: '#A7F3D0', // Pale Green
     };
     return colors[category] || colors.personal;
   }

@@ -48,7 +48,7 @@ export const OnboardingStep3 = (): JSX.Element => {
           <div className="flex items-center gap-4 mb-6">
             <button
               onClick={() => navigate("/onboarding/step2")}
-              className="text-blue-600 font-medium"
+              className="text-green-600 font-medium"
             >
               ← Back
             </button>
@@ -57,7 +57,7 @@ export const OnboardingStep3 = (): JSX.Element => {
 
           {/* Progress bar */}
           <div className="w-full bg-gray-200 rounded-full h-1 mb-6">
-            <div className="bg-teal-500 h-1 rounded-full w-3/4"></div>
+            <div className="bg-emerald-500 h-1 rounded-full w-3/4"></div>
           </div>
         </motion.div>
 
@@ -82,14 +82,14 @@ export const OnboardingStep3 = (): JSX.Element => {
                 onClick={() => toggleOption(option)}
                 className={`w-full p-4 rounded-2xl border-2 text-left transition-all ${
                   selectedOptions.includes(option)
-                    ? "border-blue-500 bg-blue-50"
+                    ? "border-green-500 bg-green-50"
                     : "border-gray-200 bg-white"
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <div className={`w-5 h-5 rounded border flex items-center justify-center ${
                     selectedOptions.includes(option)
-                      ? "border-blue-500 bg-blue-500"
+                      ? "border-green-500 bg-green-500"
                       : "border-gray-300"
                   }`}>
                     {selectedOptions.includes(option) && (
@@ -113,7 +113,7 @@ export const OnboardingStep3 = (): JSX.Element => {
           disabled={selectedOptions.length === 0}
           className={`w-full h-14 rounded-2xl font-semibold text-lg ${
             selectedOptions.length > 0
-              ? "bg-blue-600 text-white"
+              ? "bg-green-600 text-white"
               : "bg-gray-200 text-gray-400"
           }`}
         >

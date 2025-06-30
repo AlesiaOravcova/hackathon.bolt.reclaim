@@ -87,11 +87,11 @@ export const EventForm: React.FC<EventFormProps> = ({
   };
 
   const categories: Array<{ value: CalendarEvent['category']; label: string; color: string }> = [
-    { value: 'work', label: 'Work', color: '#3B82F6' },
-    { value: 'school', label: 'School', color: '#10B981' },
-    { value: 'family', label: 'Family', color: '#F59E0B' },
-    { value: 'health', label: 'Health', color: '#EF4444' },
-    { value: 'personal', label: 'Personal', color: '#8B5CF6' },
+    { value: 'work', label: 'Work', color: '#10B981' },
+    { value: 'school', label: 'School', color: '#059669' },
+    { value: 'family', label: 'Family', color: '#34D399' },
+    { value: 'health', label: 'Health', color: '#6EE7B7' },
+    { value: 'personal', label: 'Personal', color: '#A7F3D0' },
   ];
 
   return (
@@ -124,7 +124,7 @@ export const EventForm: React.FC<EventFormProps> = ({
             type="text"
             value={formData.summary}
             onChange={(e) => setFormData(prev => ({ ...prev, summary: e.target.value }))}
-            className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent"
             placeholder="Enter event title"
             required
           />
@@ -138,7 +138,7 @@ export const EventForm: React.FC<EventFormProps> = ({
           <select
             value={formData.calendarId}
             onChange={(e) => setFormData(prev => ({ ...prev, calendarId: e.target.value }))}
-            className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent"
           >
             {calendars.map(calendar => (
               <option key={calendar.id} value={calendar.id}>
@@ -161,7 +161,7 @@ export const EventForm: React.FC<EventFormProps> = ({
                 onClick={() => setFormData(prev => ({ ...prev, category: category.value }))}
                 className={`p-3 rounded-xl border-2 text-sm font-medium transition-all ${
                   formData.category === category.value
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
+                    ? 'border-green-500 bg-green-50 text-green-700'
                     : 'border-gray-200 text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -184,7 +184,7 @@ export const EventForm: React.FC<EventFormProps> = ({
             id="allDay"
             checked={formData.isAllDay}
             onChange={(e) => setFormData(prev => ({ ...prev, isAllDay: e.target.checked }))}
-            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
           />
           <label htmlFor="allDay" className="text-sm font-medium text-gray-700">
             All day event
@@ -201,7 +201,7 @@ export const EventForm: React.FC<EventFormProps> = ({
               type="date"
               value={formData.startDate}
               onChange={(e) => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent"
               required
             />
           </div>
@@ -215,7 +215,7 @@ export const EventForm: React.FC<EventFormProps> = ({
                 type="time"
                 value={formData.startTime}
                 onChange={(e) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
-                className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 required
               />
             </div>
@@ -231,7 +231,7 @@ export const EventForm: React.FC<EventFormProps> = ({
               type="date"
               value={formData.endDate}
               onChange={(e) => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent"
               required
             />
           </div>
@@ -245,7 +245,7 @@ export const EventForm: React.FC<EventFormProps> = ({
                 type="time"
                 value={formData.endTime}
                 onChange={(e) => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
-                className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 required
               />
             </div>
@@ -261,7 +261,7 @@ export const EventForm: React.FC<EventFormProps> = ({
             type="text"
             value={formData.location}
             onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-            className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent"
             placeholder="Enter location (optional)"
           />
         </div>
@@ -275,7 +275,7 @@ export const EventForm: React.FC<EventFormProps> = ({
             value={formData.description}
             onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
             rows={3}
-            className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+            className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
             placeholder="Enter description (optional)"
           />
         </div>
@@ -293,7 +293,7 @@ export const EventForm: React.FC<EventFormProps> = ({
           <Button
             type="submit"
             disabled={isLoading || !formData.summary.trim()}
-            className="flex-1 h-12 bg-blue-600 text-white"
+            className="flex-1 h-12 bg-green-600 text-white"
           >
             {isLoading ? 'Saving...' : (event ? 'Update Event' : 'Create Event')}
           </Button>
