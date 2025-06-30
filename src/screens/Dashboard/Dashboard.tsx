@@ -222,14 +222,14 @@ export const Dashboard = (): JSX.Element => {
                         onClick={handleSpaDismiss}
                         className="border-pink-300 text-pink-700 hover:bg-pink-50 rounded-full px-4 py-2"
                       >
-                        I'm In!
+                        Maybe later
                       </Button>
                       <Button
                         size="sm"
                         onClick={handleSpaCommit}
                         className="bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full px-4 py-2"
                       >
-                        Maybe Later
+                        I'm In!
                       </Button>
                 
                     </div>
