@@ -21,12 +21,14 @@ export const Welcome = (): JSX.Element => {
     debug += `Client Secret: ${clientSecret ? 'SET' : 'NOT SET'}\n`;
     debug += `Current URL: ${window.location.href}\n`;
     debug += `Redirect URI: ${window.location.origin}/auth/callback\n`;
+    debug += `Is in iframe: ${window.top !== window.self}\n`;
+    debug += `User Agent: ${navigator.userAgent}\n`;
     
     setDebugInfo(debug);
     console.log(debug);
   }, []);
 
-  const handleGoogleSignIn = () => {
+  const handleGoogleSignIn = async () => {
     setIsLoading(true);
     setError(null);
     
@@ -53,6 +55,9 @@ export const Welcome = (): JSX.Element => {
       
       console.log("Initiating OAuth flow...");
       
+      // Add a small delay to show loading state
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       // Initiate Google OAuth flow
       googleCalendarService.initiateOAuth();
       
@@ -74,6 +79,45 @@ export const Welcome = (): JSX.Element => {
 
   const handleShowDebugInfo = () => {
     alert(debugInfo);
+  };
+
+  const handleTryAlternativeMethod = () => {
+    setError(null);
+    
+    // Try opening in a new window/tab as an alternative
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    if (!clientId) {
+      setError("Google Client ID is not configured.");
+      return;
+    }
+
+    const redirectUri = `${window.location.origin}/auth/callback`;
+    const authParams = new URLSearchParams({
+      client_id: clientId,
+      redirect_uri: redirectUri,
+      response_type: 'code',
+      scope: 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events',
+      access_type: 'offline',
+      prompt: 'consent',
+    });
+
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${authParams.toString()}`;
+    
+    // Try opening in new window
+    const popup = window.open(authUrl, 'google-auth', 'width=500,height=600,scrollbars=yes,resizable=yes');
+    
+    if (!popup) {
+      setError("Popup blocked. Please allow popups for this site and try again, or use the 'Skip for now' option.");
+    } else {
+      // Monitor the popup for completion
+      const checkClosed = setInterval(() => {
+        if (popup.closed) {
+          clearInterval(checkClosed);
+          // Refresh the page to check for auth completion
+          window.location.reload();
+        }
+      }, 1000);
+    }
   };
 
   return (
@@ -238,14 +282,22 @@ export const Welcome = (): JSX.Element => {
               animate={{ opacity: 1, y: 0 }}
               className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"
             >
-              <div className="font-semibold mb-1">Error:</div>
-              <div>{error}</div>
-              <button
-                onClick={handleShowDebugInfo}
-                className="mt-2 text-xs underline text-red-600"
-              >
-                Show Debug Info
-              </button>
+              <div className="font-semibold mb-1">Connection Issue:</div>
+              <div className="mb-2">{error}</div>
+              <div className="flex gap-2">
+                <button
+                  onClick={handleTryAlternativeMethod}
+                  className="text-xs underline text-red-600 hover:text-red-800"
+                >
+                  Try Alternative Method
+                </button>
+                <button
+                  onClick={handleShowDebugInfo}
+                  className="text-xs underline text-red-600 hover:text-red-800"
+                >
+                  Show Debug Info
+                </button>
+              </div>
             </motion.div>
           )}
 
@@ -259,7 +311,7 @@ export const Welcome = (): JSX.Element => {
             {isLoading ? (
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
-                Signing in...
+                Connecting...
               </div>
             ) : (
               "Continue with Google"
@@ -290,6 +342,14 @@ export const Welcome = (): JSX.Element => {
             By continuing, you agree to our Terms of Service and Privacy Policy. 
             Connect your Google Calendar to automatically schedule your wellness time.
           </p>
+
+          {/* Troubleshooting note */}
+          <div className="mt-2 p-3 bg-blue-50 rounded-xl">
+            <p className="text-xs text-blue-700 text-center">
+              <strong>Having trouble connecting?</strong><br />
+              Make sure popups are enabled, or use "Skip for now" to explore the app without calendar integration.
+            </p>
+          </div>
         </motion.div>
       </div>
     </div>

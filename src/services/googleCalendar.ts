@@ -46,7 +46,6 @@ export interface GoogleCalendarTokens {
 class GoogleCalendarService {
   private readonly CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   private readonly CLIENT_SECRET = import.meta.env.VITE_GOOGLE_CLIENT_SECRET;
-  private readonly REDIRECT_URI = `${window.location.origin}/auth/callback`;
   private readonly SCOPES = [
     'https://www.googleapis.com/auth/calendar',
     'https://www.googleapis.com/auth/calendar.events'
@@ -61,12 +60,17 @@ class GoogleCalendarService {
     console.log('GoogleCalendarService initialized:', {
       hasClientId: !!this.CLIENT_ID,
       hasClientSecret: !!this.CLIENT_SECRET,
-      redirectUri: this.REDIRECT_URI,
+      currentOrigin: window.location.origin,
       scopes: this.SCOPES
     });
   }
 
-  // OAuth 2.0 Authentication
+  // Get the current redirect URI dynamically
+  private getRedirectUri(): string {
+    return `${window.location.origin}/auth/callback`;
+  }
+
+  // OAuth 2.0 Authentication with better error handling
   initiateOAuth(): void {
     console.log('Initiating OAuth flow...');
     
@@ -74,21 +78,40 @@ class GoogleCalendarService {
       throw new Error('Google Client ID is not configured. Please check your .env file.');
     }
 
-    const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
-    authUrl.searchParams.set('client_id', this.CLIENT_ID);
-    authUrl.searchParams.set('redirect_uri', this.REDIRECT_URI);
-    authUrl.searchParams.set('response_type', 'code');
-    authUrl.searchParams.set('scope', this.SCOPES);
-    authUrl.searchParams.set('access_type', 'offline');
-    authUrl.searchParams.set('prompt', 'consent');
-    
-    const finalUrl = authUrl.toString();
-    console.log('Redirecting to:', finalUrl);
-    
-    // Add a small delay to ensure logging is visible
-    setTimeout(() => {
-      window.location.href = finalUrl;
-    }, 100);
+    const redirectUri = this.getRedirectUri();
+    console.log('Using redirect URI:', redirectUri);
+
+    try {
+      // Create the OAuth URL with proper encoding
+      const authParams = new URLSearchParams({
+        client_id: this.CLIENT_ID,
+        redirect_uri: redirectUri,
+        response_type: 'code',
+        scope: this.SCOPES,
+        access_type: 'offline',
+        prompt: 'consent',
+        include_granted_scopes: 'true'
+      });
+
+      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${authParams.toString()}`;
+      
+      console.log('OAuth URL:', authUrl);
+      console.log('Attempting to redirect...');
+      
+      // Try different methods to handle the redirect
+      if (window.top !== window.self) {
+        // We're in an iframe, try to open in parent window
+        console.log('Detected iframe environment, attempting parent window redirect');
+        window.parent.location.href = authUrl;
+      } else {
+        // Normal redirect
+        window.location.href = authUrl;
+      }
+      
+    } catch (error) {
+      console.error('Error creating OAuth URL:', error);
+      throw new Error(`Failed to create OAuth URL: ${error}`);
+    }
   }
 
   async handleOAuthCallback(code: string): Promise<boolean> {
@@ -99,22 +122,25 @@ class GoogleCalendarService {
         throw new Error('Google API credentials are not properly configured');
       }
 
+      const redirectUri = this.getRedirectUri();
+      console.log('Using redirect URI for token exchange:', redirectUri);
+
       const tokenUrl = 'https://oauth2.googleapis.com/token';
       const body = new URLSearchParams({
         client_id: this.CLIENT_ID,
         client_secret: this.CLIENT_SECRET,
         code,
         grant_type: 'authorization_code',
-        redirect_uri: this.REDIRECT_URI,
+        redirect_uri: redirectUri,
       });
 
       console.log('Requesting tokens from:', tokenUrl);
-      console.log('Request body:', Object.fromEntries(body.entries()));
 
       const response = await fetch(tokenUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
         },
         body: body,
       });
@@ -124,7 +150,18 @@ class GoogleCalendarService {
       if (!response.ok) {
         const errorText = await response.text();
         console.error('Token exchange failed:', errorText);
-        throw new Error(`Failed to exchange code for tokens: ${response.status} ${errorText}`);
+        
+        let errorMessage = `Failed to exchange code for tokens: ${response.status}`;
+        try {
+          const errorData = JSON.parse(errorText);
+          if (errorData.error_description) {
+            errorMessage += ` - ${errorData.error_description}`;
+          }
+        } catch (e) {
+          errorMessage += ` - ${errorText}`;
+        }
+        
+        throw new Error(errorMessage);
       }
 
       const tokens = await response.json();
