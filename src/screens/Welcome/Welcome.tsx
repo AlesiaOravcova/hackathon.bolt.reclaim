@@ -71,7 +71,7 @@ export const Welcome = (): JSX.Element => {
             transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
             className="flex-1 flex items-center justify-center relative max-h-80"
           >
-            <div className="relative w-full h-80">
+            <div className="relative w-full">
               {/* Floating element 1 - Weather/Sun icon (top left) */}
               <motion.div
                 animate={{ 
