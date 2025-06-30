@@ -209,7 +209,7 @@ export const Dashboard = (): JSX.Element => {
                         You've been doing great with your wellness routine. How about scheduling some pampering time this weekend?
                       </p>
                       <div className="text-sm text-purple-700 font-medium">
-                        Perfect for relaxation and self-care
+                        Saturday 2:00-4:00PM
                       </div>
                     </div>
                   </div>
