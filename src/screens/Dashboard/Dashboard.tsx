@@ -128,7 +128,7 @@ export const Dashboard = (): JSX.Element => {
           transition={{ delay: 0.2 }}
           className="px-6"
         >
-                  <h2 className="text-lg font-semibold mb-2">Suggested activities</h2>
+          <h2 className="text-lg font-semibold mb-2">Suggested activities</h2>
           <div className="space-y-3">
             {todayActivities.map((activity, index) => (
               <motion.div
@@ -140,8 +140,12 @@ export const Dashboard = (): JSX.Element => {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-semibold text-gray-900">{activity.title}</h3>
-                    <p className="text-sm text-gray-500">{activity.time} • {activity.duration}</p>
+                    <h3 className="font-semibold text-gray-900 flex items-center gap-2 flex-wrap">
+                      {activity.title}
+                      <span className="text-sm text-gray-500">
+                        {activity.time} • {activity.duration}
+                      </span>
+                    </h3>
                   </div>
                   <Button
                     size="sm"
