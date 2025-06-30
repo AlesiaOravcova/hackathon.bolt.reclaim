@@ -5,6 +5,7 @@ import { Dashboard } from "./screens/Dashboard";
 import { Profile } from "./screens/Profile";
 import { Schedule } from "./screens/Schedule";
 import { CalendarIntegration } from "./screens/CalendarIntegration";
+import { FirebaseCalendarIntegration } from "./screens/CalendarIntegration/FirebaseCalendarIntegration";
 import { AuthCallback } from "./screens/AuthCallback";
 import { OnboardingStep1, OnboardingStep2, OnboardingStep3, OnboardingStep4 } from "./screens/Onboarding";
 
@@ -20,7 +21,8 @@ export const App = (): JSX.Element => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/schedule" element={<Schedule />} />
-        <Route path="/calendar" element={<CalendarIntegration />} />
+        <Route path="/calendar" element={<FirebaseCalendarIntegration />} />
+        <Route path="/calendar-direct" element={<CalendarIntegration />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
       </Routes>
     </div>

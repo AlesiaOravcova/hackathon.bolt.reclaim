@@ -2,12 +2,12 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
+  apiKey: "AIzaSyASWHppOn7BM5B-GChocjrmZzdeiD7PglE",
+  authDomain: "reclaim-15423.firebaseapp.com",
+  projectId: "reclaim-15423",
+  storageBucket: "reclaim-15423.firebasestorage.app",
+  messagingSenderId: "391991548537",
+  appId: "1:391991548537:web:267cc257475a762999d2a8"
 };
 
 // Initialize Firebase
