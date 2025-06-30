@@ -197,7 +197,7 @@ export const Dashboard = (): JSX.Element => {
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="text-sm font-medium text-pink-700 bg-pink-100 px-2 py-1 rounded-full">
-                          🌸Treat yourself
+                          🌸 Treat yourself
                         </span>
                       </div>
                       <h3 className="font-semibold text-gray-900 mb-1">
