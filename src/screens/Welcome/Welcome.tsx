@@ -297,7 +297,7 @@ export const Welcome = (): JSX.Element => {
           <div className="mt-2 p-3 bg-blue-50 rounded-xl">
             <p className="text-xs text-blue-700 text-center">
               <strong>Having trouble connecting?</strong><br />
-              Make sure your Google OAuth app is properly configured with the correct redirect URI, or use "Skip for now" to explore the app without calendar integration.
+              Make sure your Google OAuth app is properly configured with the correct redirect URI, or use "Skip for now\" to explore the app without calendar integration.
             </p>
           </div>
         </motion.div>
