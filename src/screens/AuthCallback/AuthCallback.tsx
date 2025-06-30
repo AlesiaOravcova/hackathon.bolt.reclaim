@@ -35,7 +35,17 @@ export const AuthCallback: React.FC = () => {
             window.close();
             return;
           } else {
-            // We're in the main window, handle OAuth callback directly
+            // We're in the main window - this should not happen in normal popup flow
+            // Check if we have a stored state parameter to verify this is a legitimate callback
+            const storedState = sessionStorage.getItem('google_oauth_state');
+            
+            if (!storedState) {
+              // No stored state means this is likely a direct redirect or failed popup flow
+              console.warn('OAuth callback received in main window without stored state parameter');
+              throw new Error('Authentication session expired or invalid. Please try signing in again.');
+            }
+            
+            // We have a stored state, proceed with normal callback handling
             const success = await googleCalendarService.handleOAuthCallback(code, state || undefined);
             
             if (success) {
