@@ -62,7 +62,7 @@ export const Dashboard = (): JSX.Element => {
           </div>
 
           {/* Progress Card */}
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl p-6 text-white">
+          <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl p-6 text-white hidden">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-lg font-semibold">Today's Progress</h3>
