@@ -217,25 +217,22 @@ export const Dashboard = (): JSX.Element => {
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between">
-                    <div className="flex space-x-4">
-                     <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={handleSpaDismiss}
-                        className="text-grey-500 px-4 py-2"
-                      >
-                        Maybe later
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={handleSpaCommit}
-                        className="bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full px-4 py-2"
-                      >
-                        I'm In!
-                      </Button>
-                
-                    </div>
+                  <div className="flex justify-end space-x-4">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={handleSpaDismiss}
+                      className="text-grey-500 px-4 py-2"
+                    >
+                      Maybe later
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={handleSpaCommit}
+                      className="bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full px-4 py-2"
+                    >
+                      I'm In!
+                    </Button>
                   </div>
                 </div>
               </motion.div>
