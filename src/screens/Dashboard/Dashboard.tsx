@@ -195,14 +195,16 @@ export const Dashboard = (): JSX.Element => {
                 <div className="relative z-10">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
+                      {/* Title row with Spa Treatment and Treat yourself on same line */}
+                      <div className="flex items-center justify-between w-full mb-2">
+                        <h3 className="font-semibold text-gray-900 mb-0 flex-1">
+                          Spa Treatment
+                        </h3>
                         <span className="text-sm font-medium text-pink-700 bg-pink-100 px-2 py-1 rounded-full">
                           🌸 Treat yourself
                         </span>
                       </div>
-                      <h3 className="font-semibold text-gray-900 mb-1">
-                        Spa Treatment
-                      </h3>
+                      
                       <p className="text-sm text-gray-600 mb-3 leading-relaxed">
                         You've been doing great with your wellness routine. How about scheduling some pampering time this weekend?
                       </p>
@@ -214,7 +216,7 @@ export const Dashboard = (): JSX.Element => {
                     {/* Dismiss button */}
                     <button
                       onClick={handleSpaDismiss}
-                      className="p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-white/50"
+                      className="p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-white/50 ml-2"
                       aria-label="Dismiss spa treatment suggestion"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
