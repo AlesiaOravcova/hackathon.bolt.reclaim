@@ -94,11 +94,10 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
               transition={{ delay: 0.3 }}
             >
               <h2 className="text-2xl font-bold text-gray-900 mb-3">
-                🎉 You're committed!
+                You've committed to {activityTitle} at 9am!
               </h2>
               <p className="text-gray-600 leading-relaxed mb-6">
-                You've made time for yourself with <span className="font-semibold text-gray-900">{activityTitle}</span>. 
-                We'll send you a gentle reminder 15 minutes before it's time to focus on you.
+                15 minutes before we'll send you a gentle reminder.
               </p>
             </motion.div>
 
