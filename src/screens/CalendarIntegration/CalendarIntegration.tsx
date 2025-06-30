@@ -4,19 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { StatusBar } from '../../components/StatusBar';
 import { TabBar } from '../../components/TabBar';
 import { Button } from '../../components/ui/button';
-import { WeeklyScheduleView } from '../../components/WeeklySchedule';
-import { CalendarGridView } from '../../components/CalendarGrid';
-import { ScheduleActivity } from '../../data/scheduleData';
 
 export const CalendarIntegration: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('calendar');
-  const [viewMode, setViewMode] = useState<'grid' | 'schedule' | 'integration'>('grid');
-
-  const handleActivityClick = (activity: ScheduleActivity) => {
-    console.log('Activity clicked:', activity);
-    // You can add more functionality here, like opening a modal or navigating to details
-  };
 
   const renderIntegrationView = () => (
     <motion.div
@@ -31,45 +22,29 @@ export const CalendarIntegration: React.FC = () => {
       </div>
 
       <h2 className="text-2xl font-bold text-gray-900 mb-3 text-center">
-        Calendar Integration Unavailable
+        Calendar Integration
       </h2>
       
       <p className="text-gray-600 text-center mb-8 leading-relaxed">
-        Calendar integration has been disabled. You can still view Gabie's sample schedule and track wellness activities manually.
+        Connect your calendar to automatically schedule your wellness activities around your existing commitments.
       </p>
 
       <div className="w-full max-w-sm space-y-4">
         <Button
-          onClick={() => setViewMode('grid')}
-          className="w-full h-14 bg-blue-600 text-white rounded-2xl font-semibold text-lg"
-        >
-          View Calendar Grid
-        </Button>
-
-        <Button
-          onClick={() => setViewMode('schedule')}
-          variant="outline"
-          className="w-full h-14 border-gray-300 text-gray-700 rounded-2xl font-semibold text-lg"
-        >
-          View Weekly Schedule
-        </Button>
-
-        <Button
           onClick={() => navigate('/dashboard')}
-          variant="outline"
-          className="w-full h-14 border-gray-300 text-gray-700 rounded-2xl font-semibold text-lg"
+          className="w-full h-14 bg-blue-600 text-white rounded-2xl font-semibold text-lg"
         >
           Back to Dashboard
         </Button>
       </div>
 
       <div className="mt-8 bg-blue-50 rounded-2xl p-4 w-full max-w-sm">
-        <h3 className="font-semibold text-blue-900 mb-2">What you can still do:</h3>
+        <h3 className="font-semibold text-blue-900 mb-2">Coming Soon:</h3>
         <ul className="text-sm text-blue-800 space-y-1">
-          <li>• View Gabie's sample weekly schedule</li>
-          <li>• Track your progress and streaks</li>
-          <li>• Set personal reminders</li>
-          <li>• View your wellness dashboard</li>
+          <li>• Google Calendar integration</li>
+          <li>• Automatic wellness scheduling</li>
+          <li>• Smart time finding</li>
+          <li>• Gentle reminders</li>
         </ul>
       </div>
     </motion.div>
@@ -99,58 +74,16 @@ export const CalendarIntegration: React.FC = () => {
               <div>
                 <h1 className="text-xl font-bold text-gray-900">Calendar</h1>
                 <p className="text-sm text-gray-600">
-                  {viewMode === 'grid' ? "Calendar Grid View" : 
-                   viewMode === 'schedule' ? "Gabie's Sample Schedule" : 
-                   "Calendar integration is not available"}
+                  Calendar integration coming soon
                 </p>
               </div>
-            </div>
-            
-            {/* View Toggle */}
-            <div className="flex bg-gray-100 rounded-xl p-1">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${
-                  viewMode === 'grid'
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                📅 Grid
-              </button>
-              <button
-                onClick={() => setViewMode('schedule')}
-                className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${
-                  viewMode === 'schedule'
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                📋 Schedule
-              </button>
-              <button
-                onClick={() => setViewMode('integration')}
-                className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${
-                  viewMode === 'integration'
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                🔗 Integration
-              </button>
             </div>
           </div>
         </motion.div>
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto">
-          {viewMode === 'grid' && (
-            <CalendarGridView onActivityClick={handleActivityClick} />
-          )}
-          {viewMode === 'schedule' && (
-            <WeeklyScheduleView onActivityClick={handleActivityClick} />
-          )}
-          {viewMode === 'integration' && renderIntegrationView()}
+          {renderIntegrationView()}
         </div>
       </div>
 
