@@ -55,7 +55,7 @@ export const Dashboard = (): JSX.Element => {
     setShowSpaPromo(false);
   };
 
-  // Get current date for calendar icon
+  // Get current date for calendar emoji
   const currentDate = new Date().getDate();
 
   return (
@@ -72,14 +72,10 @@ export const Dashboard = (): JSX.Element => {
           <div className="flex flex-col items-start mb-6">
             <div>
               <h1 className="text-4xl font-medium text-gray-900 leading-tight flex items-center gap-3">
-                {/* Calendar Icon with Current Date */}
-                <div className="relative inline-flex items-center justify-center w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg shadow-sm">
-                  {/* Calendar base */}
-                  <svg className="absolute inset-0 w-full h-full text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
-                  </svg>
-                  {/* Date number */}
-                  <span className="relative z-10 text-white font-bold text-sm leading-none">
+                {/* Calendar Emoji with Current Date */}
+                <div className="relative inline-flex items-center justify-center">
+                  <span className="text-4xl">📅</span>
+                  <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-sm mt-1">
                     {currentDate}
                   </span>
                 </div>
