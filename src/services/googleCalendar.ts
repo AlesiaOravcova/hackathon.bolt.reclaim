@@ -49,13 +49,12 @@ class GoogleCalendarService {
   
   // Minimized scopes - only request what we absolutely need
   private readonly SCOPES = [
-    'https://www.googleapis.com/auth/calendar.readonly', // Read-only access to calendars
-    'https://www.googleapis.com/auth/calendar.events'    // Manage calendar events
+    'https://www.googleapis.com/auth/calendar.readonly',
+    'https://www.googleapis.com/auth/calendar.events'
   ].join(' ');
 
   private tokens: GoogleCalendarTokens | null = null;
   private readonly STORAGE_KEY = 'google_calendar_tokens';
-  private readonly SELECTED_CALENDARS_KEY = 'selected_calendars';
 
   constructor() {
     this.loadTokensFromStorage();
@@ -78,7 +77,9 @@ class GoogleCalendarService {
 
   // Get the current redirect URI dynamically
   private getRedirectUri(): string {
-    return `${window.location.origin}/auth/callback`;
+    // Use the current origin with /auth/callback path
+    const origin = window.location.origin;
+    return `${origin}/auth/callback`;
   }
 
   // OAuth 2.0 Authentication with redirect flow
@@ -93,10 +94,13 @@ class GoogleCalendarService {
     console.log('Using redirect URI:', redirectUri);
 
     try {
-      // Create the OAuth URL with proper encoding and security parameters
+      // Generate a secure state parameter
       const state = this.generateSecureState();
-      console.log('🔐 Generated state parameter:', state);
       
+      // Store state in sessionStorage for verification
+      sessionStorage.setItem('oauth_state', state);
+      
+      // Create the OAuth URL with proper parameters
       const authParams = new URLSearchParams({
         client_id: this.CLIENT_ID,
         redirect_uri: redirectUri,
@@ -104,9 +108,8 @@ class GoogleCalendarService {
         scope: this.SCOPES,
         access_type: 'offline',
         prompt: 'consent',
-        include_granted_scopes: 'true',
-        // Security: Add state parameter to prevent CSRF attacks
-        state: state
+        state: state,
+        include_granted_scopes: 'true'
       });
 
       const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${authParams.toString()}`;
@@ -116,8 +119,8 @@ class GoogleCalendarService {
         console.log('Redirecting to Google OAuth...');
       }
       
-      // Redirect to Google OAuth
-      window.location.href = authUrl;
+      // Use window.location.assign instead of href for better compatibility
+      window.location.assign(authUrl);
       
     } catch (error) {
       console.error('Error creating OAuth URL:', error);
@@ -127,14 +130,11 @@ class GoogleCalendarService {
 
   async handleOAuthCallback(code: string, state?: string): Promise<boolean> {
     console.log('🔄 Handling OAuth callback...');
-    console.log('🔐 Received state parameter:', state);
     
     try {
       // Security: Verify state parameter to prevent CSRF attacks
       if (state) {
         const storedState = sessionStorage.getItem('oauth_state');
-        console.log('🔐 Stored state parameter:', storedState);
-        console.log('🔐 State comparison:', { received: state, stored: storedState, match: storedState === state });
         
         if (!storedState || storedState !== state) {
           console.error('❌ State parameter mismatch!', { received: state, stored: storedState });
@@ -144,9 +144,6 @@ class GoogleCalendarService {
         
         // Clear the state after verification
         sessionStorage.removeItem('oauth_state');
-        console.log('🧹 Cleared stored state parameter');
-      } else {
-        console.warn('⚠️ No state parameter received in callback');
       }
 
       if (!this.CLIENT_ID || !this.CLIENT_SECRET) {
@@ -486,15 +483,7 @@ class GoogleCalendarService {
   private generateSecureState(): string {
     const array = new Uint8Array(32);
     crypto.getRandomValues(array);
-    const state = Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
-    
-    console.log('🔐 Generating new state parameter:', state);
-    
-    // Store state in sessionStorage for verification
-    sessionStorage.setItem('oauth_state', state);
-    console.log('💾 Stored state in sessionStorage');
-    
-    return state;
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
   }
 
   private sanitizeString(input: string): string {
@@ -551,7 +540,6 @@ class GoogleCalendarService {
     this.clearSensitiveData();
     this.tokens = null;
     sessionStorage.removeItem(this.STORAGE_KEY);
-    sessionStorage.removeItem(this.SELECTED_CALENDARS_KEY);
     sessionStorage.removeItem('oauth_state');
     console.log('🧹 Signed out and cleared all stored data');
   }
