@@ -12,10 +12,9 @@ export const Dashboard = (): JSX.Element => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   const todayActivities = [
-    { time: "9–9:15am", title: "☀️ Morning Meditation", duration: "15 min", type: "mindfulness" },
-    { time: "12:30 PM", title: "Lunch Break Walk", duration: "20 min", type: "exercise" },
-    { time: "3:00 PM", title: "Breathing Exercise", duration: "10 min", type: "mindfulness" },
-    { time: "6:00 PM", title: "Evening Yoga", duration: "30 min", type: "exercise" },
+    { time: "9–9:15am", title: "🧘 Morning Meditation", duration: "15 min", type: "mindfulness" },
+    { time: "12:30 PM", title: "🚶 Lunch Break Walk", duration: "20 min", type: "exercise" },
+    { time: "6:00 PM", title: "🧘 Evening Yoga", duration: "30 min", type: "exercise" },
   ];
 
   const weeklyStats = [
