@@ -205,9 +205,6 @@ export const Schedule = (): JSX.Element => {
                       <div className="font-semibold text-xs leading-tight">
                         {event.title}
                       </div>
-                      <div className="text-xs opacity-90 mt-1">
-                        {event.time} – {event.endTime}
-                      </div>
                     </div>
                   ))}
               </div>
