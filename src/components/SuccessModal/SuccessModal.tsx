@@ -75,17 +75,8 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
             onClick={(e) => e.stopPropagation()}
             className="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 text-center shadow-2xl"
           >
-            {/* Success Icon */}
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: "spring", stiffness: 500 }}
-              className="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6"
-            >
-              <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
-            </motion.div>
+       
+            
 
             {/* Success Message */}
             <motion.div
