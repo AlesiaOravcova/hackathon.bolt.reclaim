@@ -32,7 +32,6 @@ export const TabBar = ({ activeTab, onTabChange }: TabBarProps): JSX.Element => 
       ),
     },
 
-    },
     {
       id: "profile",
       label: "Profile",
