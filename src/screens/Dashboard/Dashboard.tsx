@@ -84,7 +84,7 @@ export const Dashboard = (): JSX.Element => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="px-6 py-4"
+          className="px-6 py-4 hidden"
         >
           <div className="bg-gradient-to-r from-green-500 to-teal-600 rounded-3xl p-6 text-white">
             <div className="flex items-center justify-between">
