@@ -76,7 +76,7 @@ export const WeeklyCalendarScroll: React.FC<WeeklyCalendarScrollProps> = ({
     if (isMonday(date)) {
       return 'text-blue-600';
     }
-    return 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50';
+    return 'text-gray-700 hover:text-gray-900';
   };
 
   return (
