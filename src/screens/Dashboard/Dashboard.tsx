@@ -138,13 +138,7 @@ export const Dashboard = (): JSX.Element => {
                 day: 'numeric' 
               })}
             </h2>
-            <Button
-              variant="ghost"
-              className="text-blue-600 font-semibold"
-              onClick={() => navigate("/schedule")}
-            >
-              View All
-            </Button>
+
           </div>
 
           <div className="space-y-3">
