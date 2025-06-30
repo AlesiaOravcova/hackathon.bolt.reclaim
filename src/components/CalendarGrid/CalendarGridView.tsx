@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { format, parseISO, startOfDay, endOfDay, isWithinInterval } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { gabieSchedule, ScheduleActivity } from '../../data/scheduleData';
 
 interface CalendarGridViewProps {
