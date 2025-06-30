@@ -148,7 +148,7 @@ export const Dashboard = (): JSX.Element => {
                   </div>
                   <Button
                     size="sm"
-                    className="bg-blue-600 text-white rounded-full px-4 py-2 ml-4"
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full px-4 py-2 ml-4"
                   >
                     Commit
                   </Button>
