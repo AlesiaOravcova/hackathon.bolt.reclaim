@@ -44,7 +44,7 @@ export const Dashboard = (): JSX.Element => {
             </div>
             <button
               onClick={() => navigate("/profile")}
-              className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center"
+              className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center hidden"
             >
               <span className="text-white font-semibold">J</span>
             </button>
