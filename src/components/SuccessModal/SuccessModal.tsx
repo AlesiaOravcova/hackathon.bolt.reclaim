@@ -90,7 +90,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.4 }}
-                className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-2xl p-1 mb-1"
+                className="bg-gradient-to-r from-blue-50 to-purple-50 inline-block border border-blue-200 rounded-2xl p-1 mb-1"
               >
                 <p className="text-lg font-normal text-blue-800 text-left">
                   🧘Morning Meditation!
