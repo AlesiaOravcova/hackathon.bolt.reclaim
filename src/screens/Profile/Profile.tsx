@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { TabBar } from "../../components/TabBar";
 import { StatusBar } from "../../components/StatusBar";
+import { useGoogleCalendar } from "../../hooks/useGoogleCalendar";
 
 export const Profile = (): JSX.Element => {
   const navigate = useNavigate();
+  const { isAuthenticated, signOut } = useGoogleCalendar();
 
   const profileStats = [
     { label: "Activities Completed", value: "127", icon: "✓" },
@@ -21,6 +23,21 @@ export const Profile = (): JSX.Element => {
     { label: "Focus Areas", value: "Mindfulness, Exercise" },
     { label: "Notifications", value: "Enabled" },
   ];
+
+  const handleDisconnectGoogle = () => {
+    if (window.confirm('Are you sure you want to disconnect your Google Calendar? This will remove all stored authentication data.')) {
+      signOut();
+      // Show success message or navigate
+      alert('Google Calendar has been successfully disconnected.');
+    }
+  };
+
+  const handleSignOut = () => {
+    if (window.confirm('Are you sure you want to sign out? You will lose access to your calendar integration.')) {
+      signOut();
+      navigate("/");
+    }
+  };
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]">
@@ -54,6 +71,47 @@ export const Profile = (): JSX.Element => {
               <h2 className="text-xl font-bold text-gray-900">Jane Doe</h2>
               <p className="text-gray-600">Member since March 2024</p>
               <p className="text-sm text-blue-600 font-medium">Premium Plan</p>
+            </div>
+          </div>
+
+          {/* Google Calendar Status */}
+          <div className={`p-4 rounded-2xl border-2 mb-4 ${
+            isAuthenticated 
+              ? 'bg-green-50 border-green-200' 
+              : 'bg-gray-50 border-gray-200'
+          }`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                  isAuthenticated ? 'bg-green-100' : 'bg-gray-100'
+                }`}>
+                  <svg className={`w-5 h-5 ${
+                    isAuthenticated ? 'text-green-600' : 'text-gray-400'
+                  }`} fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 className={`font-semibold ${
+                    isAuthenticated ? 'text-green-900' : 'text-gray-900'
+                  }`}>
+                    Google Calendar
+                  </h3>
+                  <p className={`text-sm ${
+                    isAuthenticated ? 'text-green-700' : 'text-gray-600'
+                  }`}>
+                    {isAuthenticated ? 'Connected securely' : 'Not connected'}
+                  </p>
+                </div>
+              </div>
+              {isAuthenticated && (
+                <button
+                  onClick={handleDisconnectGoogle}
+                  className="text-red-600 text-sm font-medium hover:text-red-700 transition-colors px-3 py-1 rounded-lg hover:bg-red-50"
+                >
+                  Disconnect
+                </button>
+              )}
             </div>
           </div>
         </motion.div>
@@ -148,7 +206,7 @@ export const Profile = (): JSX.Element => {
             <Button
               variant="ghost"
               className="w-full justify-between h-14 bg-white rounded-2xl shadow-sm border border-gray-100"
-              onClick={() => navigate("/")}
+              onClick={handleSignOut}
             >
               <span className="text-red-600 font-medium">Sign Out</span>
               <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

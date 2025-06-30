@@ -73,9 +73,13 @@ export const CalendarIntegration: React.FC = () => {
   };
 
   const handleDisconnect = () => {
-    if (window.confirm('Are you sure you want to disconnect your Google Calendar? This will remove all stored authentication data.')) {
+    if (window.confirm('Are you sure you want to disconnect your Google Calendar? This will remove all stored authentication data and you will need to reconnect to access calendar features.')) {
       signOut();
       setSetupStep('connect');
+      // Navigate back to dashboard after disconnect
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 1000);
     }
   };
 
@@ -166,10 +170,33 @@ export const CalendarIntegration: React.FC = () => {
               
               <button
                 onClick={handleDisconnect}
-                className="text-red-600 text-sm font-medium hover:text-red-700 transition-colors"
+                className="bg-red-50 text-red-600 text-sm font-medium hover:bg-red-100 hover:text-red-700 transition-colors px-4 py-2 rounded-xl border border-red-200"
               >
                 Disconnect
               </button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Disconnected State Message */}
+        {!isAuthenticated && setupStep === 'connect' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="px-6 py-4"
+          >
+            <div className="bg-green-50 border border-green-200 rounded-2xl p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                  <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-green-900">Successfully Disconnected</h3>
+                  <p className="text-sm text-green-700">Your Google Calendar has been safely disconnected. All stored data has been cleared.</p>
+                </div>
+              </div>
             </div>
           </motion.div>
         )}
