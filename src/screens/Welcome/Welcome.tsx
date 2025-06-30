@@ -189,7 +189,7 @@ export const Welcome = (): JSX.Element => {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
-          className="flex flex-col gap-3 pb-2"
+          className="flex flex-col gap-3"
         >
           <Button
             onClick={handleGoogleSignIn}
