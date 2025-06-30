@@ -85,17 +85,19 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
                 You've committed to me time!
               </h2>
               
-              {/* Activity Details Box */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.4 }}
-                className="bg-gradient-to-r from-blue-50 to-purple-50 inline-block border border-blue-200 rounded-2xl p-3 mb-3"
-              >
-                <p className="text-lg font-normal text-blue-800 text-left">
-                  🧘Morning Meditation!
-                </p>
-              </motion.div>
+              {/* Activity Details Box - Centered */}
+              <div className="text-center mb-3">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="bg-gradient-to-r from-blue-50 to-purple-50 inline-block border border-blue-200 rounded-2xl p-3"
+                >
+                  <p className="text-lg font-normal text-blue-800 text-left">
+                    🧘Morning Meditation!
+                  </p>
+                </motion.div>
+              </div>
               
               <p className="text-gray-600 leading-relaxed mb-6 text-left">
                 15 minutes before we'll send you a gentle reminder.
