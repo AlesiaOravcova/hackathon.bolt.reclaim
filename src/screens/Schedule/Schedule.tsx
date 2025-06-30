@@ -1,29 +1,136 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../../components/ui/button";
 import { TabBar } from "../../components/TabBar";
 import { StatusBar } from "../../components/StatusBar";
+import { EventCard } from "../../components/Calendar";
+import { useGoogleCalendar } from "../../hooks/useGoogleCalendar";
+import { CalendarEvent } from "../../services/googleCalendar";
 
 export const Schedule = (): JSX.Element => {
   const navigate = useNavigate();
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('work');
 
-  const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const currentWeek = Array.from({ length: 7 }, (_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - date.getDay() + i);
-    return date;
+  const {
+    isAuthenticated,
+    events,
+    selectedCalendars,
+    isLoading,
+    error,
+    fetchEvents,
+  } = useGoogleCalendar();
+
+  // Category filter options
+  const categories = [
+    { id: 'work', label: 'Work', color: '#3B82F6' },
+    { id: 'school', label: 'School run', color: '#10B981' },
+    { id: 'family', label: 'Family', color: '#F59E0B' },
+  ];
+
+  // Fetch events when component mounts or when authentication/calendars change
+  useEffect(() => {
+    if (isAuthenticated && selectedCalendars.length > 0) {
+      fetchEvents();
+    }
+  }, [isAuthenticated, selectedCalendars.length, fetchEvents]);
+
+  // Filter events based on active category
+  const filteredEvents = events.filter(event => {
+    if (activeCategoryFilter === 'all') return true;
+    return event.category === activeCategoryFilter;
   });
 
-  const scheduleData = [
-    { time: "8:00 AM", title: "Morning Meditation", duration: "15 min", completed: true },
-    { time: "9:30 AM", title: "Gratitude Journal", duration: "10 min", completed: true },
-    { time: "12:30 PM", title: "Mindful Lunch Break", duration: "20 min", completed: false },
-    { time: "3:00 PM", title: "Breathing Exercise", duration: "10 min", completed: false },
-    { time: "5:30 PM", title: "Evening Walk", duration: "25 min", completed: false },
-    { time: "8:00 PM", title: "Yoga Session", duration: "30 min", completed: false },
-  ];
+  const handleCategoryChange = (categoryId: string) => {
+    setActiveCategoryFilter(categoryId);
+  };
+
+  const renderContent = () => {
+    if (!isAuthenticated) {
+      return (
+        <div className="flex flex-col items-center justify-center py-12 px-6">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+            <svg className="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Connect Your Calendar</h3>
+          <p className="text-gray-600 text-center mb-4">
+            Connect your Google Calendar to view and manage your events
+          </p>
+          <button
+            onClick={() => navigate("/calendar")}
+            className="bg-blue-600 text-white px-4 py-2 rounded-xl font-medium"
+          >
+            Connect Calendar
+          </button>
+        </div>
+      );
+    }
+
+    if (isLoading) {
+      return (
+        <div className="flex flex-col items-center justify-center py-12 px-6">
+          <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-gray-600">Loading events...</p>
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <div className="flex flex-col items-center justify-center py-12 px-6">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+            <svg className="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Events</h3>
+          <p className="text-gray-600 text-center mb-4">{error}</p>
+          <button
+            onClick={() => fetchEvents()}
+            className="bg-blue-600 text-white px-4 py-2 rounded-xl font-medium"
+          >
+            Try Again
+          </button>
+        </div>
+      );
+    }
+
+    if (filteredEvents.length === 0) {
+      const categoryLabel = categories.find(cat => cat.id === activeCategoryFilter)?.label || activeCategoryFilter;
+      return (
+        <div className="flex flex-col items-center justify-center py-12 px-6">
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+            <svg className="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">No {categoryLabel} Events</h3>
+          <p className="text-gray-600 text-center">
+            No events found for the selected category. Try selecting a different category or add new events.
+          </p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-3">
+        {filteredEvents.map((event, index) => (
+          <motion.div
+            key={event.id}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 * index }}
+          >
+            <EventCard
+              event={event}
+              showDate={true}
+            />
+          </motion.div>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]">
@@ -45,140 +152,45 @@ export const Schedule = (): JSX.Element => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            <h1 className="text-2xl font-bold text-gray-900">Schedule</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Calendar</h1>
           </div>
 
-          {/* Week Calendar */}
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">This Week</h2>
-            <Button variant="ghost" className="text-blue-600 font-medium">
-              Add Activity
-            </Button>
-          </div>
-
-          <div className="flex gap-2">
-            {currentWeek.map((date, index) => {
-              const isToday = date.toDateString() === new Date().toDateString();
-              const isSelected = date.toDateString() === selectedDate.toDateString();
-              
-              return (
-                <button
-                  key={index}
-                  onClick={() => setSelectedDate(date)}
-                  className={`flex-1 py-3 px-2 rounded-2xl transition-all ${
-                    isSelected
-                      ? "bg-blue-600 text-white"
-                      : isToday
-                      ? "bg-blue-100 text-blue-600"
-                      : "bg-gray-100 text-gray-600"
-                  }`}
-                >
-                  <div className="text-xs font-medium mb-1">{weekDays[index]}</div>
-                  <div className="text-lg font-bold">{date.getDate()}</div>
-                </button>
-              );
-            })}
+          {/* Category Filter Tags */}
+          <div className="flex gap-3">
+            {categories.map((category, index) => (
+              <motion.button
+                key={category.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 * index }}
+                onClick={() => handleCategoryChange(category.id)}
+                className={`px-4 py-2 rounded-2xl font-medium text-sm transition-all duration-200 ${
+                  activeCategoryFilter === category.id
+                    ? 'text-white shadow-lg transform scale-105'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+                style={{
+                  backgroundColor: activeCategoryFilter === category.id ? category.color : undefined,
+                }}
+              >
+                {category.label}
+              </motion.button>
+            ))}
           </div>
         </motion.div>
 
-        {/* Schedule List */}
+        {/* Events List */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="px-6 py-4 mb-20"
+          transition={{ delay: 0.2 }}
+          className="px-6 py-4 pb-20"
         >
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold text-gray-900">
-              {selectedDate.toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                month: 'long', 
-                day: 'numeric' 
-              })}
-            </h3>
-            <span className="text-sm text-gray-500">
-              {scheduleData.filter(item => item.completed).length} of {scheduleData.length} completed
-            </span>
-          </div>
-
-          <div className="space-y-3">
-            {scheduleData.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 * index }}
-                className={`bg-white rounded-2xl p-4 shadow-sm border ${
-                  item.completed ? "border-green-200 bg-green-50" : "border-gray-100"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                      item.completed 
-                        ? "bg-green-100" 
-                        : "bg-blue-100"
-                    }`}>
-                      {item.completed ? (
-                        <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                        </svg>
-                      ) : (
-                        <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                      )}
-                    </div>
-                    <div>
-                      <h4 className={`font-semibold ${
-                        item.completed ? "text-green-900" : "text-gray-900"
-                      }`}>
-                        {item.title}
-                      </h4>
-                      <p className={`text-sm ${
-                        item.completed ? "text-green-600" : "text-gray-500"
-                      }`}>
-                        {item.time} • {item.duration}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  {!item.completed && (
-                    <Button
-                      size="sm"
-                      className="bg-blue-600 text-white rounded-full px-4 py-2"
-                    >
-                      Start
-                    </Button>
-                  )}
-                  
-                  {item.completed && (
-                    <div className="text-green-600 font-semibold text-sm">
-                      Completed
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Add Activity Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="mt-6"
-          >
-            <Button
-              className="w-full h-14 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl font-semibold text-lg shadow-lg"
-            >
-              + Schedule New Activity
-            </Button>
-          </motion.div>
+          {renderContent()}
         </motion.div>
       </div>
 
-      <TabBar activeTab="schedule" onTabChange={() => {}} />
+      <TabBar activeTab="Calendar" onTabChange={() => {}} />
     </div>
   );
 };
