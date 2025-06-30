@@ -143,8 +143,9 @@ export const Dashboard = (): JSX.Element => {
                       <span className="flex-1 min-w-0 truncate">
                         {activity.title}
                       </span>
-                      <span className="text-sm text-gray-500 flex-shrink-0 ml-2">
-                        {activity.time} 
+                      <span className="text-sm text-gray-500 flex-shrink-0 ml-2 flex flex-col items-end">
+                        <div>{activity.time}</div>
+                        <div>{activity.duration}</div>
                       </span>
                     </h3>
                   </div>
