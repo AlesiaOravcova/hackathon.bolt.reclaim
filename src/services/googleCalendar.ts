@@ -94,6 +94,9 @@ class GoogleCalendarService {
 
     try {
       // Create the OAuth URL with proper encoding and security parameters
+      const state = this.generateSecureState();
+      console.log('🔐 Generated state parameter:', state);
+      
       const authParams = new URLSearchParams({
         client_id: this.CLIENT_ID,
         redirect_uri: redirectUri,
@@ -103,7 +106,7 @@ class GoogleCalendarService {
         prompt: 'consent',
         include_granted_scopes: 'true',
         // Security: Add state parameter to prevent CSRF attacks
-        state: this.generateSecureState()
+        state: state
       });
 
       const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${authParams.toString()}`;
@@ -143,6 +146,9 @@ class GoogleCalendarService {
           if (event.origin !== window.location.origin) return;
           
           if (event.data.type === 'GOOGLE_AUTH_CALLBACK') {
+            console.log('📨 Received auth callback message:', event.data);
+            console.log('🔐 State from callback:', event.data.state);
+            
             // Handle the OAuth callback in the main window with proper state verification
             clearInterval(checkClosed);
             window.removeEventListener('message', messageListener);
@@ -193,17 +199,27 @@ class GoogleCalendarService {
   }
 
   async handleOAuthCallback(code: string, state?: string): Promise<boolean> {
-    console.log('Handling OAuth callback...');
+    console.log('🔄 Handling OAuth callback...');
+    console.log('🔐 Received state parameter:', state);
     
     try {
       // Security: Verify state parameter to prevent CSRF attacks
       if (state) {
         const storedState = sessionStorage.getItem('oauth_state');
+        console.log('🔐 Stored state parameter:', storedState);
+        console.log('🔐 State comparison:', { received: state, stored: storedState, match: storedState === state });
+        
         if (!storedState || storedState !== state) {
+          console.error('❌ State parameter mismatch!', { received: state, stored: storedState });
           throw new Error('Invalid state parameter - possible CSRF attack');
         }
+        console.log('✅ State parameter verified successfully');
+        
         // Clear the state after verification
         sessionStorage.removeItem('oauth_state');
+        console.log('🧹 Cleared stored state parameter');
+      } else {
+        console.warn('⚠️ No state parameter received in callback');
       }
 
       if (!this.CLIENT_ID || !this.CLIENT_SECRET) {
@@ -258,9 +274,10 @@ class GoogleCalendarService {
       
       this.tokens = tokens;
       this.saveTokensToStorage();
+      console.log('✅ OAuth callback completed successfully');
       return true;
     } catch (error) {
-      console.error('OAuth callback error:', error);
+      console.error('❌ OAuth callback error:', error);
       return false;
     }
   }
@@ -543,8 +560,12 @@ class GoogleCalendarService {
     crypto.getRandomValues(array);
     const state = Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
     
+    console.log('🔐 Generating new state parameter:', state);
+    
     // Store state in sessionStorage for verification
     sessionStorage.setItem('oauth_state', state);
+    console.log('💾 Stored state in sessionStorage');
+    
     return state;
   }
 
@@ -604,6 +625,7 @@ class GoogleCalendarService {
     sessionStorage.removeItem(this.STORAGE_KEY);
     sessionStorage.removeItem(this.SELECTED_CALENDARS_KEY);
     sessionStorage.removeItem('oauth_state');
+    console.log('🧹 Signed out and cleared all stored data');
   }
 
   // Security: Updated storage methods to use sessionStorage
