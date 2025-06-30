@@ -75,19 +75,28 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
             onClick={(e) => e.stopPropagation()}
             className="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 text-center shadow-2xl"
           >
-       
-            
-
             {/* Success Message */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
-              <h2 className="text-2xl font-medium text-gray-900 mb-3">
+              <h2 className="text-2xl font-medium text-gray-900 mb-4">
                 You've committed to me time!
-                {activityTitle} at 9am!
               </h2>
+              
+              {/* Activity Details Box */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.4 }}
+                className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-2xl p-4 mb-4"
+              >
+                <p className="text-lg font-semibold text-blue-800">
+                  🧘Morning Meditation at 9am!
+                </p>
+              </motion.div>
+              
               <p className="text-gray-600 leading-relaxed mb-6">
                 15 minutes before we'll send you a gentle reminder.
               </p>
@@ -97,7 +106,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
+              transition={{ delay: 0.5 }}
             >
               <Button
                 onClick={onClose}
