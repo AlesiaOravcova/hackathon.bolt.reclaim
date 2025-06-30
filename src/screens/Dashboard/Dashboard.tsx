@@ -168,7 +168,7 @@ export const Dashboard = (): JSX.Element => {
         >
           <h2 className="text-xl font-bold text-gray-900 mb-4">This Week</h2>
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-col items-start gap-2">
               {weeklyStats.map((stat, index) => (
                 <div key={stat.day} className="flex flex-col items-center gap-2">
                   <div className="text-xs font-medium text-gray-500">{stat.day}</div>
