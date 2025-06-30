@@ -204,13 +204,13 @@ export const Dashboard = (): JSX.Element => {
                           🌸 Treat yourself
                         </span>
                       </div>
-                      
+                                            <div className="text-sm text-purple-700 font-medium">
+                        Saturday 2:00-4:00PM
+                      </div>
                       <p className="text-sm text-gray-600 mb-3 leading-relaxed">
                         You've been doing great with your wellness routine. How about scheduling some pampering time this weekend?
                       </p>
-                      <div className="text-sm text-purple-700 font-medium">
-                        Saturday 2:00-4:00PM
-                      </div>
+
                     </div>
                   </div>
                   
