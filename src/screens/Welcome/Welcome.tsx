@@ -45,7 +45,7 @@ export const Welcome = (): JSX.Element => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="flex justify-start px-6 pt-4 pb-2"
+        className="flex justify-start px-6 pt-4 pb-0"
       >
         <img 
           src="/ReclaimLogo.svg" 
