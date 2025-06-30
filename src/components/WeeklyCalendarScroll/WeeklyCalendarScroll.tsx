@@ -86,7 +86,7 @@ export const WeeklyCalendarScroll: React.FC<WeeklyCalendarScrollProps> = ({
         {/* Calendar container */}
         <div
           ref={scrollContainerRef}
-          className="overflow-hidden px-10"
+          className="overflow-hidden"
         >
           <motion.div
             key={currentWeekStart.toISOString()}
