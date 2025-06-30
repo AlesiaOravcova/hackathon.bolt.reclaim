@@ -25,33 +25,18 @@ export const AuthCallback: React.FC = () => {
         if (code) {
           // Check if we're in a popup window
           if (window.opener && !window.opener.closed) {
-            console.log('📨 In popup window, processing OAuth callback...');
+            console.log('📨 In popup window, sending OAuth callback to main window...');
             
-            // Process the OAuth callback in the popup
-            const success = await googleCalendarService.handleOAuthCallback(code, state || undefined);
+            // Send the OAuth parameters back to the main window for processing
+            window.opener.postMessage({ 
+              type: 'GOOGLE_AUTH_CALLBACK',
+              code: code,
+              state: state
+            }, window.location.origin);
             
-            if (success) {
-              console.log('✅ OAuth callback successful in popup');
-              // Send success message to parent window
-              window.opener.postMessage({ 
-                type: 'GOOGLE_AUTH_SUCCESS'
-              }, window.location.origin);
-              
-              // Close the popup
-              window.close();
-              return;
-            } else {
-              console.error('❌ OAuth callback failed in popup');
-              // Send error message to parent window
-              window.opener.postMessage({ 
-                type: 'GOOGLE_AUTH_ERROR',
-                error: 'Failed to authenticate with Google Calendar'
-              }, window.location.origin);
-              
-              // Close the popup
-              window.close();
-              return;
-            }
+            // Close the popup immediately
+            window.close();
+            return;
           } else {
             console.log('📨 In main window, processing OAuth callback...');
             // We're in the main window - proceed with normal callback handling
