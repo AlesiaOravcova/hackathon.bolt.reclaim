@@ -106,10 +106,10 @@ export const WeeklyCalendarScroll: React.FC<WeeklyCalendarScrollProps> = ({
                   ${getButtonStyle(date)}
                 `}
               >
-                <span className="text-lg font-normal leading-none">
+                <span className="text-lg font-medium leading-none">
                   {formatDate(date)}
                 </span>
-                <span className="text-xs font-medium leading-none">
+                <span className="text-xs font-normal leading-none">
                   {formatDay(date)}
                 </span>
               </motion.button>
