@@ -93,7 +93,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
                 className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-2xl p-4 mb-4"
               >
                 <p className="text-lg font-semibold text-blue-800">
-                  🧘Morning Meditation at 9am!
+                  🧘Morning Meditation
                 </p>
               </motion.div>
               
