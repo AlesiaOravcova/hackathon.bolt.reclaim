@@ -6,12 +6,23 @@ import { Button } from "../../components/ui/button";
 export const Welcome = (): JSX.Element => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingType, setLoadingType] = useState<'signup' | 'login' | null>(null);
 
-  const handleGetStarted = () => {
+  const handleSignUp = () => {
     setIsLoading(true);
+    setLoadingType('signup');
     // Simulate loading for better UX
     setTimeout(() => {
       navigate("/onboarding/step1");
+    }, 1000);
+  };
+
+  const handleLogIn = () => {
+    setIsLoading(true);
+    setLoadingType('login');
+    // Simulate loading for better UX
+    setTimeout(() => {
+      navigate("/dashboard");
     }, 1000);
   };
 
@@ -163,34 +174,72 @@ export const Welcome = (): JSX.Element => {
           </div>
         </motion.div>
 
-        {/* Get Started section */}
+        {/* Authentication section */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
           className="flex flex-col gap-3 pb-2"
         >
+          {/* Sign Up Button */}
           <Button
-            onClick={handleGetStarted}
+            onClick={handleSignUp}
             disabled={isLoading}
             className={`w-full h-12 rounded-2xl font-semibold text-lg transition-all duration-200 ${
-              isLoading
+              isLoading && loadingType === 'signup'
                 ? "bg-blue-600 bg-opacity-50 text-white cursor-not-allowed"
                 : "bg-blue-600 text-white hover:bg-blue-700 active:scale-95"
             }`}
           >
-            {isLoading ? (
+            {isLoading && loadingType === 'signup' ? (
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                Getting Started...
+                Creating Account...
               </div>
             ) : (
-              "Get Started"
+              "Sign Up"
             )}
           </Button>
 
+          {/* Log In Button */}
+          <Button
+            onClick={handleLogIn}
+            disabled={isLoading}
+            variant="outline"
+            className={`w-full h-12 rounded-2xl font-semibold text-lg transition-all duration-200 ${
+              isLoading && loadingType === 'login'
+                ? "border-gray-300 bg-gray-50 text-gray-400 cursor-not-allowed"
+                : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50 active:scale-95"
+            }`}
+          >
+            {isLoading && loadingType === 'login' ? (
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                Signing In...
+              </div>
+            ) : (
+              "Log In"
+            )}
+          </Button>
+
+          {/* Divider */}
+          <div className="flex items-center gap-3 my-2">
+            <div className="flex-1 h-px bg-gray-300"></div>
+            <span className="text-sm text-gray-500 font-medium">or</span>
+            <div className="flex-1 h-px bg-gray-300"></div>
+          </div>
+
+          {/* Continue as Guest */}
+          <button
+            onClick={handleSignUp}
+            disabled={isLoading}
+            className="text-blue-600 font-medium text-center py-2 active:scale-95 transition-all duration-200 disabled:opacity-50"
+          >
+            Continue as Guest
+          </button>
+
           {/* Privacy notice */}
-          <p className="text-xs text-gray-500 text-center leading-relaxed">
+          <p className="text-xs text-gray-500 text-center leading-relaxed mt-2">
             By continuing, you agree to our Terms of Service and Privacy Policy.
           </p>
         </motion.div>
