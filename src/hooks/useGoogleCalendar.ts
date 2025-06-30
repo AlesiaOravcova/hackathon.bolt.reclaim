@@ -8,7 +8,7 @@ export interface UseGoogleCalendarReturn {
   selectedCalendars: string[];
   isLoading: boolean;
   error: string | null;
-  initiateAuth: () => void;
+  initiateAuth: () => Promise<void>;
   handleAuthCallback: (code: string, state?: string) => Promise<boolean>;
   fetchCalendars: () => Promise<void>;
   fetchEvents: (timeMin?: Date, timeMax?: Date) => Promise<void>;
@@ -50,12 +50,17 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
     }
   }, []);
 
-  const initiateAuth = useCallback(() => {
+  const initiateAuth = useCallback(async (): Promise<void> => {
     setError(null);
+    setIsLoading(true);
+    
     try {
-      googleCalendarService.initiateOAuth();
+      const success = await googleCalendarService.initiateOAuth();
+      setIsAuthenticated(success);
     } catch (error: any) {
       setError(error.message || 'Failed to initiate authentication');
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
