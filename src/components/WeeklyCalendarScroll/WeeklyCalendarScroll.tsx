@@ -106,7 +106,7 @@ export const WeeklyCalendarScroll: React.FC<WeeklyCalendarScrollProps> = ({
                   ${getButtonStyle(date)}
                 `}
               >
-                <span className="text-lg font-bold leading-none">
+                <span className="text-lg font-normal leading-none">
                   {formatDate(date)}
                 </span>
                 <span className="text-xs font-medium leading-none">
