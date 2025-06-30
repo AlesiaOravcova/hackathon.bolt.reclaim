@@ -44,7 +44,7 @@ export const Dashboard = (): JSX.Element => {
           animate={{ opacity: 1, y: 0 }}
           className="px-6 pt-4"
         >
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col items-start mb-6">
             <div>
               <h1 className="text-4xl font-medium text-gray-900 leading-tight">
                 ☀️ Good morning{" "}
