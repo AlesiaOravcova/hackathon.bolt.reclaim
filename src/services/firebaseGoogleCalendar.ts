@@ -53,31 +53,40 @@ class FirebaseGoogleCalendarService {
 
   async signInWithGoogle(): Promise<boolean> {
     try {
+      // Clear any existing provider configuration
+      const provider = new GoogleAuthProvider();
+      
       // Configure the Google provider with additional scopes
-      googleProvider.addScope('https://www.googleapis.com/auth/calendar');
-      googleProvider.addScope('https://www.googleapis.com/auth/calendar.events');
-      googleProvider.addScope('https://www.googleapis.com/auth/calendar.readonly');
+      provider.addScope('https://www.googleapis.com/auth/calendar');
+      provider.addScope('https://www.googleapis.com/auth/calendar.events');
+      provider.addScope('https://www.googleapis.com/auth/calendar.readonly');
       
       // Set custom parameters for better UX
-      googleProvider.setCustomParameters({
+      provider.setCustomParameters({
         prompt: 'select_account',
         access_type: 'offline',
       });
 
-      // Try popup first, fallback to redirect if blocked
+      console.log('Attempting Google sign-in from domain:', window.location.origin);
+      console.log('Current URL:', window.location.href);
+
+      // Try popup first for better UX
       try {
-        const result = await signInWithPopup(auth, googleProvider);
+        console.log('Trying popup sign-in...');
+        const result = await signInWithPopup(auth, provider);
+        console.log('Popup sign-in successful');
         return this.handleAuthResult(result);
       } catch (popupError: any) {
-        console.log('Popup failed, trying redirect:', popupError.code);
+        console.log('Popup sign-in failed:', popupError.code, popupError.message);
         
         // If popup is blocked or fails, use redirect
         if (popupError.code === 'auth/popup-blocked' || 
             popupError.code === 'auth/popup-closed-by-user' ||
             popupError.code === 'auth/cancelled-popup-request') {
           
+          console.log('Using redirect sign-in as fallback...');
           // Use redirect as fallback
-          await signInWithRedirect(auth, googleProvider);
+          await signInWithRedirect(auth, provider);
           // Note: Page will redirect, so we return false here
           // The actual result will be handled in handleRedirectResult
           return false;
@@ -89,17 +98,29 @@ class FirebaseGoogleCalendarService {
     } catch (error: any) {
       console.error('Error with Google sign-in:', error);
       
-      // Handle specific error cases
-      if (error.code === 'auth/popup-blocked') {
-        throw new Error('Pop-up was blocked. Redirecting to sign-in page...');
+      // Handle specific error cases with more detailed messages
+      if (error.code === 'auth/unauthorized-domain') {
+        const currentDomain = window.location.hostname;
+        const currentOrigin = window.location.origin;
+        
+        console.error('Unauthorized domain details:', {
+          hostname: currentDomain,
+          origin: currentOrigin,
+          port: window.location.port,
+          protocol: window.location.protocol
+        });
+        
+        throw new Error(`This domain (${currentOrigin}) is not authorized. Please add the following domains to your Firebase project:\n\n• ${currentDomain}\n• ${currentOrigin}\n\nGo to Firebase Console > Authentication > Settings > Authorized domains`);
+      } else if (error.code === 'auth/popup-blocked') {
+        throw new Error('Pop-up was blocked. Please allow pop-ups for this site and try again.');
       } else if (error.code === 'auth/popup-closed-by-user') {
         throw new Error('Sign-in was cancelled. Please try again.');
       } else if (error.code === 'auth/network-request-failed') {
         throw new Error('Network error. Please check your connection and try again.');
-      } else if (error.code === 'auth/unauthorized-domain') {
-        throw new Error('This domain is not authorized. Please contact support.');
+      } else if (error.code === 'auth/operation-not-allowed') {
+        throw new Error('Google sign-in is not enabled. Please contact support.');
       } else {
-        throw new Error('Failed to sign in with Google. Please try again.');
+        throw new Error(`Failed to sign in with Google: ${error.message || 'Unknown error'}`);
       }
     }
   }
@@ -144,6 +165,11 @@ class FirebaseGoogleCalendarService {
       // Handle specific error cases
       if (error.code === 'auth/network-request-failed') {
         throw new Error('Network error. Please check your connection and try again.');
+      } else if (error.code === 'auth/unauthorized-domain') {
+        const currentDomain = window.location.hostname;
+        const currentOrigin = window.location.origin;
+        
+        throw new Error(`This domain (${currentOrigin}) is not authorized. Please add it to your Firebase project's authorized domains.`);
       } else {
         throw new Error('Failed to complete Google sign-in. Please try again.');
       }

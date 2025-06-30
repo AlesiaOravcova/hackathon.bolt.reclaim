@@ -9,7 +9,7 @@ export const Welcome = (): JSX.Element => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showPopupHelp, setShowPopupHelp] = useState(false);
+  const [debugInfo, setDebugInfo] = useState<string | null>(null);
 
   useEffect(() => {
     // Check for redirect result on component mount
@@ -31,12 +31,14 @@ export const Welcome = (): JSX.Element => {
     };
 
     checkRedirectResult();
+
+    // Set debug info
+    setDebugInfo(`Current domain: ${window.location.origin}`);
   }, [navigate]);
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     setError(null);
-    setShowPopupHelp(false);
     
     try {
       const success = await firebaseGoogleCalendarService.signInWithGoogle();
@@ -54,13 +56,7 @@ export const Welcome = (): JSX.Element => {
       // If success is false, it means redirect was used, so we wait for page reload
     } catch (error: any) {
       console.error('Google sign-in error:', error);
-      
-      if (error.message.includes('Pop-up was blocked')) {
-        setShowPopupHelp(true);
-        setError("Pop-up was blocked. Please allow pop-ups for this site or try the button below.");
-      } else {
-        setError(error.message || "An error occurred during sign-in. Please try again.");
-      }
+      setError(error.message || "An error occurred during sign-in. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -226,30 +222,33 @@ export const Welcome = (): JSX.Element => {
           transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
           className="flex flex-col gap-3 pb-2"
         >
+          {/* Debug info */}
+          {debugInfo && (
+            <div className="bg-gray-100 border border-gray-200 text-gray-700 px-3 py-2 rounded-lg text-xs text-center">
+              {debugInfo}
+            </div>
+          )}
+
           {/* Error message */}
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm text-center"
+              className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"
             >
-              {error}
-            </motion.div>
-          )}
-
-          {/* Popup help message */}
-          {showPopupHelp && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-xl text-sm"
-            >
-              <p className="font-medium mb-2">Pop-up blocked? Here's how to fix it:</p>
-              <ul className="text-xs space-y-1">
-                <li>• Look for a popup blocker icon in your address bar</li>
-                <li>• Click it and select "Always allow pop-ups from this site"</li>
-                <li>• Or try the button below for an alternative sign-in method</li>
-              </ul>
+              <div className="whitespace-pre-line">{error}</div>
+              {error.includes('unauthorized-domain') && (
+                <div className="mt-2 text-xs">
+                  <p className="font-medium">Steps to fix:</p>
+                  <ol className="list-decimal list-inside mt-1 space-y-1">
+                    <li>Go to <a href="https://console.firebase.google.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">Firebase Console</a></li>
+                    <li>Select your project "reclaim-15423"</li>
+                    <li>Go to Authentication → Settings → Authorized domains</li>
+                    <li>Add: localhost, 127.0.0.1, and {window.location.hostname}</li>
+                    <li>Save and try again</li>
+                  </ol>
+                </div>
+              )}
             </motion.div>
           )}
 
@@ -269,18 +268,6 @@ export const Welcome = (): JSX.Element => {
               "Continue with Google"
             )}
           </Button>
-
-          {/* Alternative sign-in method for popup issues */}
-          {showPopupHelp && (
-            <Button
-              onClick={handleGoogleSignIn}
-              disabled={isLoading}
-              className="flex h-12 items-center justify-center gap-3 bg-blue-600 text-white rounded-2xl font-semibold text-base shadow-lg active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <GoogleIcon className="w-5 h-5" />
-              Try Alternative Sign-in
-            </Button>
-          )}
 
           {/* Sign in link */}
           <button
