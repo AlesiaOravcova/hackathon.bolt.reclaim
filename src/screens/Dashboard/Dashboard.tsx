@@ -5,11 +5,14 @@ import { Button } from "../../components/ui/button";
 import { TabBar } from "../../components/TabBar";
 import { StatusBar } from "../../components/StatusBar";
 import { WeeklyCalendarScroll } from "../../components/WeeklyCalendarScroll";
+import { SuccessModal } from "../../components/SuccessModal";
 
 export const Dashboard = (): JSX.Element => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("home");
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [showCommitSuccessModal, setShowCommitSuccessModal] = useState(false);
+  const [selectedActivity, setSelectedActivity] = useState<string>("");
 
   const todayActivities = [
     { time: "9–9:15am", title: "🧘 Morning Meditation"},
@@ -30,6 +33,16 @@ export const Dashboard = (): JSX.Element => {
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
     // You can add logic here to filter activities by selected date
+  };
+
+  const handleCommit = (activityTitle: string) => {
+    setSelectedActivity(activityTitle);
+    setShowCommitSuccessModal(true);
+  };
+
+  const handleCloseSuccessModal = () => {
+    setShowCommitSuccessModal(false);
+    setSelectedActivity("");
   };
 
   return (
@@ -120,7 +133,6 @@ export const Dashboard = (): JSX.Element => {
         </motion.div>
 
         {/* Today's Schedule */}
-
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -148,6 +160,7 @@ export const Dashboard = (): JSX.Element => {
                   </div>
                   <Button
                     size="sm"
+                    onClick={() => handleCommit(activity.title)}
                     className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full px-4 py-2 ml-4"
                   >
                     Commit
@@ -186,6 +199,13 @@ export const Dashboard = (): JSX.Element => {
       </div>
 
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
+
+      {/* Success Modal */}
+      <SuccessModal
+        isOpen={showCommitSuccessModal}
+        onClose={handleCloseSuccessModal}
+        activityTitle={selectedActivity}
+      />
     </div>
   );
 };
