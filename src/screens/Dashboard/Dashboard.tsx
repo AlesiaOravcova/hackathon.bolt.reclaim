@@ -204,7 +204,7 @@ export const Dashboard = (): JSX.Element => {
                           🌸 Treat yourself
                         </span>
                       </div>
-                                            <div className="text-sm text-purple-700 font-medium">
+                      <div className="text-sm text-purple-700 font-medium">
                         Saturday 2:00-4:00PM
                       </div>
                       <p className="text-sm text-gray-600 mb-3 leading-relaxed">
@@ -216,21 +216,22 @@ export const Dashboard = (): JSX.Element => {
                   
                   <div className="flex items-center justify-between">
                     <div className="flex space-x-2">
-                      <Button
-                        size="sm"
-                        onClick={handleSpaCommit}
-                        className="bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full px-4 py-2"
-                      >
-                        Book Now
-                      </Button>
-                      <Button
+                     <Button
                         size="sm"
                         variant="outline"
                         onClick={handleSpaDismiss}
                         className="border-pink-300 text-pink-700 hover:bg-pink-50 rounded-full px-4 py-2"
                       >
+                        I'm In!
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={handleSpaCommit}
+                        className="bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full px-4 py-2"
+                      >
                         Maybe Later
                       </Button>
+                
                     </div>
                   </div>
                 </div>
