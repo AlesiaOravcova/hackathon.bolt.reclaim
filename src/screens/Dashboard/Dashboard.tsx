@@ -26,11 +26,6 @@ export const Dashboard = (): JSX.Element => {
     { day: "Sun", completed: 0, total: 2 },
   ];
 
-  const handleScheduleEvent = () => {
-    // Navigate to calendar page to schedule a new event
-    navigate("/calendar");
-  };
-
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       <StatusBar />
@@ -112,21 +107,13 @@ export const Dashboard = (): JSX.Element => {
         >
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-gray-900">Today's Schedule</h2>
-            <div className="flex items-center gap-2">
-              <Button
-                onClick={handleScheduleEvent}
-                className="bg-green-600 text-white font-semibold px-4 py-2 rounded-xl text-sm"
-              >
-                + Schedule Event
-              </Button>
-              <Button
-                variant="ghost"
-                className="text-green-600 font-semibold"
-                onClick={() => navigate("/schedule")}
-              >
-                View All
-              </Button>
-            </div>
+            <Button
+              variant="ghost"
+              className="text-green-600 font-semibold"
+              onClick={() => navigate("/schedule")}
+            >
+              View All
+            </Button>
           </div>
 
           <div className="space-y-3">
