@@ -208,13 +208,6 @@ export const Welcome = (): JSX.Element => {
             {isLoading ? "Signing in..." : "Continue with Google"}
           </Button>
 
-          {/* Sign in link */}
-          <button
-            onClick={handleSignIn}
-            className="text-blue-600 font-medium text-center py-1 active:scale-95 transition-all duration-200"
-          >
-            Already have an account? Sign in
-          </button>
         </motion.div>
       </div>
     </div>
