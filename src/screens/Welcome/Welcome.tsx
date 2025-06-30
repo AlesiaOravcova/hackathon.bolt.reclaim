@@ -15,11 +15,22 @@ export const Welcome = (): JSX.Element => {
     setError(null);
     
     try {
-      await firebaseGoogleCalendarService.signInWithGoogle();
-      // Note: The page will redirect, so code after this won't execute
+      const success = await firebaseGoogleCalendarService.signInWithGoogle();
+      
+      if (success) {
+        // Check if this is a new user
+        const isNewUser = firebaseGoogleCalendarService.isNewUser();
+        
+        if (isNewUser) {
+          navigate('/onboarding/step1');
+        } else {
+          navigate('/dashboard');
+        }
+      }
     } catch (error: any) {
       console.error('Google sign-in error:', error);
       setError(error.message || "An error occurred during sign-in. Please try again.");
+    } finally {
       setIsLoading(false);
     }
   };

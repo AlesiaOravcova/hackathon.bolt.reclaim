@@ -1,4 +1,4 @@
-import { signInWithRedirect, getRedirectResult, signOut as firebaseSignOut, User, GoogleAuthProvider, getAdditionalUserInfo } from 'firebase/auth';
+import { signInWithPopup, signInWithRedirect, getRedirectResult, signOut as firebaseSignOut, User, GoogleAuthProvider, getAdditionalUserInfo } from 'firebase/auth';
 import { auth, googleProvider } from './firebaseConfig';
 
 export interface CalendarEvent {
@@ -51,7 +51,7 @@ class FirebaseGoogleCalendarService {
     });
   }
 
-  async signInWithGoogle(): Promise<void> {
+  async signInWithGoogle(): Promise<boolean> {
     try {
       // Configure the Google provider with additional scopes
       googleProvider.addScope('https://www.googleapis.com/auth/calendar');
@@ -64,17 +64,50 @@ class FirebaseGoogleCalendarService {
         access_type: 'offline',
       });
 
-      // Use redirect instead of popup to avoid popup blockers
-      await signInWithRedirect(auth, googleProvider);
-      // Note: Code after this line will not execute as the page redirects
+      // Use popup instead of redirect
+      const result = await signInWithPopup(auth, googleProvider);
+      
+      if (result) {
+        this.user = result.user;
+        
+        // Get the access token for Google Calendar API
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        this.accessToken = credential?.accessToken || null;
+        
+        // Check if this is a new user
+        const additionalUserInfo = getAdditionalUserInfo(result);
+        const isNewUser = additionalUserInfo?.isNewUser || false;
+        
+        // Store user info in localStorage for persistence
+        if (this.accessToken) {
+          localStorage.setItem('google_access_token', this.accessToken);
+          localStorage.setItem('user_info', JSON.stringify({
+            uid: this.user.uid,
+            email: this.user.email,
+            displayName: this.user.displayName,
+            photoURL: this.user.photoURL,
+            isNewUser
+          }));
+        }
+        
+        return true;
+      }
+      
+      return false;
     } catch (error: any) {
-      console.error('Error initiating Google sign-in:', error);
+      console.error('Error with Google sign-in:', error);
       
       // Handle specific error cases
-      if (error.code === 'auth/network-request-failed') {
+      if (error.code === 'auth/popup-blocked') {
+        throw new Error('Pop-up was blocked. Please allow pop-ups and try again.');
+      } else if (error.code === 'auth/popup-closed-by-user') {
+        throw new Error('Sign-in was cancelled. Please try again.');
+      } else if (error.code === 'auth/network-request-failed') {
         throw new Error('Network error. Please check your connection and try again.');
+      } else if (error.code === 'auth/unauthorized-domain') {
+        throw new Error('This domain is not authorized. Please contact support.');
       } else {
-        throw new Error('Failed to initiate Google sign-in. Please try again.');
+        throw new Error('Failed to sign in with Google. Please try again.');
       }
     }
   }
