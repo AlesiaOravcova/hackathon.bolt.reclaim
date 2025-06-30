@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
+import { useAuthContext } from "../../contexts/AuthContext";
 
 export const Welcome = (): JSX.Element => {
   const navigate = useNavigate();
+  const { isAuthenticated, isLoading: authLoading } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [loadingType, setLoadingType] = useState<'signup' | 'login' | null>(null);
+
+  // Redirect authenticated users to dashboard
+  useEffect(() => {
+    if (isAuthenticated && !authLoading) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, authLoading, navigate]);
 
   const handleSignUp = () => {
     setIsLoading(true);
@@ -34,6 +43,18 @@ export const Welcome = (): JSX.Element => {
       navigate("/onboarding/step1");
     }, 1000);
   };
+
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5] relative overflow-hidden">

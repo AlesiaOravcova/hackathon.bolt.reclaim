@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { StatusBar } from "../../components/StatusBar";
+import { useAuthContext } from "../../contexts/AuthContext";
 
 export const SignUp = (): JSX.Element => {
   const navigate = useNavigate();
+  const { signUp, error: authError, clearError } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -38,10 +40,8 @@ export const SignUp = (): JSX.Element => {
     // Password validation
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      newErrors.password = "Password must contain uppercase, lowercase, and number";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
     }
 
     // Confirm password validation
@@ -61,6 +61,10 @@ export const SignUp = (): JSX.Element => {
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: "" }));
     }
+    // Clear auth error when user starts typing
+    if (authError) {
+      clearError();
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -73,14 +77,17 @@ export const SignUp = (): JSX.Element => {
     setIsLoading(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await signUp({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        password: formData.password
+      });
       
       // On success, navigate to onboarding
       navigate("/onboarding/step1");
     } catch (error) {
+      // Error is handled by the auth context
       console.error("Sign up error:", error);
-      setErrors({ general: "Something went wrong. Please try again." });
     } finally {
       setIsLoading(false);
     }
@@ -127,14 +134,14 @@ export const SignUp = (): JSX.Element => {
           className="px-6 pb-6"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* General Error */}
-            {errors.general && (
+            {/* Firebase Auth Error */}
+            {authError && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"
               >
-                {errors.general}
+                {authError}
               </motion.div>
             )}
 
@@ -234,7 +241,7 @@ export const SignUp = (): JSX.Element => {
                 </motion.p>
               )}
               <p className="text-xs text-gray-500 mt-1">
-                Must be 8+ characters with uppercase, lowercase, and number
+                Must be at least 6 characters
               </p>
             </div>
 

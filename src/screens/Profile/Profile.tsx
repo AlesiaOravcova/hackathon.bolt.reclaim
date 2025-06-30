@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { TabBar } from "../../components/TabBar";
 import { StatusBar } from "../../components/StatusBar";
+import { useAuthContext } from "../../contexts/AuthContext";
 
 export const Profile = (): JSX.Element => {
   const navigate = useNavigate();
+  const { user, signOut } = useAuthContext();
 
   const profileStats = [
     { label: "Activities Completed", value: "127", icon: "✓" },
@@ -22,10 +24,31 @@ export const Profile = (): JSX.Element => {
     { label: "Notifications", value: "Enabled" },
   ];
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     if (window.confirm('Are you sure you want to sign out?')) {
-      navigate("/");
+      try {
+        await signOut();
+        navigate("/");
+      } catch (error) {
+        console.error("Sign out error:", error);
+      }
     }
+  };
+
+  // Get user initials for avatar
+  const getUserInitials = () => {
+    if (user?.displayName) {
+      return user.displayName
+        .split(' ')
+        .map(name => name.charAt(0))
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+    }
+    if (user?.email) {
+      return user.email.charAt(0).toUpperCase();
+    }
+    return 'U';
   };
 
   return (
@@ -54,12 +77,19 @@ export const Profile = (): JSX.Element => {
           {/* Profile Info */}
           <div className="flex items-center gap-4 mb-6">
             <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-2xl">J</span>
+              <span className="text-white font-bold text-2xl">{getUserInitials()}</span>
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Jane Doe</h2>
-              <p className="text-gray-600">Member since March 2024</p>
-              <p className="text-sm text-blue-600 font-medium">Premium Plan</p>
+              <h2 className="text-xl font-bold text-gray-900">
+                {user?.displayName || 'User'}
+              </h2>
+              <p className="text-gray-600">{user?.email || 'No email'}</p>
+              <div className="flex items-center gap-2 mt-1">
+                <div className={`w-2 h-2 rounded-full ${user?.emailVerified ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+                <span className="text-sm text-gray-500">
+                  {user?.emailVerified ? 'Verified' : 'Unverified'} • Member since {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                </span>
+              </div>
             </div>
           </div>
         </motion.div>

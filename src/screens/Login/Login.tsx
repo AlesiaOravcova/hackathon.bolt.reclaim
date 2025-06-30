@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { StatusBar } from "../../components/StatusBar";
+import { useAuthContext } from "../../contexts/AuthContext";
 
 export const Login = (): JSX.Element => {
   const navigate = useNavigate();
+  const { signIn, error: authError, clearError } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -40,6 +42,10 @@ export const Login = (): JSX.Element => {
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: "" }));
     }
+    // Clear auth error when user starts typing
+    if (authError) {
+      clearError();
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,14 +58,16 @@ export const Login = (): JSX.Element => {
     setIsLoading(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await signIn({
+        email: formData.email.trim(),
+        password: formData.password
+      });
       
       // On success, navigate to dashboard
       navigate("/dashboard");
     } catch (error) {
+      // Error is handled by the auth context
       console.error("Login error:", error);
-      setErrors({ general: "Invalid email or password. Please try again." });
     } finally {
       setIsLoading(false);
     }
@@ -104,14 +112,14 @@ export const Login = (): JSX.Element => {
           className="px-6 pb-6"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* General Error */}
-            {errors.general && (
+            {/* Firebase Auth Error */}
+            {authError && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"
               >
-                {errors.general}
+                {authError}
               </motion.div>
             )}
 

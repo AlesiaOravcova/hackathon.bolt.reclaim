@@ -1,5 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Welcome } from "./screens/Welcome";
 import { SignUp } from "./screens/SignUp";
 import { Login } from "./screens/Login";
@@ -11,20 +13,50 @@ import { OnboardingStep1, OnboardingStep2, OnboardingStep3, OnboardingStep4 } fr
 
 export const App = (): JSX.Element => {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Routes>
-        <Route path="/" element={<Welcome />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/onboarding/step1" element={<OnboardingStep1 />} />
-        <Route path="/onboarding/step2" element={<OnboardingStep2 />} />
-        <Route path="/onboarding/step3" element={<OnboardingStep3 />} />
-        <Route path="/onboarding/step4" element={<OnboardingStep4 />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/schedule" element={<Schedule />} />
-        <Route path="/calendar" element={<CalendarIntegration />} />
-      </Routes>
-    </div>
+    <AuthProvider>
+      <div className="min-h-screen bg-gray-50">
+        <Routes>
+          <Route path="/" element={<Welcome />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/onboarding/step1" element={<OnboardingStep1 />} />
+          <Route path="/onboarding/step2" element={<OnboardingStep2 />} />
+          <Route path="/onboarding/step3" element={<OnboardingStep3 />} />
+          <Route path="/onboarding/step4" element={<OnboardingStep4 />} />
+          <Route 
+            path="/dashboard" 
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/schedule" 
+            element={
+              <ProtectedRoute>
+                <Schedule />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/calendar" 
+            element={
+              <ProtectedRoute>
+                <CalendarIntegration />
+              </ProtectedRoute>
+            } 
+          />
+        </Routes>
+      </div>
+    </AuthProvider>
   );
 };
