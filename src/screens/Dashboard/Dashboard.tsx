@@ -4,11 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { TabBar } from "../../components/TabBar";
 import { StatusBar } from "../../components/StatusBar";
+import { WellnessTimeSuggestions } from "../../components/WellnessTimeSuggestions";
 import { useAuthContext } from "../../contexts/AuthContext";
 
 export const Dashboard = (): JSX.Element => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("home");
+  const [showSuggestions, setShowSuggestions] = useState(true);
   const { user } = useAuthContext();
 
   const todayActivities = [
@@ -55,6 +57,11 @@ export const Dashboard = (): JSX.Element => {
     return 'there';
   };
 
+  const handleAcceptSuggestion = (slot: any) => {
+    console.log('Accepted suggestion:', slot);
+    // Here you would typically add the slot to the user's calendar
+  };
+
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]">
       <StatusBar />
@@ -98,6 +105,21 @@ export const Dashboard = (): JSX.Element => {
             </div>
           </div>
         </motion.div>
+
+        {/* AI Wellness Suggestions */}
+        {showSuggestions && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="px-6 py-4"
+          >
+            <WellnessTimeSuggestions
+              onAcceptSuggestion={handleAcceptSuggestion}
+              onDismiss={() => setShowSuggestions(false)}
+            />
+          </motion.div>
+        )}
 
         {/* Today's Schedule */}
         <motion.div
