@@ -74,8 +74,6 @@ export const WeeklyCalendarScroll: React.FC<WeeklyCalendarScrollProps> = ({
       return 'text-blue-600';
     }
 
-    }
-    return 'text-gray-700 hover:text-gray-900';
   };
 
   return (
