@@ -23,26 +23,29 @@ export const AuthCallback: React.FC = () => {
         }
         
         if (code) {
-          // Security: Handle direct Google Calendar API OAuth callback with state verification
-          const success = await googleCalendarService.handleOAuthCallback(code, state || undefined);
-          
-          if (success) {
-            // Security: Clear URL parameters to remove sensitive data from browser history
-            window.history.replaceState({}, document.title, window.location.pathname);
+          // Check if we're in a popup window
+          if (window.opener && !window.opener.closed) {
+            // We're in a popup, send the code and state back to the parent window
+            // Let the parent window handle the OAuth callback with proper state verification
+            window.opener.postMessage({ 
+              type: 'GOOGLE_AUTH_CALLBACK',
+              code: code,
+              state: state
+            }, window.location.origin);
+            window.close();
+            return;
+          } else {
+            // We're in the main window, handle OAuth callback directly
+            const success = await googleCalendarService.handleOAuthCallback(code, state || undefined);
             
-            // Check if we're in a popup window
-            if (window.opener && !window.opener.closed) {
-              // We're in a popup, send success message to parent and close
-              window.opener.postMessage({ type: 'GOOGLE_AUTH_SUCCESS' }, window.location.origin);
-              window.close();
-              return;
-            } else {
-              // We're in the main window, navigate to calendar
+            if (success) {
+              // Security: Clear URL parameters to remove sensitive data from browser history
+              window.history.replaceState({}, document.title, window.location.pathname);
               navigate('/calendar');
               return;
+            } else {
+              throw new Error('Failed to authenticate with Google Calendar');
             }
-          } else {
-            throw new Error('Failed to authenticate with Google Calendar');
           }
         }
 

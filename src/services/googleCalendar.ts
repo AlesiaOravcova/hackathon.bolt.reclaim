@@ -142,7 +142,25 @@ class GoogleCalendarService {
         const messageListener = (event: MessageEvent) => {
           if (event.origin !== window.location.origin) return;
           
-          if (event.data.type === 'GOOGLE_AUTH_SUCCESS') {
+          if (event.data.type === 'GOOGLE_AUTH_CALLBACK') {
+            // Handle the OAuth callback in the main window with proper state verification
+            clearInterval(checkClosed);
+            window.removeEventListener('message', messageListener);
+            popup.close();
+            
+            // Process the OAuth callback
+            this.handleOAuthCallback(event.data.code, event.data.state)
+              .then((success) => {
+                if (success) {
+                  resolve(true);
+                } else {
+                  reject(new Error('Failed to authenticate with Google Calendar'));
+                }
+              })
+              .catch((error) => {
+                reject(error);
+              });
+          } else if (event.data.type === 'GOOGLE_AUTH_SUCCESS') {
             clearInterval(checkClosed);
             window.removeEventListener('message', messageListener);
             popup.close();
