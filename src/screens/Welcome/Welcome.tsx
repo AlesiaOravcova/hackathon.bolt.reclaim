@@ -181,7 +181,6 @@ export const Welcome = (): JSX.Element => {
         <motion.div className="text-base text-gray-600 leading-relaxed"/>
           <p> AI assistant that intelligently schedules time for your personal wellbeing and self-care.
           </p>
-        />
         </motion.div>
 
                   
