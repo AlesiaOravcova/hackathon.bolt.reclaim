@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
@@ -9,21 +9,53 @@ export const Welcome = (): JSX.Element => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [debugInfo, setDebugInfo] = useState<string>("");
+
+  useEffect(() => {
+    // Debug environment variables
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const clientSecret = import.meta.env.VITE_GOOGLE_CLIENT_SECRET;
+    
+    let debug = "Debug Info:\n";
+    debug += `Client ID: ${clientId ? `${clientId.substring(0, 20)}...` : 'NOT SET'}\n`;
+    debug += `Client Secret: ${clientSecret ? 'SET' : 'NOT SET'}\n`;
+    debug += `Current URL: ${window.location.href}\n`;
+    debug += `Redirect URI: ${window.location.origin}/auth/callback\n`;
+    
+    setDebugInfo(debug);
+    console.log(debug);
+  }, []);
 
   const handleGoogleSignIn = () => {
     setIsLoading(true);
     setError(null);
     
     try {
+      console.log("Starting Google Sign-In process...");
+      
       // Check if we have Google Calendar credentials configured
-      if (!import.meta.env.VITE_GOOGLE_CLIENT_ID) {
-        setError("Google Calendar integration is not configured. Please set up your Google API credentials.");
-        setIsLoading(false);
-        return;
+      const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+      const clientSecret = import.meta.env.VITE_GOOGLE_CLIENT_SECRET;
+      
+      console.log("Environment check:", {
+        hasClientId: !!clientId,
+        hasClientSecret: !!clientSecret,
+        clientIdLength: clientId?.length || 0
+      });
+      
+      if (!clientId) {
+        throw new Error("VITE_GOOGLE_CLIENT_ID is not configured. Please check your .env file.");
       }
+      
+      if (!clientSecret) {
+        throw new Error("VITE_GOOGLE_CLIENT_SECRET is not configured. Please check your .env file.");
+      }
+      
+      console.log("Initiating OAuth flow...");
       
       // Initiate Google OAuth flow
       googleCalendarService.initiateOAuth();
+      
       // Note: The page will redirect, so code after this won't execute
     } catch (error: any) {
       console.error('Google sign-in error:', error);
@@ -38,6 +70,10 @@ export const Welcome = (): JSX.Element => {
     setTimeout(() => {
       navigate("/onboarding/step1");
     }, 1000);
+  };
+
+  const handleShowDebugInfo = () => {
+    alert(debugInfo);
   };
 
   return (
@@ -200,9 +236,16 @@ export const Welcome = (): JSX.Element => {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm text-center"
+              className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"
             >
-              {error}
+              <div className="font-semibold mb-1">Error:</div>
+              <div>{error}</div>
+              <button
+                onClick={handleShowDebugInfo}
+                className="mt-2 text-xs underline text-red-600"
+              >
+                Show Debug Info
+              </button>
             </motion.div>
           )}
 
@@ -231,6 +274,16 @@ export const Welcome = (): JSX.Element => {
           >
             Skip for now - Get Started
           </button>
+
+          {/* Debug button for development */}
+          {import.meta.env.DEV && (
+            <button
+              onClick={handleShowDebugInfo}
+              className="text-xs text-gray-400 text-center py-1"
+            >
+              Debug Info
+            </button>
+          )}
 
           {/* Privacy notice */}
           <p className="text-xs text-gray-500 text-center leading-relaxed">

@@ -56,10 +56,24 @@ class GoogleCalendarService {
 
   constructor() {
     this.loadTokensFromStorage();
+    
+    // Debug logging
+    console.log('GoogleCalendarService initialized:', {
+      hasClientId: !!this.CLIENT_ID,
+      hasClientSecret: !!this.CLIENT_SECRET,
+      redirectUri: this.REDIRECT_URI,
+      scopes: this.SCOPES
+    });
   }
 
   // OAuth 2.0 Authentication
   initiateOAuth(): void {
+    console.log('Initiating OAuth flow...');
+    
+    if (!this.CLIENT_ID) {
+      throw new Error('Google Client ID is not configured. Please check your .env file.');
+    }
+
     const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
     authUrl.searchParams.set('client_id', this.CLIENT_ID);
     authUrl.searchParams.set('redirect_uri', this.REDIRECT_URI);
@@ -68,30 +82,58 @@ class GoogleCalendarService {
     authUrl.searchParams.set('access_type', 'offline');
     authUrl.searchParams.set('prompt', 'consent');
     
-    window.location.href = authUrl.toString();
+    const finalUrl = authUrl.toString();
+    console.log('Redirecting to:', finalUrl);
+    
+    // Add a small delay to ensure logging is visible
+    setTimeout(() => {
+      window.location.href = finalUrl;
+    }, 100);
   }
 
   async handleOAuthCallback(code: string): Promise<boolean> {
+    console.log('Handling OAuth callback with code:', code.substring(0, 20) + '...');
+    
     try {
-      const response = await fetch('https://oauth2.googleapis.com/token', {
+      if (!this.CLIENT_ID || !this.CLIENT_SECRET) {
+        throw new Error('Google API credentials are not properly configured');
+      }
+
+      const tokenUrl = 'https://oauth2.googleapis.com/token';
+      const body = new URLSearchParams({
+        client_id: this.CLIENT_ID,
+        client_secret: this.CLIENT_SECRET,
+        code,
+        grant_type: 'authorization_code',
+        redirect_uri: this.REDIRECT_URI,
+      });
+
+      console.log('Requesting tokens from:', tokenUrl);
+      console.log('Request body:', Object.fromEntries(body.entries()));
+
+      const response = await fetch(tokenUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: new URLSearchParams({
-          client_id: this.CLIENT_ID,
-          client_secret: this.CLIENT_SECRET,
-          code,
-          grant_type: 'authorization_code',
-          redirect_uri: this.REDIRECT_URI,
-        }),
+        body: body,
       });
 
+      console.log('Token response status:', response.status);
+      
       if (!response.ok) {
-        throw new Error('Failed to exchange code for tokens');
+        const errorText = await response.text();
+        console.error('Token exchange failed:', errorText);
+        throw new Error(`Failed to exchange code for tokens: ${response.status} ${errorText}`);
       }
 
       const tokens = await response.json();
+      console.log('Received tokens:', {
+        hasAccessToken: !!tokens.access_token,
+        hasRefreshToken: !!tokens.refresh_token,
+        expiresIn: tokens.expires_in
+      });
+      
       tokens.expires_at = Date.now() + (tokens.expires_in * 1000);
       
       this.tokens = tokens;
@@ -105,6 +147,7 @@ class GoogleCalendarService {
 
   async refreshAccessToken(): Promise<boolean> {
     if (!this.tokens?.refresh_token) {
+      console.error('No refresh token available');
       return false;
     }
 
@@ -123,7 +166,9 @@ class GoogleCalendarService {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to refresh token');
+        const errorText = await response.text();
+        console.error('Token refresh failed:', errorText);
+        throw new Error(`Failed to refresh token: ${response.status}`);
       }
 
       const newTokens = await response.json();
@@ -144,10 +189,12 @@ class GoogleCalendarService {
 
   private async ensureValidToken(): Promise<boolean> {
     if (!this.tokens) {
+      console.error('No tokens available');
       return false;
     }
 
     if (Date.now() >= this.tokens.expires_at - 60000) { // Refresh 1 minute before expiry
+      console.log('Token expired, refreshing...');
       return await this.refreshAccessToken();
     }
 
