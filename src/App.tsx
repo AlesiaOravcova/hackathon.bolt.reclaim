@@ -12,7 +12,7 @@ export const App = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Routes>
-        <Route path="/" element={<Welcome />} />
+        <Route path="/" element={<Dashboard />} />
         <Route path="/onboarding/step1" element={<OnboardingStep1 />} />
         <Route path="/onboarding/step2" element={<OnboardingStep2 />} />
         <Route path="/onboarding/step3" element={<OnboardingStep3 />} />

@@ -12,8 +12,8 @@ export const TabBar = ({ activeTab, onTabChange }: TabBarProps): JSX.Element => 
 
   const tabs = [
     {
-      id: "home",
-      label: "Home",
+      id: "Me time",
+      label: "Me time",
       path: "/dashboard",
       icon: (active: boolean) => (
         <svg className={`w-6 h-6 ${active ? "text-blue-600" : "text-gray-400"}`} fill="currentColor" viewBox="0 0 24 24">
@@ -22,8 +22,8 @@ export const TabBar = ({ activeTab, onTabChange }: TabBarProps): JSX.Element => 
       ),
     },
     {
-      id: "schedule",
-      label: "Schedule",
+      id: "Calendar",
+      label: "Calendar",
       path: "/schedule",
       icon: (active: boolean) => (
         <svg className={`w-6 h-6 ${active ? "text-blue-600" : "text-gray-400"}`} fill="currentColor" viewBox="0 0 24 24">
@@ -31,19 +31,10 @@ export const TabBar = ({ activeTab, onTabChange }: TabBarProps): JSX.Element => 
         </svg>
       ),
     },
+
     {
-      id: "calendar",
-      label: "Calendar",
-      path: "/calendar",
-      icon: (active: boolean) => (
-        <svg className={`w-6 h-6 ${active ? "text-blue-600" : "text-gray-400"}`} fill="currentColor" viewBox="0 0 24 24">
-          <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
-        </svg>
-      ),
-    },
-    {
-      id: "profile",
-      label: "Profile",
+      id: "Settings",
+      label: "Settings",
       path: "/profile",
       icon: (active: boolean) => (
         <svg className={`w-6 h-6 ${active ? "text-blue-600" : "text-gray-400"}`} fill="currentColor" viewBox="0 0 24 24">
@@ -60,7 +51,7 @@ export const TabBar = ({ activeTab, onTabChange }: TabBarProps): JSX.Element => 
 
   const getCurrentTab = () => {
     const currentPath = location.pathname;
-    return tabs.find(tab => tab.path === currentPath)?.id || "home";
+    return tabs.find(tab => tab.path === currentPath)?.id || "Your me time";
   };
 
   const currentActiveTab = getCurrentTab();

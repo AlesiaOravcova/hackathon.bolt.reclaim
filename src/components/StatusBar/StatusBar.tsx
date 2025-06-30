@@ -3,7 +3,7 @@ import React from "react";
 export const StatusBar = (): JSX.Element => {
   return (
     <div className="flex justify-between items-center px-6 pt-3 pb-1 text-black">
-      <span className="text-sm font-semibold">9:41</span>
+      <span className="text-sm font-semibold">8:23</span>
       <div className="flex items-center gap-1">
         <div className="flex gap-1">
           <div className="w-1 h-1 bg-black rounded-full"></div>

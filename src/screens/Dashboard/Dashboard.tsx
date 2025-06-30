@@ -4,16 +4,21 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { TabBar } from "../../components/TabBar";
 import { StatusBar } from "../../components/StatusBar";
+import { WeeklyCalendarScroll } from "../../components/WeeklyCalendarScroll";
+import { SuccessModal } from "../../components/SuccessModal";
 
 export const Dashboard = (): JSX.Element => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("home");
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [showCommitSuccessModal, setShowCommitSuccessModal] = useState(false);
+  const [selectedActivity, setSelectedActivity] = useState<string>("");
+  const [showSpaPromo, setShowSpaPromo] = useState(true);
 
   const todayActivities = [
-    { time: "9:00 AM", title: "Morning Meditation", duration: "15 min", type: "mindfulness" },
-    { time: "12:30 PM", title: "Lunch Break Walk", duration: "20 min", type: "exercise" },
-    { time: "3:00 PM", title: "Breathing Exercise", duration: "10 min", type: "mindfulness" },
-    { time: "6:00 PM", title: "Evening Yoga", duration: "30 min", type: "exercise" },
+    { time: "9:00–9:15am", title: "🧘 Morning Meditation"},
+    { time: "12:30–1:00PM", title: "🚶 Lunch Break Walk"},
+    { time: "8:15–8:45PM", title: "🧘 Evening Yoga"},
   ];
 
   const weeklyStats = [
@@ -26,32 +31,71 @@ export const Dashboard = (): JSX.Element => {
     { day: "Sun", completed: 0, total: 2 },
   ];
 
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date);
+    // You can add logic here to filter activities by selected date
+  };
+
+  const handleCommit = (activityTitle: string) => {
+    setSelectedActivity(activityTitle);
+    setShowCommitSuccessModal(true);
+  };
+
+  const handleCloseSuccessModal = () => {
+    setShowCommitSuccessModal(false);
+    setSelectedActivity("");
+  };
+
+  const handleSpaCommit = () => {
+    setSelectedActivity("🌸 Spa Treatment");
+    setShowCommitSuccessModal(true);
+  };
+
+  const handleSpaDismiss = () => {
+    setShowSpaPromo(false);
+  };
+
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]">
       <StatusBar />
       
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto pb-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="px-6 py-6 bg-white"
+          className="px-6 pt-4"
         >
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col items-start mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Good morning!</h1>
-              <p className="text-gray-600">Ready for your me time?</p>
+              <h1 className="text-4xl font-medium text-gray-900 leading-tight">
+                ☀️ Good morning{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                  Elizabeth
+                </span>
+              </h1>
             </div>
+
             <button
               onClick={() => navigate("/profile")}
-              className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center"
+              className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center hidden"
             >
               <span className="text-white font-semibold">J</span>
             </button>
           </div>
 
+          {/* Weekly Calendar Scroll */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mb-6"
+          >
+            <WeeklyCalendarScroll onDateSelect={handleDateSelect} />
+          </motion.div>
+
           {/* Progress Card */}
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl p-6 text-white">
+          <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl p-6 text-white hidden">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-lg font-semibold">Today's Progress</h3>
@@ -73,7 +117,7 @@ export const Dashboard = (): JSX.Element => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="px-6 py-4"
+          className="px-6 py-4 hidden"
         >
           <div className="bg-gradient-to-r from-green-500 to-teal-600 rounded-3xl p-6 text-white">
             <div className="flex items-center justify-between">
@@ -103,19 +147,9 @@ export const Dashboard = (): JSX.Element => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="px-6 py-4"
+          className="px-6"
         >
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-900">Today's Schedule</h2>
-            <Button
-              variant="ghost"
-              className="text-blue-600 font-semibold"
-              onClick={() => navigate("/schedule")}
-            >
-              View All
-            </Button>
-          </div>
-
+          <h2 className="text-lg font-semibold mb-2">Suggested activities</h2>
           <div className="space-y-3">
             {todayActivities.map((activity, index) => (
               <motion.div
@@ -126,66 +160,92 @@ export const Dashboard = (): JSX.Element => {
                 className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                      activity.type === "mindfulness" 
-                        ? "bg-purple-100" 
-                        : "bg-green-100"
-                    }`}>
-                      {activity.type === "mindfulness" ? (
-                        <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                        </svg>
-                      ) : (
-                        <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/>
-                        </svg>
-                      )}
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900">{activity.title}</h3>
-                      <p className="text-sm text-gray-500">{activity.time} • {activity.duration}</p>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-gray-900 mb-1">
+                      {activity.title}
+                    </h3>
+                    <div className="text-sm text-gray-500">
+                      {activity.time} 
                     </div>
                   </div>
                   <Button
                     size="sm"
-                    className="bg-blue-600 text-white rounded-full px-4 py-2"
+                    onClick={() => handleCommit(activity.title)}
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full px-4 py-2 ml-4"
                   >
-                    Start
+                    Commit
                   </Button>
                 </div>
               </motion.div>
             ))}
-          </div>
-        </motion.div>
 
-        {/* Weekly Overview */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="px-6 py-4 mb-20"
-        >
-          <h2 className="text-xl font-bold text-gray-900 mb-4">This Week</h2>
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between gap-2">
-              {weeklyStats.map((stat, index) => (
-                <div key={stat.day} className="flex flex-col items-center gap-2">
-                  <div className="text-xs font-medium text-gray-500">{stat.day}</div>
-                  <div className="w-8 h-16 bg-gray-100 rounded-full relative overflow-hidden">
-                    <div
-                      className="absolute bottom-0 w-full bg-gradient-to-t from-blue-500 to-purple-600 rounded-full transition-all duration-500"
-                      style={{ height: `${(stat.completed / stat.total) * 100}%` }}
-                    ></div>
+            {/* Spa Treatment Promotional Card */}
+            {showSpaPromo && (
+              <motion.div
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                transition={{ delay: 0.4, type: "spring", damping: 20, stiffness: 300 }}
+                className="relative overflow-hidden bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 rounded-2xl p-5 border-2 border-pink-200 shadow-sm"
+              >
+                {/* Subtle decorative elements */}
+                <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-pink-200/30 to-purple-200/30 rounded-full -translate-y-10 translate-x-10"></div>
+                <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-indigo-200/30 to-pink-200/30 rounded-full translate-y-8 -translate-x-8"></div>
+                
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1">
+                      {/* Left side: Tag and spa details stacked vertically */}
+                      <div className="flex flex-col items-start">
+                        <span className="text-sm font-medium text-pink-700 bg-pink-100 px-2 py-1 rounded-full mb-2">
+                          🌸 Treat yourself
+                        </span>
+                        <h3 className="font-semibold text-gray-900 mb-1">
+                          Spa Treatment
+                        </h3>
+                        <div className="text-sm text-purple-700 font-medium">
+                          Saturday 2:00-4:00PM
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-600">{stat.completed}/{stat.total}</div>
+
+                  <p className="text-sm text-gray-600 mb-3 leading-relaxed">
+                    You've been doing great with your wellness routine. How about scheduling some pampering time this weekend?
+                  </p>
+                  
+                  <div className="flex justify-end space-x-4">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={handleSpaDismiss}
+                      className="text-grey-500 px-4 py-2"
+                    >
+                      Maybe later
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={handleSpaCommit}
+                      className="bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full px-4 py-2"
+                    >
+                      I'm In!
+                    </Button>
+                  </div>
                 </div>
-              ))}
-            </div>
+              </motion.div>
+            )}
           </div>
         </motion.div>
       </div>
 
+      {/* Success Modal */}
+      <SuccessModal
+        isOpen={showCommitSuccessModal}
+        onClose={handleCloseSuccessModal}
+        activityTitle={selectedActivity}
+      />
+
+      {/* Tab Bar */}
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
   );
