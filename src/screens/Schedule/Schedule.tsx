@@ -12,7 +12,7 @@ export const Schedule = (): JSX.Element => {
   const scheduleData = {
     sunday: [
       { id: 1, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
-      { id: 2, time: "9:00 AM", endTime: "10:00 AM", title: "Wake kids up/breakfast", type: "family" },
+      { id: 2, time: "9:00 AM", endTime: "10:00 AM", title: "", type: "family" },
       { id: 3, time: "10:00 AM", endTime: "11:30 AM", title: "English tutor (ride)", type: "education" },
       { id: 4, time: "12:30 PM", endTime: "1:30 PM", title: "Lunch", type: "meal" },
       { id: 5, time: "2:00 PM", endTime: "3:30 PM", title: "Football (ride)", type: "sports" },
@@ -21,13 +21,13 @@ export const Schedule = (): JSX.Element => {
     ],
     monday: [
       { id: 8, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
-      { id: 9, time: "7:30 AM", endTime: "8:30 AM", title: "Wake kids up/breakfast", type: "family" },
+      { id: 9, time: "7:30 AM", endTime: "8:30 AM", title: "", type: "family" },
       { id: 10, time: "9:00 AM", endTime: "5:00 PM", title: "Onsite", type: "work" },
       { id: 11, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
     ],
     tuesday: [
       { id: 12, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
-      { id: 13, time: "7:30 AM", endTime: "8:30 AM", title: "Wake kids up/breakfast", type: "family" },
+      { id: 13, time: "7:30 AM", endTime: "8:30 AM", title: "", type: "family" },
       { id: 14, time: "8:30 AM", endTime: "9:00 AM", title: "Summer school drop off", type: "transport" },
       { id: 15, time: "9:00 AM", endTime: "5:00 PM", title: "Onsite", type: "work" },
       { id: 16, time: "5:30 PM", endTime: "6:00 PM", title: "Summer school pick up", type: "transport" },
@@ -35,13 +35,13 @@ export const Schedule = (): JSX.Element => {
     ],
     wednesday: [
       { id: 18, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
-      { id: 19, time: "7:30 AM", endTime: "8:30 AM", title: "Wake kids up/breakfast", type: "family" },
+      { id: 19, time: "7:30 AM", endTime: "8:30 AM", title: "", type: "family" },
       { id: 20, time: "9:30 AM", endTime: "5:30 PM", title: "Work from Home", type: "work" },
       { id: 21, time: "6:00 PM", endTime: "7:30 PM", title: "Dinner", type: "meal" }
     ],
     thursday: [
       { id: 22, time: "7:00 AM", endTime: "8:00 AM", title: "Breakfast", type: "meal" },
-      { id: 23, time: "7:30 AM", endTime: "8:30 AM", title: "Wake kids up/breakfast", type: "family" },
+      { id: 23, time: "7:30 AM", endTime: "8:30 AM", title: "", type: "family" },
       { id: 24, time: "8:30 AM", endTime: "9:00 AM", title: "Summer school drop off", type: "transport" },
       { id: 25, time: "9:00 AM", endTime: "5:00 PM", title: "Work from Home", type: "work" },
       { id: 26, time: "5:30 PM", endTime: "6:00 PM", title: "Summer school pick up", type: "transport" },
