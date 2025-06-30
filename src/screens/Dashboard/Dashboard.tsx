@@ -47,6 +47,7 @@ export const Dashboard = (): JSX.Element => {
               Elizabeth
             </span>
           </h1>
+            </div>
 
 
 
