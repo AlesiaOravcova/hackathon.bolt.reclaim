@@ -80,10 +80,11 @@ export const Schedule = (): JSX.Element => {
 
   const currentWeek = getCurrentWeek();
 
-  // Time slots for the calendar grid
+  // Extended time slots from 7am to 11pm
   const timeSlots = [
     "7 AM", "8 AM", "9 AM", "10 AM", "11 AM", "12 PM", 
-    "1 PM", "2 PM", "3 PM", "4 PM", "5 PM", "6 PM", "7 PM", "8 PM"
+    "1 PM", "2 PM", "3 PM", "4 PM", "5 PM", "6 PM", 
+    "7 PM", "8 PM", "9 PM", "10 PM", "11 PM"
   ];
 
   const getEventsForDay = (dayIndex: number) => {
@@ -214,7 +215,7 @@ export const Schedule = (): JSX.Element => {
           </div>
         ))}
         
-        {/* Current time indicator (red line) */}
+        {/* Current time indicator (red line) - adjusted position for extended time range */}
         <div className="absolute left-0 right-0 h-0.5 bg-red-500 z-20" style={{ top: '390px' }}>
           <div className="w-3 h-3 bg-red-500 rounded-full -ml-1.5 -mt-1"></div>
         </div>
