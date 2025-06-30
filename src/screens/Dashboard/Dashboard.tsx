@@ -137,7 +137,7 @@ export const Dashboard = (): JSX.Element => {
                 transition={{ delay: 0.1 * index }}
                 className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100"
               >
-                <div className="flex items-start justify-between">
+                <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <h3 className="font-semibold text-gray-900 mb-1">
                       {activity.title}
