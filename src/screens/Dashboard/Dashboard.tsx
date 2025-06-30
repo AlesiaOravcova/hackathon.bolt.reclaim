@@ -42,7 +42,7 @@ export const Dashboard = (): JSX.Element => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="px-6 pt-4"
+          className="px-6 pt-0"
         >
           <div className="flex items-center justify-between mb-4">
             <div>
