@@ -131,7 +131,7 @@ export const Dashboard = (): JSX.Element => {
           className="px-6 py-4"
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-900">
+            <h2 className="text-xl font-bold text-gray-100">
               {selectedDate.toLocaleDateString('en-US', { 
                 weekday: 'long', 
                 month: 'long', 
