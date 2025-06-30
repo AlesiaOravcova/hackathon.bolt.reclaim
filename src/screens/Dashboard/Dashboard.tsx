@@ -196,7 +196,7 @@ export const Dashboard = (): JSX.Element => {
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
                       {/* Title row with Spa Treatment and Treat yourself on same line */}
-                      <div className="flex items-center justify-between w-full">
+                      <div className="flex items-start justify-between w-full">
                         <div className="flex flex-col"> 
                           <h3 className="font-semibold text-gray-900 mb-0 flex-1">
                             Spa Treatment
