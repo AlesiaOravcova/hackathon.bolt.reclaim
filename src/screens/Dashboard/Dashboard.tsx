@@ -195,7 +195,7 @@ export const Dashboard = (): JSX.Element => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="px-6 py-4 mb-20"
+          className="px-6 py-4 mb-20 hidden"
         >
           <h2 className="text-xl font-bold text-gray-900 mb-4">This Week</h2>
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
