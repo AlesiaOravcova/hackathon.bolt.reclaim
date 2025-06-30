@@ -41,10 +41,7 @@ export const Dashboard = (): JSX.Element => {
     setShowCommitSuccessModal(true);
   };
 
-  const handleCloseSuccessModal = () => {
-    setShowCommitSuccessModal(false);
-    setSelectedActivity("");
-  };
+
 
   const handleSpaCommit = () => {
     setSelectedActivity("🌸 Spa Treatment");
