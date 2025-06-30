@@ -23,7 +23,7 @@ export const TabBar = ({ activeTab, onTabChange }: TabBarProps): JSX.Element => 
     },
     {
       id: "schedule",
-      label: "Schedule",
+      label: "Calendar",
       path: "/schedule",
       icon: (active: boolean) => (
         <svg className={`w-6 h-6 ${active ? "text-blue-600" : "text-gray-400"}`} fill="currentColor" viewBox="0 0 24 24">
