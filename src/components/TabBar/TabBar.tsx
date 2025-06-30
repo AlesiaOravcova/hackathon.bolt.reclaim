@@ -51,7 +51,7 @@ export const TabBar = ({ activeTab, onTabChange }: TabBarProps): JSX.Element => 
 
   const getCurrentTab = () => {
     const currentPath = location.pathname;
-    return tabs.find(tab => tab.path === currentPath)?.id || "home";
+    return tabs.find(tab => tab.path === currentPath)?.id || "Your me time";
   };
 
   const currentActiveTab = getCurrentTab();
