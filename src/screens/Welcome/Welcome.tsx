@@ -69,7 +69,7 @@ export const Welcome = (): JSX.Element => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
-            className="flex-1 flex items-center justify-center relative max-h-80"
+            className="flex-1 flex items-center justify-center relative max"
           >
             <div className="relative w-full h-80">
               {/* Floating element 1 - Weather/Sun icon (top left) */}
