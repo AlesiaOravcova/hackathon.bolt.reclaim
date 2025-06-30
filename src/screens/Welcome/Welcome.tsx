@@ -66,9 +66,9 @@ export const Welcome = (): JSX.Element => {
 
           <h1 className="text-3xl font-bold text-gray-900 leading-tight">
             your 
-            <div className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
               me time
-            </div>
+            </span>
           </h1>
 
           <p className="text-base text-gray-600 leading-relaxed">
