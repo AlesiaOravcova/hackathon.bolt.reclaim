@@ -1,7 +1,8 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
-const firebaseConfig = {
+const firebaseConfig = 
+{
   apiKey: "AIzaSyASWHppOn7BM5B-GChocjrmZzdeiD7PglE",
   authDomain: "reclaim-15423.firebaseapp.com",
   projectId: "reclaim-15423",
