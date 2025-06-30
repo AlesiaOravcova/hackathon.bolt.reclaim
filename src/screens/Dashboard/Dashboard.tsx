@@ -47,13 +47,9 @@ export const Dashboard = (): JSX.Element => {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="text-4xl font-medium text-gray-900 leading-tight">
-                <span className="">
-              ☀️ Good morning
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+              ☀️ Good morning Elizabeth
                 </span>     
-                <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-              Elizabeth
-            </span>
           </h1>
             </div>
 
