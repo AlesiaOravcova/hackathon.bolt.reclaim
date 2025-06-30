@@ -178,15 +178,18 @@ export const Welcome = (): JSX.Element => {
             </div>
           </div>
         </motion.div>
-        <motion.div className="text-base text-gray-600 leading-relaxed"
-          <p> AI assistant that intelligently schedules time for your personal wellbeing and self-care.
+
+        {/* Description text - positioned after illustration */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
+          className="text-center px-4 mb-6"
+        >
+          <p className="text-base text-gray-600 leading-relaxed">
+            AI assistant that intelligently schedules time for your personal wellbeing and self-care.
           </p>
-        />
         </motion.div>
-
-                  
-
-
 
         {/* Authentication section - compact spacing */}
         <motion.div
