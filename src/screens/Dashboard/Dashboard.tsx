@@ -41,7 +41,10 @@ export const Dashboard = (): JSX.Element => {
     setShowCommitSuccessModal(true);
   };
 
-
+  const handleCloseSuccessModal = () => {
+    setShowCommitSuccessModal(false);
+    setSelectedActivity("");
+  };
 
   const handleSpaCommit = () => {
     setSelectedActivity("🌸 Spa Treatment");
@@ -206,80 +209,3 @@ export const Dashboard = (): JSX.Element => {
                         You've been doing great with your wellness routine. How about scheduling some pampering time this weekend?
                       </p>
                       <div className="text-sm text-purple-700 font-medium">
-                        Saturday 2:00–3:30PM
-                      </div>
-                    </div>
-                    
-                    {/* Dismiss button */}
-                    <button
-                      onClick={handleSpaDismiss}
-                      className="p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-white/50 ml-2"
-                      aria-label="Dismiss spa treatment suggestion"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                  
-                  <div className="flex gap-3">
-                    <Button
-                      size="sm"
-                      onClick={handleSpaCommit}
-                      className="bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full px-4 py-2 font-medium shadow-sm hover:shadow-md transition-all duration-200"
-                    >
-                      I'm in! 💆‍♀️
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={handleSpaDismiss}
-                      className="text-gray-600 hover:text-gray-800 hover:bg-white/60 rounded-full px-4 py-2 font-medium transition-all duration-200"
-                    >
-                      Maybe later
-                    </Button>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </div>
-        </motion.div>
-
-        {/* Weekly Overview */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="px-6 py-4 mb-20 hidden"
-        >
-          <h2 className="text-xl font-bold text-gray-900 mb-4">This Week</h2>
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <div className="flex flex-col items-start gap-2">
-              {weeklyStats.map((stat, index) => (
-                <div key={stat.day} className="flex flex-col items-center gap-2">
-                  <div className="text-xs font-medium text-gray-500">{stat.day}</div>
-                  <div className="w-8 h-16 bg-gray-100 rounded-full relative overflow-hidden">
-                    <div
-                      className="absolute bottom-0 w-full bg-gradient-to-t from-blue-500 to-purple-600 rounded-full transition-all duration-500"
-                      style={{ height: `${(stat.completed / stat.total) * 100}%` }}
-                    ></div>
-                  </div>
-                  <div className="text-xs text-gray-600">{stat.completed}/{stat.total}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
-      <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
-
-      {/* Success Modal */}
-      <SuccessModal
-        isOpen={showCommitSuccessModal}
-        onClose={handleCloseSuccessModal}
-        activityTitle={selectedActivity}
-      />
-    </div>
-  );
-};
