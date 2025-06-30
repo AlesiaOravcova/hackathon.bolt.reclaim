@@ -270,11 +270,8 @@ export const Schedule = (): JSX.Element => {
                         zIndex: 15
                       }}
                     >
-                      <div className="font-semibold text-xs leading-tight mb-1">
+                      <div className="font-semibold text-xs leading-tight">
                         {meTime.title}
-                      </div>
-                      <div className="text-xs opacity-90">
-                        {meTime.time.replace(':00', '')} – {meTime.endTime.replace(':00', '')}
                       </div>
                     </motion.div>
                   ))}
