@@ -121,13 +121,14 @@ export const Dashboard = (): JSX.Element => {
         </motion.div>
 
         {/* Today's Schedule */}
-        <h2 className="text-lg font-semibold mb-2">Suggested activities</h2>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
           className="px-6"
         >
+                  <h2 className="text-lg font-semibold mb-2">Suggested activities</h2>
           <div className="space-y-3">
             {todayActivities.map((activity, index) => (
               <motion.div
