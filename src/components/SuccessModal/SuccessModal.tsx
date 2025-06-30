@@ -73,7 +73,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
               duration: 0.3 
             }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 text-center shadow-2xl"
+            className="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl"
           >
             {/* Success Message */}
             <motion.div
@@ -81,7 +81,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
-              <h2 className="text-2xl font-medium text-gray-900 mb-4">
+              <h2 className="text-2xl font-medium text-gray-900 mb-4 text-left">
                 You've committed to me time!
               </h2>
               
@@ -92,12 +92,12 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
                 transition={{ delay: 0.4 }}
                 className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-2xl p-4 mb-4"
               >
-                <p className="text-lg font-normal text-blue-800">
-                  🧘Morning Meditation
+                <p className="text-lg font-normal text-blue-800 text-left">
+                  🧘Morning Meditation at 9am!
                 </p>
               </motion.div>
               
-              <p className="text-gray-600 leading-relaxed mb-6">
+              <p className="text-gray-600 leading-relaxed mb-6 text-left">
                 15 minutes before we'll send you a gentle reminder.
               </p>
             </motion.div>
@@ -110,7 +110,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
             >
               <Button
                 onClick={onClose}
-                className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 text-center"
               >
                 Perfect! ✨
               </Button>
@@ -121,7 +121,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="text-sm text-gray-500 mt-4"
+              className="text-sm text-gray-500 mt-4 text-left"
             >
               Taking time for yourself is an act of self-care 💙
             </motion.p>
