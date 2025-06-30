@@ -184,7 +184,7 @@ export const Welcome = (): JSX.Element => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
-          className="text-start px-4 mb-6"
+          className="text-start mb-6"
         >
           <p className="text-base text-gray-600 leading-relaxed">
             AI assistant that intelligently schedules time for your personal wellbeing and self-care.
