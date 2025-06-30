@@ -103,7 +103,7 @@ export const WeeklyCalendarScroll: React.FC<WeeklyCalendarScrollProps> = ({
                 transition={{ delay: index * 0.05, duration: 0.2 }}
                 onClick={() => handleDateSelect(date)}
                 className={`
-                  flex-1 min-w-0 h-16 rounded-2xl border-2 transition-all duration-200 
+                  flex-1 min-w-0 h-16 border-2 transition-all duration-200 
                   flex flex-col items-center justify-center gap-1 
                   active:scale-95 transform
                   ${getButtonStyle(date)}
