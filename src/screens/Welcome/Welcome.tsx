@@ -1,65 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { GoogleIcon } from "../../components/icons";
-import { firebaseGoogleCalendarService } from "../../services/firebaseGoogleCalendar";
 
 export const Welcome = (): JSX.Element => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [debugInfo, setDebugInfo] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Check for redirect result on component mount
-    const checkRedirectResult = async () => {
-      try {
-        const success = await firebaseGoogleCalendarService.handleRedirectResult();
-        if (success) {
-          const isNewUser = firebaseGoogleCalendarService.isNewUser();
-          if (isNewUser) {
-            navigate('/onboarding/step1');
-          } else {
-            navigate('/dashboard');
-          }
-        }
-      } catch (error: any) {
-        console.error('Redirect result error:', error);
-        setError(error.message);
-      }
-    };
-
-    checkRedirectResult();
-
-    // Set debug info
-    setDebugInfo(`Current domain: ${window.location.origin}`);
-  }, [navigate]);
-
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSignIn = () => {
     setIsLoading(true);
-    setError(null);
-    
-    try {
-      const success = await firebaseGoogleCalendarService.signInWithGoogle();
-      
-      if (success) {
-        // Check if this is a new user
-        const isNewUser = firebaseGoogleCalendarService.isNewUser();
-        
-        if (isNewUser) {
-          navigate('/onboarding/step1');
-        } else {
-          navigate('/dashboard');
-        }
-      }
-      // If success is false, it means redirect was used, so we wait for page reload
-    } catch (error: any) {
-      console.error('Google sign-in error:', error);
-      setError(error.message || "An error occurred during sign-in. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+    // Simulate loading for better UX
+    setTimeout(() => {
+      navigate("/onboarding/step1");
+    }, 1000);
   };
 
   const handleSignIn = () => {
@@ -222,36 +176,6 @@ export const Welcome = (): JSX.Element => {
           transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
           className="flex flex-col gap-3 pb-2"
         >
-          {/* Debug info */}
-          {debugInfo && (
-            <div className="bg-gray-100 border border-gray-200 text-gray-700 px-3 py-2 rounded-lg text-xs text-center">
-              {debugInfo}
-            </div>
-          )}
-
-          {/* Error message */}
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"
-            >
-              <div className="whitespace-pre-line">{error}</div>
-              {error.includes('unauthorized-domain') && (
-                <div className="mt-2 text-xs">
-                  <p className="font-medium">Steps to fix:</p>
-                  <ol className="list-decimal list-inside mt-1 space-y-1">
-                    <li>Go to <a href="https://console.firebase.google.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">Firebase Console</a></li>
-                    <li>Select your project "reclaim-15423"</li>
-                    <li>Go to Authentication → Settings → Authorized domains</li>
-                    <li>Add: localhost, 127.0.0.1, and {window.location.hostname}</li>
-                    <li>Save and try again</li>
-                  </ol>
-                </div>
-              )}
-            </motion.div>
-          )}
-
           <Button
             onClick={handleGoogleSignIn}
             disabled={isLoading}
@@ -262,10 +186,10 @@ export const Welcome = (): JSX.Element => {
             {isLoading ? (
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
-                Signing in...
+                Getting started...
               </div>
             ) : (
-              "Continue with Google"
+              "Get Started"
             )}
           </Button>
 
@@ -281,7 +205,7 @@ export const Welcome = (): JSX.Element => {
           {/* Privacy notice */}
           <p className="text-xs text-gray-500 text-center leading-relaxed">
             By continuing, you agree to our Terms of Service and Privacy Policy. 
-            We'll access your Google Calendar to help schedule your wellness time.
+            Connect your calendar later to automatically schedule your wellness time.
           </p>
         </motion.div>
       </div>

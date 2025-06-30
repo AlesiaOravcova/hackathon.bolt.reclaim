@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StatusBar } from '../../components/StatusBar';
-import { firebaseGoogleCalendarService } from '../../services/firebaseGoogleCalendar';
+import { googleCalendarService } from '../../services/googleCalendar';
 
 export const AuthCallback: React.FC = () => {
   const navigate = useNavigate();
@@ -11,29 +11,22 @@ export const AuthCallback: React.FC = () => {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        // Check for Firebase redirect result first
-        const firebaseResult = await firebaseGoogleCalendarService.handleRedirectResult();
-        
-        if (firebaseResult) {
-          // Firebase authentication successful
-          const isNewUser = firebaseGoogleCalendarService.isNewUser();
-          
-          if (isNewUser) {
-            navigate('/onboarding/step1');
-          } else {
-            navigate('/dashboard');
-          }
-          return;
-        }
-
-        // Check for direct Google Calendar API OAuth callback (existing logic)
+        // Check for direct Google Calendar API OAuth callback
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
         
         if (code) {
           // Handle direct Google Calendar API OAuth callback
-          navigate('/calendar-direct');
-          return;
+          const success = await googleCalendarService.handleOAuthCallback(code);
+          
+          if (success) {
+            // Clear URL parameters
+            window.history.replaceState({}, document.title, window.location.pathname);
+            navigate('/calendar');
+            return;
+          } else {
+            throw new Error('Failed to authenticate with Google Calendar');
+          }
         }
 
         // No authentication result found, redirect to welcome
