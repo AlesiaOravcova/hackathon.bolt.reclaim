@@ -14,13 +14,20 @@ export const AuthCallback: React.FC = () => {
         // Check for direct Google Calendar API OAuth callback
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
+        const state = urlParams.get('state');
+        const error = urlParams.get('error');
+        
+        // Security: Check for OAuth errors first
+        if (error) {
+          throw new Error(`OAuth error: ${error}`);
+        }
         
         if (code) {
-          // Handle direct Google Calendar API OAuth callback
-          const success = await googleCalendarService.handleOAuthCallback(code);
+          // Security: Handle direct Google Calendar API OAuth callback with state verification
+          const success = await googleCalendarService.handleOAuthCallback(code, state || undefined);
           
           if (success) {
-            // Clear URL parameters
+            // Security: Clear URL parameters to remove sensitive data from browser history
             window.history.replaceState({}, document.title, window.location.pathname);
             navigate('/calendar');
             return;
@@ -34,6 +41,9 @@ export const AuthCallback: React.FC = () => {
       } catch (error: any) {
         console.error('Auth callback error:', error);
         setError(error.message || 'Authentication failed. Please try again.');
+        
+        // Security: Clear any potentially sensitive URL parameters
+        window.history.replaceState({}, document.title, window.location.pathname);
         
         // Redirect to welcome page after showing error briefly
         setTimeout(() => {
@@ -89,7 +99,7 @@ export const AuthCallback: React.FC = () => {
             Connecting your account...
           </h2>
           <p className="text-gray-600">
-            Please wait while we complete your authentication.
+            Please wait while we securely complete your authentication.
           </p>
         </div>
       </div>

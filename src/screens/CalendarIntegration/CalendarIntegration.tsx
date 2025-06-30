@@ -31,14 +31,23 @@ export const CalendarIntegration: React.FC = () => {
   } = useGoogleCalendar();
 
   useEffect(() => {
-    // Check for OAuth callback
+    // Security: Check for OAuth callback with state parameter
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
+    const state = urlParams.get('state');
+    const error = urlParams.get('error');
+    
+    if (error) {
+      console.error('OAuth error:', error);
+      // Clear URL parameters and show error
+      window.history.replaceState({}, document.title, window.location.pathname);
+      return;
+    }
     
     if (code) {
-      handleAuthCallback(code).then(success => {
+      handleAuthCallback(code, state || undefined).then(success => {
         if (success) {
-          // Clear URL parameters
+          // Security: Clear URL parameters to remove sensitive data
           window.history.replaceState({}, document.title, window.location.pathname);
           setSetupStep('select');
           fetchCalendars();
@@ -64,7 +73,7 @@ export const CalendarIntegration: React.FC = () => {
   };
 
   const handleDisconnect = () => {
-    if (window.confirm('Are you sure you want to disconnect your Google Calendar?')) {
+    if (window.confirm('Are you sure you want to disconnect your Google Calendar? This will remove all stored authentication data.')) {
       signOut();
       setSetupStep('connect');
     }
@@ -150,14 +159,14 @@ export const CalendarIntegration: React.FC = () => {
                 <div>
                   <h1 className="text-xl font-bold text-gray-900">My Calendar</h1>
                   <p className="text-sm text-gray-600">
-                    {selectedCalendars.length} calendar{selectedCalendars.length !== 1 ? 's' : ''} connected
+                    {selectedCalendars.length} calendar{selectedCalendars.length !== 1 ? 's' : ''} connected securely
                   </p>
                 </div>
               </div>
               
               <button
                 onClick={handleDisconnect}
-                className="text-red-600 text-sm font-medium"
+                className="text-red-600 text-sm font-medium hover:text-red-700 transition-colors"
               >
                 Disconnect
               </button>

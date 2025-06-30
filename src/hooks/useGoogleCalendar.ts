@@ -9,7 +9,7 @@ export interface UseGoogleCalendarReturn {
   isLoading: boolean;
   error: string | null;
   initiateAuth: () => void;
-  handleAuthCallback: (code: string) => Promise<boolean>;
+  handleAuthCallback: (code: string, state?: string) => Promise<boolean>;
   fetchCalendars: () => Promise<void>;
   fetchEvents: (timeMin?: Date, timeMax?: Date) => Promise<void>;
   selectCalendars: (calendarIds: string[]) => void;
@@ -31,32 +31,44 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
   useEffect(() => {
     setIsAuthenticated(googleCalendarService.isAuthenticated());
     
-    // Load selected calendars from localStorage
-    const stored = localStorage.getItem('selected_calendars');
+    // Security: Load selected calendars from sessionStorage instead of localStorage
+    const stored = sessionStorage.getItem('selected_calendars');
     if (stored) {
       try {
-        setSelectedCalendars(JSON.parse(stored));
+        const parsedCalendars = JSON.parse(stored);
+        // Security: Validate the stored data
+        if (Array.isArray(parsedCalendars) && parsedCalendars.every(id => typeof id === 'string')) {
+          setSelectedCalendars(parsedCalendars);
+        } else {
+          // Invalid data, clear it
+          sessionStorage.removeItem('selected_calendars');
+        }
       } catch (error) {
         console.error('Failed to parse selected calendars:', error);
+        sessionStorage.removeItem('selected_calendars');
       }
     }
   }, []);
 
   const initiateAuth = useCallback(() => {
     setError(null);
-    googleCalendarService.initiateOAuth();
+    try {
+      googleCalendarService.initiateOAuth();
+    } catch (error: any) {
+      setError(error.message || 'Failed to initiate authentication');
+    }
   }, []);
 
-  const handleAuthCallback = useCallback(async (code: string): Promise<boolean> => {
+  const handleAuthCallback = useCallback(async (code: string, state?: string): Promise<boolean> => {
     setIsLoading(true);
     setError(null);
     
     try {
-      const success = await googleCalendarService.handleOAuthCallback(code);
+      const success = await googleCalendarService.handleOAuthCallback(code, state);
       setIsAuthenticated(success);
       return success;
-    } catch (error) {
-      setError('Authentication failed. Please try again.');
+    } catch (error: any) {
+      setError(error.message || 'Authentication failed. Please try again.');
       return false;
     } finally {
       setIsLoading(false);
@@ -80,12 +92,14 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
       if (selectedCalendars.length === 0) {
         const primaryCalendar = calendarList.find(cal => cal.primary);
         if (primaryCalendar) {
-          setSelectedCalendars([primaryCalendar.id]);
-          localStorage.setItem('selected_calendars', JSON.stringify([primaryCalendar.id]));
+          const newSelection = [primaryCalendar.id];
+          setSelectedCalendars(newSelection);
+          // Security: Use sessionStorage instead of localStorage
+          sessionStorage.setItem('selected_calendars', JSON.stringify(newSelection));
         }
       }
-    } catch (error) {
-      setError('Failed to fetch calendars');
+    } catch (error: any) {
+      setError(error.message || 'Failed to fetch calendars');
       console.error('Fetch calendars error:', error);
     } finally {
       setIsLoading(false);
@@ -103,8 +117,8 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
     try {
       const eventList = await googleCalendarService.getEvents(selectedCalendars, timeMin, timeMax);
       setEvents(eventList);
-    } catch (error) {
-      setError('Failed to fetch events');
+    } catch (error: any) {
+      setError(error.message || 'Failed to fetch events');
       console.error('Fetch events error:', error);
     } finally {
       setIsLoading(false);
@@ -112,8 +126,15 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
   }, [selectedCalendars]);
 
   const selectCalendars = useCallback((calendarIds: string[]) => {
+    // Security: Validate input
+    if (!Array.isArray(calendarIds) || !calendarIds.every(id => typeof id === 'string')) {
+      console.error('Invalid calendar IDs provided');
+      return;
+    }
+
     setSelectedCalendars(calendarIds);
-    localStorage.setItem('selected_calendars', JSON.stringify(calendarIds));
+    // Security: Use sessionStorage instead of localStorage
+    sessionStorage.setItem('selected_calendars', JSON.stringify(calendarIds));
   }, []);
 
   const createEvent = useCallback(async (
@@ -122,6 +143,12 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
   ): Promise<CalendarEvent | null> => {
     if (!googleCalendarService.isAuthenticated()) {
       setError('Not authenticated');
+      return null;
+    }
+
+    // Security: Validate inputs
+    if (!calendarId || typeof calendarId !== 'string') {
+      setError('Invalid calendar ID');
       return null;
     }
 
@@ -139,8 +166,8 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
       }));
       
       return createdEvent;
-    } catch (error) {
-      setError('Failed to create event');
+    } catch (error: any) {
+      setError(error.message || 'Failed to create event');
       console.error('Create event error:', error);
       return null;
     } finally {
@@ -158,6 +185,12 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
       return null;
     }
 
+    // Security: Validate inputs
+    if (!calendarId || !eventId || typeof calendarId !== 'string' || typeof eventId !== 'string') {
+      setError('Invalid calendar or event ID');
+      return null;
+    }
+
     setIsLoading(true);
     setError(null);
 
@@ -168,8 +201,8 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
       setEvents(prev => prev.map(e => e.id === eventId ? updatedEvent : e));
       
       return updatedEvent;
-    } catch (error) {
-      setError('Failed to update event');
+    } catch (error: any) {
+      setError(error.message || 'Failed to update event');
       console.error('Update event error:', error);
       return null;
     } finally {
@@ -183,6 +216,12 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
       return false;
     }
 
+    // Security: Validate inputs
+    if (!calendarId || !eventId || typeof calendarId !== 'string' || typeof eventId !== 'string') {
+      setError('Invalid calendar or event ID');
+      return false;
+    }
+
     setIsLoading(true);
     setError(null);
 
@@ -193,8 +232,8 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
       setEvents(prev => prev.filter(e => e.id !== eventId));
       
       return true;
-    } catch (error) {
-      setError('Failed to delete event');
+    } catch (error: any) {
+      setError(error.message || 'Failed to delete event');
       console.error('Delete event error:', error);
       return false;
     } finally {
@@ -209,7 +248,8 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
     setEvents([]);
     setSelectedCalendars([]);
     setError(null);
-    localStorage.removeItem('selected_calendars');
+    // Security: Clear all session storage data
+    sessionStorage.removeItem('selected_calendars');
   }, []);
 
   const refreshEvents = useCallback(async (): Promise<void> => {

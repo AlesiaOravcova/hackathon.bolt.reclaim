@@ -1,4 +1,4 @@
-// Google Calendar API service
+// Google Calendar API service with enhanced security
 export interface CalendarEvent {
   id: string;
   summary: string;
@@ -46,23 +46,34 @@ export interface GoogleCalendarTokens {
 class GoogleCalendarService {
   private readonly CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   private readonly CLIENT_SECRET = import.meta.env.VITE_GOOGLE_CLIENT_SECRET;
+  
+  // Minimized scopes - only request what we absolutely need
   private readonly SCOPES = [
-    'https://www.googleapis.com/auth/calendar',
-    'https://www.googleapis.com/auth/calendar.events'
+    'https://www.googleapis.com/auth/calendar.readonly', // Read-only access to calendars
+    'https://www.googleapis.com/auth/calendar.events'    // Manage calendar events
   ].join(' ');
 
   private tokens: GoogleCalendarTokens | null = null;
+  private readonly STORAGE_KEY = 'google_calendar_tokens';
+  private readonly SELECTED_CALENDARS_KEY = 'selected_calendars';
 
   constructor() {
     this.loadTokensFromStorage();
     
-    // Debug logging
-    console.log('GoogleCalendarService initialized:', {
-      hasClientId: !!this.CLIENT_ID,
-      hasClientSecret: !!this.CLIENT_SECRET,
-      currentOrigin: window.location.origin,
-      scopes: this.SCOPES
+    // Security: Clear tokens on page unload for additional protection
+    window.addEventListener('beforeunload', () => {
+      this.clearSensitiveData();
     });
+    
+    // Debug logging (only in development)
+    if (import.meta.env.DEV) {
+      console.log('GoogleCalendarService initialized:', {
+        hasClientId: !!this.CLIENT_ID,
+        hasClientSecret: !!this.CLIENT_SECRET,
+        currentOrigin: window.location.origin,
+        scopes: this.SCOPES
+      });
+    }
   }
 
   // Get the current redirect URI dynamically
@@ -82,7 +93,7 @@ class GoogleCalendarService {
     console.log('Using redirect URI:', redirectUri);
 
     try {
-      // Create the OAuth URL with proper encoding
+      // Create the OAuth URL with proper encoding and security parameters
       const authParams = new URLSearchParams({
         client_id: this.CLIENT_ID,
         redirect_uri: redirectUri,
@@ -90,13 +101,17 @@ class GoogleCalendarService {
         scope: this.SCOPES,
         access_type: 'offline',
         prompt: 'consent',
-        include_granted_scopes: 'true'
+        include_granted_scopes: 'true',
+        // Security: Add state parameter to prevent CSRF attacks
+        state: this.generateSecureState()
       });
 
       const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${authParams.toString()}`;
       
-      console.log('OAuth URL:', authUrl);
-      console.log('Attempting to redirect...');
+      if (import.meta.env.DEV) {
+        console.log('OAuth URL:', authUrl);
+        console.log('Attempting to redirect...');
+      }
       
       // Try different methods to handle the redirect
       if (window.top !== window.self) {
@@ -114,16 +129,25 @@ class GoogleCalendarService {
     }
   }
 
-  async handleOAuthCallback(code: string): Promise<boolean> {
-    console.log('Handling OAuth callback with code:', code.substring(0, 20) + '...');
+  async handleOAuthCallback(code: string, state?: string): Promise<boolean> {
+    console.log('Handling OAuth callback...');
     
     try {
+      // Security: Verify state parameter to prevent CSRF attacks
+      if (state) {
+        const storedState = sessionStorage.getItem('oauth_state');
+        if (!storedState || storedState !== state) {
+          throw new Error('Invalid state parameter - possible CSRF attack');
+        }
+        // Clear the state after verification
+        sessionStorage.removeItem('oauth_state');
+      }
+
       if (!this.CLIENT_ID || !this.CLIENT_SECRET) {
         throw new Error('Google API credentials are not properly configured');
       }
 
       const redirectUri = this.getRedirectUri();
-      console.log('Using redirect URI for token exchange:', redirectUri);
 
       const tokenUrl = 'https://oauth2.googleapis.com/token';
       const body = new URLSearchParams({
@@ -134,8 +158,6 @@ class GoogleCalendarService {
         redirect_uri: redirectUri,
       });
 
-      console.log('Requesting tokens from:', tokenUrl);
-
       const response = await fetch(tokenUrl, {
         method: 'POST',
         headers: {
@@ -145,8 +167,6 @@ class GoogleCalendarService {
         body: body,
       });
 
-      console.log('Token response status:', response.status);
-      
       if (!response.ok) {
         const errorText = await response.text();
         console.error('Token exchange failed:', errorText);
@@ -165,11 +185,11 @@ class GoogleCalendarService {
       }
 
       const tokens = await response.json();
-      console.log('Received tokens:', {
-        hasAccessToken: !!tokens.access_token,
-        hasRefreshToken: !!tokens.refresh_token,
-        expiresIn: tokens.expires_in
-      });
+      
+      // Security: Validate token response
+      if (!tokens.access_token || !tokens.refresh_token) {
+        throw new Error('Invalid token response from Google');
+      }
       
       tokens.expires_at = Date.now() + (tokens.expires_in * 1000);
       
@@ -205,10 +225,22 @@ class GoogleCalendarService {
       if (!response.ok) {
         const errorText = await response.text();
         console.error('Token refresh failed:', errorText);
+        
+        // Security: Clear tokens if refresh fails (user needs to re-authenticate)
+        if (response.status === 400 || response.status === 401) {
+          this.signOut();
+        }
+        
         throw new Error(`Failed to refresh token: ${response.status}`);
       }
 
       const newTokens = await response.json();
+      
+      // Security: Validate refreshed token
+      if (!newTokens.access_token) {
+        throw new Error('Invalid refresh token response');
+      }
+      
       this.tokens = {
         ...this.tokens,
         access_token: newTokens.access_token,
@@ -230,6 +262,7 @@ class GoogleCalendarService {
       return false;
     }
 
+    // Security: Check token expiry with buffer time
     if (Date.now() >= this.tokens.expires_at - 60000) { // Refresh 1 minute before expiry
       console.log('Token expired, refreshing...');
       return await this.refreshAccessToken();
@@ -281,6 +314,8 @@ class GoogleCalendarService {
       }
 
       const data = await response.json();
+      
+      // Security: Data minimization - only return necessary fields
       return data.items.map((item: any) => ({
         id: item.id,
         summary: item.summary,
@@ -296,7 +331,7 @@ class GoogleCalendarService {
     }
   }
 
-  // Event Management
+  // Event Management with data minimization
   async getEvents(calendarIds: string[], timeMin?: Date, timeMax?: Date): Promise<CalendarEvent[]> {
     const startTime = timeMin || new Date();
     const endTime = timeMax || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days from now
@@ -309,6 +344,9 @@ class GoogleCalendarService {
         url.searchParams.set('singleEvents', 'true');
         url.searchParams.set('orderBy', 'startTime');
         url.searchParams.set('maxResults', '50');
+        
+        // Security: Only request fields we actually need
+        url.searchParams.set('fields', 'items(id,summary,description,start,end,location,colorId)');
 
         const response = await this.makeAuthenticatedRequest(url.toString());
         
@@ -319,7 +357,13 @@ class GoogleCalendarService {
 
         const data = await response.json();
         return data.items.map((item: any) => ({
-          ...item,
+          id: item.id,
+          summary: item.summary || 'Untitled Event',
+          description: item.description,
+          start: item.start,
+          end: item.end,
+          location: item.location,
+          colorId: item.colorId,
           calendarId,
           category: this.categorizeEvent(item.summary, item.description),
         }));
@@ -342,19 +386,21 @@ class GoogleCalendarService {
 
   async createEvent(calendarId: string, event: Partial<CalendarEvent>): Promise<CalendarEvent> {
     try {
+      // Security: Sanitize input data
+      const sanitizedEvent = {
+        summary: this.sanitizeString(event.summary || ''),
+        description: this.sanitizeString(event.description || ''),
+        start: event.start,
+        end: event.end,
+        location: this.sanitizeString(event.location || ''),
+        colorId: event.colorId,
+      };
+
       const response = await this.makeAuthenticatedRequest(
         `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events`,
         {
           method: 'POST',
-          body: JSON.stringify({
-            summary: event.summary,
-            description: event.description,
-            start: event.start,
-            end: event.end,
-            location: event.location,
-            attendees: event.attendees,
-            colorId: event.colorId,
-          }),
+          body: JSON.stringify(sanitizedEvent),
         }
       );
 
@@ -376,19 +422,21 @@ class GoogleCalendarService {
 
   async updateEvent(calendarId: string, eventId: string, event: Partial<CalendarEvent>): Promise<CalendarEvent> {
     try {
+      // Security: Sanitize input data
+      const sanitizedEvent = {
+        summary: this.sanitizeString(event.summary || ''),
+        description: this.sanitizeString(event.description || ''),
+        start: event.start,
+        end: event.end,
+        location: this.sanitizeString(event.location || ''),
+        colorId: event.colorId,
+      };
+
       const response = await this.makeAuthenticatedRequest(
         `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events/${eventId}`,
         {
           method: 'PUT',
-          body: JSON.stringify({
-            summary: event.summary,
-            description: event.description,
-            start: event.start,
-            end: event.end,
-            location: event.location,
-            attendees: event.attendees,
-            colorId: event.colorId,
-          }),
+          body: JSON.stringify(sanitizedEvent),
         }
       );
 
@@ -423,6 +471,31 @@ class GoogleCalendarService {
     } catch (error) {
       console.error('Error deleting event:', error);
       throw error;
+    }
+  }
+
+  // Security utility methods
+  private generateSecureState(): string {
+    const array = new Uint8Array(32);
+    crypto.getRandomValues(array);
+    const state = Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    
+    // Store state in sessionStorage for verification
+    sessionStorage.setItem('oauth_state', state);
+    return state;
+  }
+
+  private sanitizeString(input: string): string {
+    // Basic sanitization - remove potentially harmful characters
+    return input.replace(/[<>\"'&]/g, '').trim();
+  }
+
+  private clearSensitiveData(): void {
+    // Clear any sensitive data from memory
+    if (this.tokens) {
+      // Overwrite token data
+      this.tokens.access_token = '';
+      this.tokens.refresh_token = '';
     }
   }
 
@@ -462,25 +535,52 @@ class GoogleCalendarService {
   }
 
   signOut(): void {
+    // Security: Clear all stored data
+    this.clearSensitiveData();
     this.tokens = null;
-    localStorage.removeItem('google_calendar_tokens');
+    sessionStorage.removeItem(this.STORAGE_KEY);
+    sessionStorage.removeItem(this.SELECTED_CALENDARS_KEY);
+    sessionStorage.removeItem('oauth_state');
   }
 
+  // Security: Updated storage methods to use sessionStorage
   private saveTokensToStorage(): void {
     if (this.tokens) {
-      localStorage.setItem('google_calendar_tokens', JSON.stringify(this.tokens));
+      try {
+        // Use sessionStorage instead of localStorage for better security
+        sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.tokens));
+      } catch (error) {
+        console.error('Failed to save tokens to storage:', error);
+        // If storage fails, clear tokens to prevent inconsistent state
+        this.tokens = null;
+      }
     }
   }
 
   private loadTokensFromStorage(): void {
-    const stored = localStorage.getItem('google_calendar_tokens');
-    if (stored) {
-      try {
-        this.tokens = JSON.parse(stored);
-      } catch (error) {
-        console.error('Failed to parse stored tokens:', error);
-        localStorage.removeItem('google_calendar_tokens');
+    try {
+      // Use sessionStorage instead of localStorage
+      const stored = sessionStorage.getItem(this.STORAGE_KEY);
+      if (stored) {
+        const tokens = JSON.parse(stored);
+        
+        // Security: Validate stored tokens
+        if (tokens.access_token && tokens.refresh_token && tokens.expires_at) {
+          // Check if tokens are still valid
+          if (Date.now() < tokens.expires_at) {
+            this.tokens = tokens;
+          } else {
+            // Tokens expired, remove them
+            sessionStorage.removeItem(this.STORAGE_KEY);
+          }
+        } else {
+          // Invalid token structure, remove them
+          sessionStorage.removeItem(this.STORAGE_KEY);
+        }
       }
+    } catch (error) {
+      console.error('Failed to parse stored tokens:', error);
+      sessionStorage.removeItem(this.STORAGE_KEY);
     }
   }
 }
