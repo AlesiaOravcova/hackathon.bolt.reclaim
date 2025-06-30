@@ -6,7 +6,7 @@ export const BoltBadge: React.FC = () => {
       href="https://bolt.new/" 
       target="_blank" 
       rel="noopener noreferrer"
-      className="fixed top-4 right-4 z-50 transition-transform duration-200 hover:scale-105"
+      className="fixed top-10 right-4 z-50 transition-transform duration-200 hover:scale-105"
     >
       <div className="w-12 h-12 rounded-full shadow-lg bg-transparent flex items-center justify-center overflow-hidden">
         <img 
