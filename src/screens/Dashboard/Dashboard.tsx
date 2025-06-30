@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { TabBar } from "../../components/TabBar";
 import { StatusBar } from "../../components/StatusBar";
+import { WeeklyCalendarScroll } from "../../components/WeeklyCalendarScroll";
 
 export const Dashboard = (): JSX.Element => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("home");
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   const todayActivities = [
     { time: "9:00 AM", title: "Morning Meditation", duration: "15 min", type: "mindfulness" },
@@ -25,6 +27,11 @@ export const Dashboard = (): JSX.Element => {
     { day: "Sat", completed: 0, total: 2 },
     { day: "Sun", completed: 0, total: 2 },
   ];
+
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date);
+    // You can add logic here to filter activities by selected date
+  };
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]">
@@ -50,9 +57,6 @@ export const Dashboard = (): JSX.Element => {
           </h1>
             </div>
 
-
-
-
             <button
               onClick={() => navigate("/profile")}
               className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center hidden"
@@ -60,6 +64,16 @@ export const Dashboard = (): JSX.Element => {
               <span className="text-white font-semibold">J</span>
             </button>
           </div>
+
+          {/* Weekly Calendar Scroll */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mb-6"
+          >
+            <WeeklyCalendarScroll onDateSelect={handleDateSelect} />
+          </motion.div>
 
           {/* Progress Card */}
           <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl p-6 text-white hidden">
@@ -117,7 +131,13 @@ export const Dashboard = (): JSX.Element => {
           className="px-6 py-4"
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-900">Today's Schedule</h2>
+            <h2 className="text-xl font-bold text-gray-900">
+              {selectedDate.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                month: 'long', 
+                day: 'numeric' 
+              })}
+            </h2>
             <Button
               variant="ghost"
               className="text-blue-600 font-semibold"
