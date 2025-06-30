@@ -143,7 +143,7 @@ export const Dashboard = (): JSX.Element => {
                       {activity.title}
                     </h3>
                     <div className="text-sm text-gray-500">
-                      {activity.time} • {activity.duration}
+                      {activity.time} 
                     </div>
                   </div>
                   <Button
