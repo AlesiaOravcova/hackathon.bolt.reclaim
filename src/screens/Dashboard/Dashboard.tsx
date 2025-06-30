@@ -150,7 +150,7 @@ export const Dashboard = (): JSX.Element => {
                     size="sm"
                     className="bg-blue-600 text-white rounded-full px-4 py-2 self-start"
                   >
-                    Schedule
+                    Commit
                   </Button>
                 </div>
               </motion.div>
