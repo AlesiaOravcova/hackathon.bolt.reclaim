@@ -137,8 +137,8 @@ export const Dashboard = (): JSX.Element => {
                 transition={{ delay: 0.1 * index }}
                 className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100"
               >
-                <div className="flex flex-col">
-                  <div className="mb-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
                     <h3 className="font-semibold text-gray-900 mb-1">
                       {activity.title}
                     </h3>
@@ -148,7 +148,7 @@ export const Dashboard = (): JSX.Element => {
                   </div>
                   <Button
                     size="sm"
-                    className="bg-blue-600 text-white rounded-full px-4 py-2 self-start"
+                    className="bg-blue-600 text-white rounded-full px-4 py-2 ml-4"
                   >
                     Commit
                   </Button>
