@@ -64,42 +64,34 @@ class FirebaseGoogleCalendarService {
         access_type: 'offline',
       });
 
-      // Use popup instead of redirect
-      const result = await signInWithPopup(auth, googleProvider);
-      
-      if (result) {
-        this.user = result.user;
+      // Try popup first, fallback to redirect if blocked
+      try {
+        const result = await signInWithPopup(auth, googleProvider);
+        return this.handleAuthResult(result);
+      } catch (popupError: any) {
+        console.log('Popup failed, trying redirect:', popupError.code);
         
-        // Get the access token for Google Calendar API
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        this.accessToken = credential?.accessToken || null;
-        
-        // Check if this is a new user
-        const additionalUserInfo = getAdditionalUserInfo(result);
-        const isNewUser = additionalUserInfo?.isNewUser || false;
-        
-        // Store user info in localStorage for persistence
-        if (this.accessToken) {
-          localStorage.setItem('google_access_token', this.accessToken);
-          localStorage.setItem('user_info', JSON.stringify({
-            uid: this.user.uid,
-            email: this.user.email,
-            displayName: this.user.displayName,
-            photoURL: this.user.photoURL,
-            isNewUser
-          }));
+        // If popup is blocked or fails, use redirect
+        if (popupError.code === 'auth/popup-blocked' || 
+            popupError.code === 'auth/popup-closed-by-user' ||
+            popupError.code === 'auth/cancelled-popup-request') {
+          
+          // Use redirect as fallback
+          await signInWithRedirect(auth, googleProvider);
+          // Note: Page will redirect, so we return false here
+          // The actual result will be handled in handleRedirectResult
+          return false;
         }
         
-        return true;
+        // Re-throw other errors
+        throw popupError;
       }
-      
-      return false;
     } catch (error: any) {
       console.error('Error with Google sign-in:', error);
       
       // Handle specific error cases
       if (error.code === 'auth/popup-blocked') {
-        throw new Error('Pop-up was blocked. Please allow pop-ups and try again.');
+        throw new Error('Pop-up was blocked. Redirecting to sign-in page...');
       } else if (error.code === 'auth/popup-closed-by-user') {
         throw new Error('Sign-in was cancelled. Please try again.');
       } else if (error.code === 'auth/network-request-failed') {
@@ -112,37 +104,40 @@ class FirebaseGoogleCalendarService {
     }
   }
 
+  private handleAuthResult(result: any): boolean {
+    if (result) {
+      this.user = result.user;
+      
+      // Get the access token for Google Calendar API
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      this.accessToken = credential?.accessToken || null;
+      
+      // Check if this is a new user
+      const additionalUserInfo = getAdditionalUserInfo(result);
+      const isNewUser = additionalUserInfo?.isNewUser || false;
+      
+      // Store user info in localStorage for persistence
+      if (this.accessToken) {
+        localStorage.setItem('google_access_token', this.accessToken);
+        localStorage.setItem('user_info', JSON.stringify({
+          uid: this.user.uid,
+          email: this.user.email,
+          displayName: this.user.displayName,
+          photoURL: this.user.photoURL,
+          isNewUser
+        }));
+      }
+      
+      return true;
+    }
+    
+    return false;
+  }
+
   async handleRedirectResult(): Promise<boolean> {
     try {
       const result = await getRedirectResult(auth);
-      
-      if (result) {
-        this.user = result.user;
-        
-        // Get the access token for Google Calendar API
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        this.accessToken = credential?.accessToken || null;
-        
-        // Check if this is a new user
-        const additionalUserInfo = getAdditionalUserInfo(result);
-        const isNewUser = additionalUserInfo?.isNewUser || false;
-        
-        // Store user info in localStorage for persistence
-        if (this.accessToken) {
-          localStorage.setItem('google_access_token', this.accessToken);
-          localStorage.setItem('user_info', JSON.stringify({
-            uid: this.user.uid,
-            email: this.user.email,
-            displayName: this.user.displayName,
-            photoURL: this.user.photoURL,
-            isNewUser
-          }));
-        }
-        
-        return true;
-      }
-      
-      return false;
+      return this.handleAuthResult(result);
     } catch (error: any) {
       console.error('Error handling redirect result:', error);
       

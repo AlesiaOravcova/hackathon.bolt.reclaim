@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
@@ -9,10 +9,34 @@ export const Welcome = (): JSX.Element => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPopupHelp, setShowPopupHelp] = useState(false);
+
+  useEffect(() => {
+    // Check for redirect result on component mount
+    const checkRedirectResult = async () => {
+      try {
+        const success = await firebaseGoogleCalendarService.handleRedirectResult();
+        if (success) {
+          const isNewUser = firebaseGoogleCalendarService.isNewUser();
+          if (isNewUser) {
+            navigate('/onboarding/step1');
+          } else {
+            navigate('/dashboard');
+          }
+        }
+      } catch (error: any) {
+        console.error('Redirect result error:', error);
+        setError(error.message);
+      }
+    };
+
+    checkRedirectResult();
+  }, [navigate]);
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     setError(null);
+    setShowPopupHelp(false);
     
     try {
       const success = await firebaseGoogleCalendarService.signInWithGoogle();
@@ -27,9 +51,16 @@ export const Welcome = (): JSX.Element => {
           navigate('/dashboard');
         }
       }
+      // If success is false, it means redirect was used, so we wait for page reload
     } catch (error: any) {
       console.error('Google sign-in error:', error);
-      setError(error.message || "An error occurred during sign-in. Please try again.");
+      
+      if (error.message.includes('Pop-up was blocked')) {
+        setShowPopupHelp(true);
+        setError("Pop-up was blocked. Please allow pop-ups for this site or try the button below.");
+      } else {
+        setError(error.message || "An error occurred during sign-in. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -206,6 +237,22 @@ export const Welcome = (): JSX.Element => {
             </motion.div>
           )}
 
+          {/* Popup help message */}
+          {showPopupHelp && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-xl text-sm"
+            >
+              <p className="font-medium mb-2">Pop-up blocked? Here's how to fix it:</p>
+              <ul className="text-xs space-y-1">
+                <li>• Look for a popup blocker icon in your address bar</li>
+                <li>• Click it and select "Always allow pop-ups from this site"</li>
+                <li>• Or try the button below for an alternative sign-in method</li>
+              </ul>
+            </motion.div>
+          )}
+
           <Button
             onClick={handleGoogleSignIn}
             disabled={isLoading}
@@ -222,6 +269,18 @@ export const Welcome = (): JSX.Element => {
               "Continue with Google"
             )}
           </Button>
+
+          {/* Alternative sign-in method for popup issues */}
+          {showPopupHelp && (
+            <Button
+              onClick={handleGoogleSignIn}
+              disabled={isLoading}
+              className="flex h-12 items-center justify-center gap-3 bg-blue-600 text-white rounded-2xl font-semibold text-base shadow-lg active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <GoogleIcon className="w-5 h-5" />
+              Try Alternative Sign-in
+            </Button>
+          )}
 
           {/* Sign in link */}
           <button
