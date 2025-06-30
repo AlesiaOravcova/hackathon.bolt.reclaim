@@ -16,39 +16,71 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
 }) => {
   useEffect(() => {
     if (isOpen) {
-      // Trigger confetti animation
-      const duration = 3000;
-      const animationEnd = Date.now() + duration;
-      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+      // Single burst of confetti from the bottom
+      const fireConfetti = () => {
+        const count = 200;
+        const defaults = {
+          origin: { y: 1.2 }, // Start from below the screen
+          colors: ['#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444'],
+          shapes: ['square', 'circle'],
+          gravity: 0.8, // Realistic gravity
+          drift: 0.1, // Slight horizontal drift
+          ticks: 300, // How long particles last
+          startVelocity: 45, // Initial upward velocity
+          scalar: 1.2, // Size of particles
+        };
 
-      function randomInRange(min: number, max: number) {
-        return Math.random() * (max - min) + min;
-      }
-
-      const interval = setInterval(function() {
-        const timeLeft = animationEnd - Date.now();
-
-        if (timeLeft <= 0) {
-          return clearInterval(interval);
-        }
-
-        const particleCount = 50 * (timeLeft / duration);
-
-        // Create confetti from different positions
+        // Fire confetti from multiple points along the bottom
         confetti({
           ...defaults,
-          particleCount,
-          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+          particleCount: count * 0.25,
+          spread: 26,
+          angle: 60,
+          origin: { x: 0.2, y: 1.2 }
         });
+
         confetti({
           ...defaults,
-          particleCount,
-          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+          particleCount: count * 0.35,
+          spread: 60,
+          angle: 90,
+          origin: { x: 0.5, y: 1.2 }
         });
-      }, 250);
 
-      // Cleanup interval on unmount or when modal closes
-      return () => clearInterval(interval);
+        confetti({
+          ...defaults,
+          particleCount: count * 0.25,
+          spread: 26,
+          angle: 120,
+          origin: { x: 0.8, y: 1.2 }
+        });
+
+        // Additional smaller bursts for more natural effect
+        setTimeout(() => {
+          confetti({
+            ...defaults,
+            particleCount: count * 0.15,
+            spread: 40,
+            angle: 75,
+            origin: { x: 0.35, y: 1.2 },
+            startVelocity: 35,
+          });
+
+          confetti({
+            ...defaults,
+            particleCount: count * 0.15,
+            spread: 40,
+            angle: 105,
+            origin: { x: 0.65, y: 1.2 },
+            startVelocity: 35,
+          });
+        }, 150);
+      };
+
+      // Delay the confetti slightly to sync with modal animation
+      const confettiTimeout = setTimeout(fireConfetti, 400);
+
+      return () => clearTimeout(confettiTimeout);
     }
   }, [isOpen]);
 
@@ -121,8 +153,6 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
                 Perfect! ✨
               </Button>
             </motion.div>
-
-
           </motion.div>
         </motion.div>
       )}
