@@ -143,7 +143,7 @@ export const Dashboard = (): JSX.Element => {
                     <h3 className="font-semibold text-gray-900 flex items-center gap-2 flex-wrap">
                       {activity.title}
                       <span className="text-sm text-gray-500">
-                        {activity.time} • {activity.duration}
+                        {activity.time} 
                       </span>
                     </h3>
                   </div>
