@@ -140,9 +140,11 @@ export const Dashboard = (): JSX.Element => {
               >
                 <div className="flex flex-col">
                   <div className="mb-3">
-                    <h3 className="font-semibold text-gray-900 flex items-center gap-2 flex-wrap">
-                      {activity.title}
-                      <span className="text-sm text-gray-500">
+                    <h3 className="font-semibold text-gray-900 flex items-center justify-between">
+                      <span className="flex-1 min-w-0 truncate">
+                        {activity.title}
+                      </span>
+                      <span className="text-sm text-gray-500 flex-shrink-0 ml-2">
                         {activity.time} 
                       </span>
                     </h3>
