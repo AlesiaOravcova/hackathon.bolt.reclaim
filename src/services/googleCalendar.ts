@@ -134,8 +134,10 @@ class GoogleCalendarService {
             clearInterval(checkClosed);
             // Check if we received tokens (they would be stored during the callback)
             if (this.isAuthenticated()) {
+              console.log('✅ Authentication successful - tokens found');
               resolve(true);
             } else {
+              console.log('❌ Authentication failed - no tokens found');
               reject(new Error('Authentication was cancelled or failed.'));
             }
           }
@@ -158,20 +160,25 @@ class GoogleCalendarService {
             this.handleOAuthCallback(event.data.code, event.data.state)
               .then((success) => {
                 if (success) {
+                  console.log('✅ OAuth callback processed successfully');
                   resolve(true);
                 } else {
+                  console.log('❌ OAuth callback processing failed');
                   reject(new Error('Failed to authenticate with Google Calendar'));
                 }
               })
               .catch((error) => {
+                console.error('❌ OAuth callback error:', error);
                 reject(error);
               });
           } else if (event.data.type === 'GOOGLE_AUTH_SUCCESS') {
+            console.log('✅ Received auth success message');
             clearInterval(checkClosed);
             window.removeEventListener('message', messageListener);
             popup.close();
             resolve(true);
           } else if (event.data.type === 'GOOGLE_AUTH_ERROR') {
+            console.error('❌ Received auth error message:', event.data.error);
             clearInterval(checkClosed);
             window.removeEventListener('message', messageListener);
             popup.close();
@@ -237,6 +244,7 @@ class GoogleCalendarService {
         redirect_uri: redirectUri,
       });
 
+      console.log('🔄 Exchanging code for tokens...');
       const response = await fetch(tokenUrl, {
         method: 'POST',
         headers: {
@@ -634,6 +642,7 @@ class GoogleCalendarService {
       try {
         // Use sessionStorage instead of localStorage for better security
         sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.tokens));
+        console.log('💾 Tokens saved to sessionStorage');
       } catch (error) {
         console.error('Failed to save tokens to storage:', error);
         // If storage fails, clear tokens to prevent inconsistent state
@@ -654,13 +663,16 @@ class GoogleCalendarService {
           // Check if tokens are still valid
           if (Date.now() < tokens.expires_at) {
             this.tokens = tokens;
+            console.log('✅ Valid tokens loaded from sessionStorage');
           } else {
             // Tokens expired, remove them
             sessionStorage.removeItem(this.STORAGE_KEY);
+            console.log('🧹 Expired tokens removed from sessionStorage');
           }
         } else {
           // Invalid token structure, remove them
           sessionStorage.removeItem(this.STORAGE_KEY);
+          console.log('🧹 Invalid tokens removed from sessionStorage');
         }
       }
     } catch (error) {

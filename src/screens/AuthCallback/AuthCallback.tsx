@@ -25,24 +25,43 @@ export const AuthCallback: React.FC = () => {
         if (code) {
           // Check if we're in a popup window
           if (window.opener && !window.opener.closed) {
-            // We're in a popup, send the code and state back to the parent window
-            // Let the parent window handle the OAuth callback with proper state verification
-            window.opener.postMessage({ 
-              type: 'GOOGLE_AUTH_CALLBACK',
-              code: code,
-              state: state
-            }, window.location.origin);
-            window.close();
-            return;
-          } else {
-            // We're in the main window - proceed with normal callback handling
-            // The googleCalendarService.handleOAuthCallback will handle state verification
+            console.log('📨 In popup window, processing OAuth callback...');
+            
+            // Process the OAuth callback in the popup
             const success = await googleCalendarService.handleOAuthCallback(code, state || undefined);
             
             if (success) {
+              console.log('✅ OAuth callback successful in popup');
+              // Send success message to parent window
+              window.opener.postMessage({ 
+                type: 'GOOGLE_AUTH_SUCCESS'
+              }, window.location.origin);
+              
+              // Close the popup
+              window.close();
+              return;
+            } else {
+              console.error('❌ OAuth callback failed in popup');
+              // Send error message to parent window
+              window.opener.postMessage({ 
+                type: 'GOOGLE_AUTH_ERROR',
+                error: 'Failed to authenticate with Google Calendar'
+              }, window.location.origin);
+              
+              // Close the popup
+              window.close();
+              return;
+            }
+          } else {
+            console.log('📨 In main window, processing OAuth callback...');
+            // We're in the main window - proceed with normal callback handling
+            const success = await googleCalendarService.handleOAuthCallback(code, state || undefined);
+            
+            if (success) {
+              console.log('✅ OAuth callback successful in main window');
               // Security: Clear URL parameters to remove sensitive data from browser history
               window.history.replaceState({}, document.title, window.location.pathname);
-              // Redirect to onboarding instead of calendar
+              // Redirect to onboarding
               navigate('/onboarding/step1');
               return;
             } else {
