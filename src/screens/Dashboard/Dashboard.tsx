@@ -223,7 +223,7 @@ export const Dashboard = (): JSX.Element => {
                         size="sm"
                         variant="outline"
                         onClick={handleSpaDismiss}
-                        className="border-pink-300 text-pink-700 hover:bg-pink-50 rounded-full px-4 py-2"
+                        className="text-grey-500 px-4 py-2"
                       >
                         Maybe later
                       </Button>
