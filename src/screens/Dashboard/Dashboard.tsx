@@ -59,7 +59,7 @@ export const Dashboard = (): JSX.Element => {
     <div className="flex flex-col h-screen bg-gradient-to-br from-[#F1F6FE] to-[#F3FDF5]">
       <StatusBar />
       
-      <div className="flex-1 overflow-y-auto pb-16">
+      <div className="flex-1 overflow-y-auto pb-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
