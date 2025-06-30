@@ -327,16 +327,6 @@ export const Welcome = (): JSX.Element => {
             Skip for now - Get Started
           </button>
 
-          {/* Debug button for development */}
-          {import.meta.env.DEV && (
-            <button
-              onClick={handleShowDebugInfo}
-              className="text-xs text-gray-400 text-center py-1"
-            >
-              Debug Info
-            </button>
-          )}
-
           {/* Privacy notice */}
           <p className="text-xs text-gray-500 text-center leading-relaxed">
             By continuing, you agree to our Terms of Service and Privacy Policy. 
